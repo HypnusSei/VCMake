@@ -1,0 +1,71 @@
+ contrib/CMakeLists.txt | 2 ++
+ libtiff-4.pc.in        | 2 +-
+ port/CMakeLists.txt    | 2 ++
+ test/CMakeLists.txt    | 2 ++
+ tools/CMakeLists.txt   | 2 ++
+ 5 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/contrib/CMakeLists.txt b/contrib/CMakeLists.txt
+index 6bb124f4..0665b2f0 100644
+--- a/contrib/CMakeLists.txt
++++ b/contrib/CMakeLists.txt
+@@ -22,6 +22,8 @@
+ # LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ # OF THIS SOFTWARE.
+ 
++SET(CMAKE_EXE_LINKER_FLAGS /NODEFAULTLIB:"msvcrt.lib")
++
+ add_subdirectory(addtiffo)
+ add_subdirectory(dbs)
+ add_subdirectory(iptcutil)
+diff --git a/libtiff-4.pc.in b/libtiff-4.pc.in
+index abe75a62..6966df60 100644
+--- a/libtiff-4.pc.in
++++ b/libtiff-4.pc.in
+@@ -6,6 +6,6 @@ includedir=@includedir@
+ Name: libtiff
+ Description:  Tag Image File Format (TIFF) library.
+ Version: @VERSION@
+-Libs: -L${libdir} -ltiff
++Libs: -L${libdir} -ltiff -lzlib -llzma
+ Libs.private: @tiff_libs_private@
+ Cflags: -I${includedir}
+diff --git a/port/CMakeLists.txt b/port/CMakeLists.txt
+index b7eb3a29..5d5308b8 100644
+--- a/port/CMakeLists.txt
++++ b/port/CMakeLists.txt
+@@ -22,6 +22,8 @@
+ # LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ # OF THIS SOFTWARE.
+ 
++SET(CMAKE_EXE_LINKER_FLAGS /NODEFAULTLIB:"msvcrt.lib")
++
+ set(port_HEADERS libport.h)
+ set(port_SOURCES dummy.c)
+ set(port_optional_SOURCES
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index ff91f78b..ec805ecf 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -22,6 +22,8 @@
+ # LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ # OF THIS SOFTWARE.
+ 
++SET(CMAKE_EXE_LINKER_FLAGS /NODEFAULTLIB:"msvcrt.lib")
++
+ include_directories(${PROJECT_SOURCE_DIR}/libtiff
+                     ${PROJECT_BINARY_DIR}/libtiff
+                     ${CMAKE_CURRENT_BINARY_DIR}
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 886d4549..fb7a43db 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -24,6 +24,8 @@
+ 
+ extra_dist(Makefile.vc)
+ 
++SET(CMAKE_EXE_LINKER_FLAGS /NODEFAULTLIB:"msvcrt.lib")
++
+ include_directories(${PROJECT_SOURCE_DIR}/libtiff
+                     ${PROJECT_BINARY_DIR}/libtiff
+                     ${PROJECT_SOURCE_DIR}/port

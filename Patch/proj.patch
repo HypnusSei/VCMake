@@ -1,0 +1,51 @@
+ src/CMakeLists.txt | 4 ++++
+ src/bin_cct.cmake  | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 534bc311..51445918 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -44,11 +44,13 @@ endif()
+ if(BUILD_CCT)
+   include(bin_cct.cmake)
+   set(BIN_TARGETS ${BIN_TARGETS} cct)
++  link_libraries(zlib liblzma jpeg zstd libcurl cares.lib libssl libcrypto nghttp2 brotlicommon brotlidec libssh2 Crypt32 ws2_32 wldap32 msvcrt)
+ endif()
+ 
+ if(BUILD_CS2CS)
+   include(bin_cs2cs.cmake)
+   set(BIN_TARGETS ${BIN_TARGETS} cs2cs)
++  link_libraries(zlib liblzma jpeg zstd libcurl cares.lib libssl libcrypto nghttp2 brotlicommon brotlidec libssh2 Crypt32 ws2_32 wldap32 msvcrt)
+ endif()
+ 
+ if(BUILD_GEOD)
+@@ -57,6 +59,7 @@ if(BUILD_GEOD)
+     include(bin_geodtest.cmake)
+   endif()
+   set(BIN_TARGETS ${BIN_TARGETS} geod)
++  link_libraries(zlib liblzma jpeg zstd libcurl cares.lib libssl libcrypto nghttp2 brotlicommon brotlidec libssh2 Crypt32 ws2_32 wldap32 msvcrt)
+ endif()
+ 
+ if(BUILD_PROJ)
+@@ -72,6 +75,7 @@ endif()
+ if(BUILD_GIE)
+   include(bin_gie.cmake)
+   set(BIN_TARGETS ${BIN_TARGETS} gie)
++  link_libraries(zlib liblzma jpeg zstd libcurl cares.lib libssl libcrypto nghttp2 brotlicommon brotlidec libssh2 Crypt32 ws2_32 wldap32 msvcrt)
+ endif()
+ 
+ if(BUILD_PROJSYNC)
+diff --git a/src/bin_cct.cmake b/src/bin_cct.cmake
+index 9e9bb7ec..2c8b6824 100644
+--- a/src/bin_cct.cmake
++++ b/src/bin_cct.cmake
+@@ -8,7 +8,7 @@ set(CCT_INCLUDE apps/optargpm.h)
+ source_group("Source Files\\Bin" FILES ${CCT_SRC})
+ 
+ add_executable(cct ${CCT_SRC} ${CCT_INCLUDE})
+-target_link_libraries(cct ${PROJ_LIBRARIES})
++target_link_libraries(cct ${PROJ_LIBRARIES} zlib liblzma jpeg zstd libcurl cares.lib libssl libcrypto nghttp2 brotlicommon brotlidec libssh2 advapi32 crypt32 ws2_32 wldap32 msvcrt)
+ target_compile_options(cct PRIVATE ${PROJ_CXX_WARN_FLAGS})
+ 
+ install(TARGETS cct

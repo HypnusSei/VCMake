@@ -1,0 +1,2467 @@
+ include/libxml/xmlwin32version.h |    1 +
+ win32/Makefile.msvc              | 1004 +++++++++++++-------------
+ win32/configure.js               | 1436 +++++++++++++++++++-------------------
+ 3 files changed, 1221 insertions(+), 1220 deletions(-)
+
+diff --git a/include/libxml/xmlwin32version.h b/include/libxml/xmlwin32version.h
+index c6bc8b83..963b22e3 100644
+--- a/include/libxml/xmlwin32version.h
++++ b/include/libxml/xmlwin32version.h
+@@ -10,6 +10,7 @@
+ 
+ #ifndef __XML_VERSION_H__
+ #define __XML_VERSION_H__
++#define LIBXML_STATIC 1
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/win32/Makefile.msvc b/win32/Makefile.msvc
+index 725b0ca1..48786074 100644
+--- a/win32/Makefile.msvc
++++ b/win32/Makefile.msvc
+@@ -1,502 +1,502 @@
+-# Makefile for libxml2, specific for Windows, MSVC and NMAKE.
+-#
+-# Take a look at the beginning and modify the variables to suit your 
+-# environment. Having done that, you can do a
+-#
+-# nmake [all]     to build the libxml and the accompanying utilities.
+-# nmake clean     to remove all compiler output files and return to a
+-#                 clean state.
+-# nmake rebuild   to rebuild everything from scratch. This basically does
+-#                 a 'nmake clean' and then a 'nmake all'.
+-# nmake install   to install the library and its header files.
+-#
+-# March 2002, Igor Zlatkovic <igor@zlatkovic.com>
+-
+-# There should never be a need to modify anything below this line.
+-# ----------------------------------------------------------------
+-
+-AUTOCONF = .\config.msvc
+-!include $(AUTOCONF)
+-
+-# Names of various input and output components.
+-XML_NAME = xml2
+-XML_BASENAME = lib$(XML_NAME)
+-XML_SO = $(XML_BASENAME).dll
+-XML_RES = $(XML_BASENAME).res
+-XML_IMP = $(XML_BASENAME).lib
+-XML_DEF = $(XML_BASENAME).def
+-XML_A = $(XML_BASENAME)_a.lib
+-XML_A_DLL = $(XML_BASENAME)_a_dll.lib
+-
+-# Place where we let the compiler put its output.
+-BINDIR = bin.msvc
+-XML_INTDIR = int.msvc
+-XML_INTDIR_A = int.a.msvc
+-XML_INTDIR_A_DLL = int.a.dll.msvc
+-UTILS_INTDIR = int.utils.msvc
+-
+-# The preprocessor and its options.
+-CPP = cl.exe /EP
+-CPPFLAGS = /nologo /I$(XML_SRCDIR)\include /D "NOLIBTOOL" 
+-!if "$(WITH_THREADS)" != "no"
+-CPPFLAGS = $(CPPFLAGS) /D "_REENTRANT"
+-!endif
+-
+-# The compiler and its options.
+-CC = cl.exe
+-CFLAGS = /nologo /D "_WINDOWS" /D "_MBCS" /D "NOLIBTOOL" /W3 /wd4244 /wd4267 $(CRUNTIME)
+-CFLAGS = $(CFLAGS) /I$(XML_SRCDIR) /I$(XML_SRCDIR)\include /I$(INCPREFIX)
+-!if "$(WITH_THREADS)" != "no"
+-CFLAGS = $(CFLAGS) /D "_REENTRANT"
+-!endif
+-!if "$(WITH_THREADS)" == "yes" || "$(WITH_THREADS)" == "ctls"
+-CFLAGS = $(CFLAGS) /D "HAVE_WIN32_THREADS" /D "HAVE_COMPILER_TLS"
+-!else if "$(WITH_THREADS)" == "native"
+-CFLAGS = $(CFLAGS) /D "HAVE_WIN32_THREADS"
+-!else if "$(WITH_THREADS)" == "posix"
+-CFLAGS = $(CFLAGS) /D "HAVE_PTHREAD_H"
+-!endif
+-CFLAGS = $(CFLAGS) /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE
+-
+-# The linker and its options.
+-LD = link.exe
+-LDFLAGS = /nologo /VERSION:$(LIBXML_MAJOR_VERSION).$(LIBXML_MINOR_VERSION)
+-LDFLAGS = $(LDFLAGS) /LIBPATH:$(BINDIR) /LIBPATH:$(LIBPREFIX)
+-LIBS =
+-!if "$(WITH_FTP)" == "1" || "$(WITH_HTTP)" == "1"
+-LIBS = $(LIBS) wsock32.lib ws2_32.lib
+-!endif 
+-!if "$(WITH_ICONV)" == "1"
+-LIBS = $(LIBS) iconv.lib
+-!endif 
+-!if "$(WITH_ICU)" == "1"
+-!if "$(STATIC)" == "1"
+-LIBS = $(LIBS) advapi32.lib sicuuc.lib sicuin.lib sicudt.lib
+-!else
+-LIBS = $(LIBS) icuuc.lib icuin.lib icudt.lib
+-!endif
+-!endif
+-!if "$(WITH_ZLIB)" == "1"
+-# could be named differently zdll or zlib
+-# LIBS = $(LIBS) zdll.lib
+-LIBS = $(LIBS) zlib.lib
+-!endif
+-!if "$(WITH_LZMA)" == "1"
+-LIBS = $(LIBS) liblzma.lib
+-!endif
+-!if "$(WITH_THREADS)" == "posix"
+-LIBS = $(LIBS) pthreadVC.lib
+-!endif
+-!if "$(WITH_MODULES)" == "1"
+-LIBS = $(LIBS) kernel32.lib
+-!endif
+-
+-# The archiver and its options.
+-AR = lib.exe
+-ARFLAGS = /nologo
+-
+-# Optimisation and debug symbols.
+-!if "$(DEBUG)" == "1"
+-CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7
+-LDFLAGS = $(LDFLAGS) /DEBUG
+-!else
+-CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 
+-# commented out as this break VC10 c.f. 634846
+-# LDFLAGS = $(LDFLAGS) /OPT:NOWIN98
+-LDFLAGS = $(LDFLAGS)
+-!endif
+-
+-# append CFLAGS etc. passed on command line
+-CPPFLAGS = $(CPPFLAGS) $(EXTRA_CPPFLAGS)
+-CFLAGS = $(CFLAGS) $(EXTRA_CFLAGS)
+-LDFLAGS = $(LDFLAGS) $(EXTRA_LDFLAGS)
+-
+-# Libxml object files.
+-XML_OBJS = $(XML_INTDIR)\buf.obj\
+-	$(XML_INTDIR)\c14n.obj\
+-	$(XML_INTDIR)\catalog.obj\
+-	$(XML_INTDIR)\chvalid.obj\
+-	$(XML_INTDIR)\debugXML.obj\
+-	$(XML_INTDIR)\dict.obj\
+-	$(XML_INTDIR)\DOCBparser.obj\
+-	$(XML_INTDIR)\encoding.obj\
+-	$(XML_INTDIR)\entities.obj\
+-	$(XML_INTDIR)\error.obj\
+-	$(XML_INTDIR)\globals.obj\
+-	$(XML_INTDIR)\hash.obj\
+-	$(XML_INTDIR)\HTMLparser.obj\
+-	$(XML_INTDIR)\HTMLtree.obj\
+-	$(XML_INTDIR)\legacy.obj\
+-	$(XML_INTDIR)\list.obj\
+-	$(XML_INTDIR)\nanoftp.obj\
+-	$(XML_INTDIR)\nanohttp.obj\
+-	$(XML_INTDIR)\parser.obj\
+-	$(XML_INTDIR)\parserInternals.obj\
+-	$(XML_INTDIR)\pattern.obj\
+-	$(XML_INTDIR)\relaxng.obj\
+-	$(XML_INTDIR)\SAX2.obj\
+-	$(XML_INTDIR)\SAX.obj\
+-	$(XML_INTDIR)\schematron.obj\
+-	$(XML_INTDIR)\threads.obj\
+-	$(XML_INTDIR)\tree.obj\
+-	$(XML_INTDIR)\uri.obj\
+-	$(XML_INTDIR)\valid.obj\
+-	$(XML_INTDIR)\xinclude.obj\
+-	$(XML_INTDIR)\xlink.obj\
+-	$(XML_INTDIR)\xmlIO.obj\
+-	$(XML_INTDIR)\xmlmemory.obj\
+-	$(XML_INTDIR)\xmlreader.obj\
+-	$(XML_INTDIR)\xmlregexp.obj\
+-	$(XML_INTDIR)\xmlmodule.obj\
+-	$(XML_INTDIR)\xmlsave.obj\
+-	$(XML_INTDIR)\xmlschemas.obj\
+-	$(XML_INTDIR)\xmlschemastypes.obj\
+-	$(XML_INTDIR)\xmlunicode.obj\
+-	$(XML_INTDIR)\xmlwriter.obj\
+-	$(XML_INTDIR)\xpath.obj\
+-	$(XML_INTDIR)\xpointer.obj\
+-	$(XML_INTDIR)\xmlstring.obj
+-
+-# Static libxml object files.
+-XML_OBJS_A = $(XML_INTDIR_A)\buf.obj\
+-	$(XML_INTDIR_A)\c14n.obj\
+-	$(XML_INTDIR_A)\catalog.obj\
+-	$(XML_INTDIR_A)\chvalid.obj\
+-	$(XML_INTDIR_A)\debugXML.obj\
+-	$(XML_INTDIR_A)\dict.obj\
+-	$(XML_INTDIR_A)\DOCBparser.obj\
+-	$(XML_INTDIR_A)\encoding.obj\
+-	$(XML_INTDIR_A)\entities.obj\
+-	$(XML_INTDIR_A)\error.obj\
+-	$(XML_INTDIR_A)\globals.obj\
+-	$(XML_INTDIR_A)\hash.obj\
+-	$(XML_INTDIR_A)\HTMLparser.obj\
+-	$(XML_INTDIR_A)\HTMLtree.obj\
+-	$(XML_INTDIR_A)\legacy.obj\
+-	$(XML_INTDIR_A)\list.obj\
+-	$(XML_INTDIR_A)\nanoftp.obj\
+-	$(XML_INTDIR_A)\nanohttp.obj\
+-	$(XML_INTDIR_A)\parser.obj\
+-	$(XML_INTDIR_A)\parserInternals.obj\
+-	$(XML_INTDIR_A)\pattern.obj\
+-	$(XML_INTDIR_A)\relaxng.obj\
+-	$(XML_INTDIR_A)\SAX2.obj\
+-	$(XML_INTDIR_A)\SAX.obj\
+-	$(XML_INTDIR_A)\schematron.obj\
+-	$(XML_INTDIR_A)\threads.obj\
+-	$(XML_INTDIR_A)\tree.obj\
+-	$(XML_INTDIR_A)\uri.obj\
+-	$(XML_INTDIR_A)\valid.obj\
+-	$(XML_INTDIR_A)\xinclude.obj\
+-	$(XML_INTDIR_A)\xlink.obj\
+-	$(XML_INTDIR_A)\xmlIO.obj\
+-	$(XML_INTDIR_A)\xmlmemory.obj\
+-	$(XML_INTDIR_A)\xmlreader.obj\
+-	$(XML_INTDIR_A)\xmlregexp.obj\
+-	$(XML_INTDIR_A)\xmlmodule.obj\
+-	$(XML_INTDIR_A)\xmlsave.obj\
+-	$(XML_INTDIR_A)\xmlschemas.obj\
+-	$(XML_INTDIR_A)\xmlschemastypes.obj\
+-	$(XML_INTDIR_A)\xmlunicode.obj\
+-	$(XML_INTDIR_A)\xmlwriter.obj\
+-	$(XML_INTDIR_A)\xpath.obj\
+-	$(XML_INTDIR_A)\xpointer.obj\
+-	$(XML_INTDIR_A)\xmlstring.obj
+-
+-# Static libxml object files.
+-XML_OBJS_A_DLL = $(XML_INTDIR_A_DLL)\buf.obj\
+-	$(XML_INTDIR_A_DLL)\c14n.obj\
+-	$(XML_INTDIR_A_DLL)\catalog.obj\
+-	$(XML_INTDIR_A_DLL)\chvalid.obj\
+-	$(XML_INTDIR_A_DLL)\debugXML.obj\
+-	$(XML_INTDIR_A_DLL)\dict.obj\
+-	$(XML_INTDIR_A_DLL)\DOCBparser.obj\
+-	$(XML_INTDIR_A_DLL)\encoding.obj\
+-	$(XML_INTDIR_A_DLL)\entities.obj\
+-	$(XML_INTDIR_A_DLL)\error.obj\
+-	$(XML_INTDIR_A_DLL)\globals.obj\
+-	$(XML_INTDIR_A_DLL)\hash.obj\
+-	$(XML_INTDIR_A_DLL)\HTMLparser.obj\
+-	$(XML_INTDIR_A_DLL)\HTMLtree.obj\
+-	$(XML_INTDIR_A_DLL)\legacy.obj\
+-	$(XML_INTDIR_A_DLL)\list.obj\
+-	$(XML_INTDIR_A_DLL)\nanoftp.obj\
+-	$(XML_INTDIR_A_DLL)\nanohttp.obj\
+-	$(XML_INTDIR_A_DLL)\parser.obj\
+-	$(XML_INTDIR_A_DLL)\parserInternals.obj\
+-	$(XML_INTDIR_A_DLL)\pattern.obj\
+-	$(XML_INTDIR_A_DLL)\relaxng.obj\
+-	$(XML_INTDIR_A_DLL)\SAX2.obj\
+-	$(XML_INTDIR_A_DLL)\SAX.obj\
+-	$(XML_INTDIR_A_DLL)\schematron.obj\
+-	$(XML_INTDIR_A_DLL)\threads.obj\
+-	$(XML_INTDIR_A_DLL)\tree.obj\
+-	$(XML_INTDIR_A_DLL)\uri.obj\
+-	$(XML_INTDIR_A_DLL)\valid.obj\
+-	$(XML_INTDIR_A_DLL)\xinclude.obj\
+-	$(XML_INTDIR_A_DLL)\xlink.obj\
+-	$(XML_INTDIR_A_DLL)\xmlIO.obj\
+-	$(XML_INTDIR_A_DLL)\xmlmemory.obj\
+-	$(XML_INTDIR_A_DLL)\xmlreader.obj\
+-	$(XML_INTDIR_A_DLL)\xmlregexp.obj\
+-	$(XML_INTDIR_A_DLL)\xmlmodule.obj\
+-	$(XML_INTDIR_A_DLL)\xmlsave.obj\
+-	$(XML_INTDIR_A_DLL)\xmlschemas.obj\
+-	$(XML_INTDIR_A_DLL)\xmlschemastypes.obj\
+-	$(XML_INTDIR_A_DLL)\xmlunicode.obj\
+-	$(XML_INTDIR_A_DLL)\xmlwriter.obj\
+-	$(XML_INTDIR_A_DLL)\xpath.obj\
+-	$(XML_INTDIR_A_DLL)\xpointer.obj\
+-	$(XML_INTDIR_A_DLL)\xmlstring.obj
+-
+-!if "$(WITH_LZMA)" == "1"
+-XML_OBJS = $(XML_OBJS) $(XML_INTDIR)\xzlib.obj
+-XML_OBJS_A = $(XML_OBJS_A) $(XML_INTDIR_A)\xzlib.obj
+-XML_OBJS_A_DLL = $(XML_OBJS_A_DLL) $(XML_INTDIR_A_DLL)\xzlib.obj
+-!endif
+-
+-# Xmllint and friends executables.
+-UTILS = $(BINDIR)\xmllint.exe\
+-	$(BINDIR)\xmlcatalog.exe\
+-	$(BINDIR)\testAutomata.exe\
+-	$(BINDIR)\testC14N.exe\
+-	$(BINDIR)\testDocbook.exe\
+-	$(BINDIR)\testHTML.exe\
+-	$(BINDIR)\testReader.exe\
+-	$(BINDIR)\testRelax.exe\
+-	$(BINDIR)\testRegexp.exe\
+-	$(BINDIR)\testModule.exe\
+-	$(BINDIR)\testSAX.exe\
+-	$(BINDIR)\testSchemas.exe\
+-	$(BINDIR)\testURI.exe\
+-	$(BINDIR)\testXPath.exe\
+-	$(BINDIR)\runtest.exe\
+-	$(BINDIR)\runsuite.exe\
+-	$(BINDIR)\runxmlconf.exe\
+-	$(BINDIR)\testapi.exe\
+-	$(BINDIR)\testchar.exe\
+-	$(BINDIR)\testdict.exe\
+-	$(BINDIR)\testlimits.exe\
+-	$(BINDIR)\testrecurse.exe
+-	
+-!if "$(WITH_THREADS)" != "no"
+-UTILS = $(UTILS) $(BINDIR)\testThreads.exe
+-!endif
+-
+-!if "$(VCMANIFEST)" == "1"
+-_VC_MANIFEST_EMBED_EXE= if exist $@.manifest mt.exe -nologo -manifest $@.manifest -outputresource:$@;1
+-_VC_MANIFEST_EMBED_DLL= if exist $@.manifest mt.exe -nologo -manifest $@.manifest -outputresource:$@;2
+-!else
+-_VC_MANIFEST_EMBED_EXE=
+-_VC_MANIFEST_EMBED_DLL=
+-!endif
+-
+-all : libxml libxmla libxmladll utils
+-
+-libxml : $(BINDIR)\$(XML_SO) 
+-
+-libxmla : $(BINDIR)\$(XML_A)
+-
+-libxmladll : $(BINDIR)\$(XML_A_DLL)
+-
+-utils : $(UTILS)
+-
+-clean :
+-	if exist $(XML_INTDIR) rmdir /S /Q $(XML_INTDIR)
+-	if exist $(XML_INTDIR_A) rmdir /S /Q $(XML_INTDIR_A)
+-	if exist $(XML_INTDIR_A_DLL) rmdir /S /Q $(XML_INTDIR_A_DLL)
+-	if exist $(UTILS_INTDIR) rmdir /S /Q $(UTILS_INTDIR)
+-	if exist $(BINDIR) rmdir /S /Q $(BINDIR)
+-
+-distclean : clean
+-	if exist config.* del config.*
+-	if exist Makefile del Makefile
+-
+-rebuild : clean all
+-
+-install-libs : all
+-	if not exist $(INCPREFIX)\libxml2 mkdir $(INCPREFIX)\libxml2
+-	if not exist $(INCPREFIX)\libxml2\libxml mkdir $(INCPREFIX)\libxml2\libxml
+-	if not exist $(BINPREFIX) mkdir $(BINPREFIX)
+-	if not exist $(LIBPREFIX) mkdir $(LIBPREFIX)
+-	if not exist $(SOPREFIX) mkdir $(SOPREFIX)
+-	copy $(XML_SRCDIR)\include\libxml\*.h $(INCPREFIX)\libxml2\libxml
+-	copy $(BINDIR)\$(XML_SO) $(SOPREFIX)
+-	copy $(BINDIR)\$(XML_A) $(LIBPREFIX)
+-	copy $(BINDIR)\$(XML_A_DLL) $(LIBPREFIX)
+-	copy $(BINDIR)\$(XML_IMP) $(LIBPREFIX)
+-
+-install : install-libs 
+-	copy $(BINDIR)\*.exe $(BINPREFIX)
+-	-copy $(BINDIR)\*.pdb $(BINPREFIX)
+-
+-install-dist : install-libs 
+-	copy $(BINDIR)\xml*.exe $(BINPREFIX)
+-	-copy $(BINDIR)\xml*.pdb $(BINPREFIX)
+-
+-# This is a target for me, to make a binary distribution. Not for the public use,
+-# keep your hands off :-)
+-BDVERSION = $(LIBXML_MAJOR_VERSION).$(LIBXML_MINOR_VERSION).$(LIBXML_MICRO_VERSION)
+-BDPREFIX = $(XML_BASENAME)-$(BDVERSION).win32
+-bindist : all
+-	$(MAKE) /nologo PREFIX=$(BDPREFIX) SOPREFIX=$(BDPREFIX)\bin install-dist
+-	cscript //NoLogo configure.js genreadme $(XML_BASENAME) $(BDVERSION) $(BDPREFIX)\readme.txt
+-
+-
+-# Makes the output directory.
+-$(BINDIR) :
+-	if not exist $(BINDIR) mkdir $(BINDIR)
+-
+-
+-# Makes the libxml intermediate directory.
+-$(XML_INTDIR) :
+-	if not exist $(XML_INTDIR) mkdir $(XML_INTDIR)
+-
+-# Makes the static libxml intermediate directory.
+-$(XML_INTDIR_A) :
+-	if not exist $(XML_INTDIR_A) mkdir $(XML_INTDIR_A)
+-
+-# Makes the static for dll libxml intermediate directory.
+-$(XML_INTDIR_A_DLL) :
+-	if not exist $(XML_INTDIR_A_DLL) mkdir $(XML_INTDIR_A_DLL)
+-
+-# An implicit rule for libxml compilation.
+-{$(XML_SRCDIR)}.c{$(XML_INTDIR)}.obj::
+-	$(CC) $(CFLAGS) /Fo$(XML_INTDIR)\ /c $<
+-
+-# An implicit rule for static libxml compilation.
+-{$(XML_SRCDIR)}.c{$(XML_INTDIR_A)}.obj::
+-	$(CC) $(CFLAGS) /D "LIBXML_STATIC" /Fo$(XML_INTDIR_A)\ /c $<
+-
+-# An implicit rule for static for dll libxml compilation.
+-{$(XML_SRCDIR)}.c{$(XML_INTDIR_A_DLL)}.obj::
+-	$(CC) $(CFLAGS) /D "LIBXML_STATIC" /D "LIBXML_STATIC_FOR_DLL" /Fo$(XML_INTDIR_A_DLL)\ /c $<
+-
+-# Compiles libxml source. Uses the implicit rule for commands.
+-$(XML_OBJS) : $(XML_INTDIR) 
+-
+-# Compiles static libxml source. Uses the implicit rule for commands.
+-$(XML_OBJS_A) : $(XML_INTDIR_A) 
+-
+-# Compiles static for dll libxml source. Uses the implicit rule for commands.
+-$(XML_OBJS_A_DLL) : $(XML_INTDIR_A_DLL) 
+-
+-# Creates the export definition file (DEF) for libxml.
+-$(XML_INTDIR)\$(XML_DEF) : $(XML_INTDIR) $(XML_DEF).src
+-	$(CPP) $(CPPFLAGS) $(XML_DEF).src > $(XML_INTDIR)\$(XML_DEF)
+-$(XML_INTDIR)\$(XML_RES) : $(XML_INTDIR) libxml2.rc
+-	rc -Fo $(XML_INTDIR)\$(XML_RES) libxml2.rc
+-
+-# Creates the libxml shared object.
+-$(BINDIR)\$(XML_SO) : $(BINDIR) $(XML_OBJS) $(XML_INTDIR)\$(XML_DEF) $(XML_INTDIR)\$(XML_RES)
+-	$(LD) $(LDFLAGS) /DLL \
+-		/IMPLIB:$(BINDIR)\$(XML_IMP) /OUT:$(BINDIR)\$(XML_SO) $(XML_OBJS) $(XML_INTDIR)\$(XML_RES) $(LIBS)
+-	@$(_VC_MANIFEST_EMBED_DLL)
+-
+-#$(BINDIR)\$(XML_SO) : $(BINDIR) $(XML_OBJS) $(XML_INTDIR)\$(XML_DEF)
+-#	$(LD) $(LDFLAGS) /DLL /DEF:$(XML_INTDIR)\$(XML_DEF) \
+-#		/IMPLIB:$(BINDIR)\$(XML_IMP) /OUT:$(BINDIR)\$(XML_SO) $(XML_OBJS) $(LIBS)
+-
+-# Creates the libxml archive.
+-$(BINDIR)\$(XML_A) : $(BINDIR) $(XML_OBJS_A)
+-	$(AR) $(ARFLAGS) /OUT:$(BINDIR)\$(XML_A) $(XML_OBJS_A)
+-
+-# Creates the libxml static for dll archive.
+-$(BINDIR)\$(XML_A_DLL) : $(BINDIR) $(XML_OBJS_A_DLL)
+-	$(AR) $(ARFLAGS) /OUT:$(BINDIR)\$(XML_A_DLL) $(XML_OBJS_A_DLL)
+-
+-# Makes the utils intermediate directory.
+-$(UTILS_INTDIR) :
+-	if not exist $(UTILS_INTDIR) mkdir $(UTILS_INTDIR)
+-
+-# An implicit rule for xmllint and friends.
+-!if "$(STATIC)" == "1"
+-{$(UTILS_SRCDIR)}.c{$(BINDIR)}.exe:
+-	$(CC) /D "LIBXML_STATIC" $(CFLAGS) /Fo$(UTILS_INTDIR)\ /c $< 
+-	$(LD) $(LDFLAGS) /OUT:$@ $(XML_A) $(LIBS) $(UTILS_INTDIR)\$(<B).obj
+-	@$(_VC_MANIFEST_EMBED_EXE)
+-!else
+-{$(UTILS_SRCDIR)}.c{$(BINDIR)}.exe:
+-	$(CC) $(CFLAGS) /Fo$(UTILS_INTDIR)\ /c $< 
+-	$(LD) $(LDFLAGS) /OUT:$@ $(XML_IMP) $(LIBS) $(UTILS_INTDIR)\$(<B).obj
+-	@$(_VC_MANIFEST_EMBED_EXE)
+-!endif
+-
+-# Builds xmllint and friends. Uses the implicit rule for commands.
+-$(UTILS) : $(UTILS_INTDIR) $(BINDIR) libxml libxmla libxmladll
+-
+-# Source dependences should be autogenerated somehow here, but how to
+-# do it? I have no clue.
+-
+-# TESTS
+-
+-tests : checktests XPathtests
+-
+-checktests : $(UTILS)
+-	cd .. && win32\$(BINDIR)\runtest.exe
+-	cd .. && win32\$(BINDIR)\testrecurse.exe
+-	cd .. && win32\$(BINDIR)\testapi.exe
+-	cd .. && win32\$(BINDIR)\testchar.exe
+-	cd .. && win32\$(BINDIR)\testdict.exe
+-	cd .. && win32\$(BINDIR)\runxmlconf.exe
+-
+-XPathtests : $(BINDIR)\testXPath.exe
+-	@echo. 2> .memdump
+-	@echo ## XPath regression tests
+-	@-$(BINDIR)\testXPath.exe | find /C "support not compiled in" 1>nul
+-	@if %ERRORLEVEL% NEQ 0 @( \
+-		echo Skipping debug not compiled in\
+-		@exit 0 \
+-	)
+-	@for %%I in ($(XML_SRCDIR)\test\XPath\expr\*.*) do @( \
+-		@IF NOT EXIST $(XML_SRCDIR)\result\XPath\expr\%%~nxI ( \
+-			@echo New test %%~nxI &&\
+-			@echo %%~nxI &&\
+-			$(BINDIR)\testXPath.exe -f --expr %%I > $(XML_SRCDIR)/result/XPath/expr/%%~nxI &&\
+-			findstr /C:"MEMORY ALLOCATED : 0" \
+-		) ELSE ( \
+-			$(BINDIR)\testXPath.exe -f --expr %%I 2>&1 > result.%%~nxI &&\
+-			fc $(XML_SRCDIR)\result\XPath\expr\%%~nxI result.%%~nxI >nul &\
+-			iF ERRORLEVEL 1 exit 1 & \
+-			findstr "MEMORY ALLOCATED" .memdump | findstr /C:"MEMORY ALLOCATED : 0" >nul &&\
+-			del result.%%~nxI \
+-		) \
+-	)
+-	@for %%I in ($(XML_SRCDIR)\test\XPath\docs\*.*) do @( \
+-		for %%J in ($(XML_SRCDIR)\test\XPath\tests\%%~nxI*.*) do @( \
+-			if not exist $(XML_SRCDIR)\result\XPath\tests\%%~nxJ ( \
+-				$(BINDIR)\testXPath.exe -f -i %%I %%J > $(XML_SRCDIR)\result\XPath\tests\%%~nxJ &&\
+-				findstr /C:"MEMORY ALLOCATED" .memdump | findstr /C:"MEMORY ALLOCATED : 0" > nul \
+-			) ELSE ( \
+-				$(BINDIR)\testXPAth.exe -f -i %%I %%J 2>&1 > result.%%~nxJ &&\
+-				findstr /C:"MEMORY ALLOCATED" .memdump | findstr /C:"MEMORY ALLOCATED : 0">null &&\
+-				fc $(XML_SRCDIR)\result\XPath\tests\%%~nxJ result.%%~nxJ >null & \
+-				IF ERRORLEVEL 1 (echo Error: %%I %%J & exit 1) & \
+-				del result.%%~nxJ \
+-			)\
+-		)\
+-	)
+-
+-XMLtests : $(BINDIR)\xmllint.exe
+-	@echo. 2> .memdump
+-	@echo ## XML regression tests
+-	-@for %%I in ($(XML_SRCDIR)\test\*) do @( \
+-		if not exist $(XML_SRCDIR)\result\%%~nxI ( \
+-			echo New test file %%~nxI &\
+-			$(BINDIR)\xmllint.exe  %%I > $(XML_SRCDIR)\result\%%~nxI && \
+-			findstr /C:"MEMORY ALLOCATED" .memdump | findstr /C:"MEMORY ALLOCATED : 0" > null \
+-		) ELSE ( \
+-			$(BINDIR)\xmllint.exe %%I 2>&1 > result.%%~nxI && \
+-			findstr /C:"MEMORY ALLOC" .memdump | findstr /C:"MEMORY ALLOCATED : 0" > null && \
+-			fc $(XML_SRCDIR)\result\%%~nxI result.%%~nxI > null && \
+-			$(BINDIR)\xmllint.exe result.%%~nxI 2>&1 > result2.%%~nxI | findstr /V /C:"failed to load external entity" && \
+-			fc result.%%~nxI result2.%%~nxI & \
+-			del result.%%~nxI result2.%%~nxI\
+-		) \
+-	)	
+-
+-				
+-
+-
+-
+-	
++# Makefile for libxml2, specific for Windows, MSVC and NMAKE.
++#
++# Take a look at the beginning and modify the variables to suit your 
++# environment. Having done that, you can do a
++#
++# nmake [all]     to build the libxml and the accompanying utilities.
++# nmake clean     to remove all compiler output files and return to a
++#                 clean state.
++# nmake rebuild   to rebuild everything from scratch. This basically does
++#                 a 'nmake clean' and then a 'nmake all'.
++# nmake install   to install the library and its header files.
++#
++# March 2002, Igor Zlatkovic <igor@zlatkovic.com>
++
++# There should never be a need to modify anything below this line.
++# ----------------------------------------------------------------
++
++AUTOCONF = .\config.msvc
++!include $(AUTOCONF)
++
++# Names of various input and output components.
++XML_NAME = xml2
++XML_BASENAME = lib$(XML_NAME)
++XML_SO = $(XML_BASENAME).dll
++XML_RES = $(XML_BASENAME).res
++XML_IMP = $(XML_BASENAME).lib
++XML_DEF = $(XML_BASENAME).def
++XML_A = $(XML_BASENAME)_a.lib
++XML_A_DLL = $(XML_BASENAME)_a_dll.lib
++
++# Place where we let the compiler put its output.
++BINDIR = bin.msvc
++XML_INTDIR = int.msvc
++XML_INTDIR_A = int.a.msvc
++XML_INTDIR_A_DLL = int.a.dll.msvc
++UTILS_INTDIR = int.utils.msvc
++
++# The preprocessor and its options.
++CPP = cl.exe /EP
++CPPFLAGS = /nologo /I$(XML_SRCDIR)\include /D "NOLIBTOOL" 
++!if "$(WITH_THREADS)" != "no"
++CPPFLAGS = $(CPPFLAGS) /D "_REENTRANT"
++!endif
++
++# The compiler and its options.
++CC = cl.exe
++CFLAGS = /nologo /D "_WINDOWS" /D "_MBCS" /D "NOLIBTOOL" /W3 /wd4244 /wd4267 $(CRUNTIME)
++CFLAGS = $(CFLAGS) /I$(XML_SRCDIR) /I$(XML_SRCDIR)\include /I$(INCPREFIX)
++!if "$(WITH_THREADS)" != "no"
++CFLAGS = $(CFLAGS) /D "_REENTRANT"
++!endif
++!if "$(WITH_THREADS)" == "yes" || "$(WITH_THREADS)" == "ctls"
++CFLAGS = $(CFLAGS) /D "HAVE_WIN32_THREADS" /D "HAVE_COMPILER_TLS"
++!else if "$(WITH_THREADS)" == "native"
++CFLAGS = $(CFLAGS) /D "HAVE_WIN32_THREADS"
++!else if "$(WITH_THREADS)" == "posix"
++CFLAGS = $(CFLAGS) /D "HAVE_PTHREAD_H"
++!endif
++CFLAGS = $(CFLAGS) /D_CRT_SECURE_NO_DEPRECATE /D_CRT_NONSTDC_NO_DEPRECATE
++
++# The linker and its options.
++LD = link.exe
++LDFLAGS = /nologo /VERSION:$(LIBXML_MAJOR_VERSION).$(LIBXML_MINOR_VERSION)
++LDFLAGS = $(LDFLAGS) /LIBPATH:$(BINDIR) /LIBPATH:$(LIBPREFIX)
++LIBS =
++!if "$(WITH_FTP)" == "1" || "$(WITH_HTTP)" == "1"
++LIBS = $(LIBS) wsock32.lib ws2_32.lib
++!endif 
++!if "$(WITH_ICONV)" == "1"
++LIBS = $(LIBS) libiconv.lib libcharset.lib
++!endif 
++!if "$(WITH_ICU)" == "1"
++!if "$(STATIC)" == "1"
++LIBS = $(LIBS) advapi32.lib sicuuc.lib sicuin.lib sicudt.lib
++!else
++LIBS = $(LIBS) icuuc.lib icuin.lib icudt.lib
++!endif
++!endif
++!if "$(WITH_ZLIB)" == "1"
++# could be named differently zdll or zlib
++# LIBS = $(LIBS) zdll.lib
++LIBS = $(LIBS) zlib.lib
++!endif
++!if "$(WITH_LZMA)" == "1"
++LIBS = $(LIBS) liblzma.lib
++!endif
++!if "$(WITH_THREADS)" == "posix"
++LIBS = $(LIBS) pthreadVC.lib
++!endif
++!if "$(WITH_MODULES)" == "1"
++LIBS = $(LIBS) kernel32.lib
++!endif
++
++# The archiver and its options.
++AR = lib.exe
++ARFLAGS = /nologo
++
++# Optimisation and debug symbols.
++!if "$(DEBUG)" == "1"
++CFLAGS = $(CFLAGS) /D "_DEBUG" /Od /Z7
++LDFLAGS = $(LDFLAGS) /DEBUG
++!else
++CFLAGS = $(CFLAGS) /D "NDEBUG" /O2 
++# commented out as this break VC10 c.f. 634846
++# LDFLAGS = $(LDFLAGS) /OPT:NOWIN98
++LDFLAGS = $(LDFLAGS)
++!endif
++
++# append CFLAGS etc. passed on command line
++CPPFLAGS = $(CPPFLAGS) $(EXTRA_CPPFLAGS)
++CFLAGS = $(CFLAGS) $(EXTRA_CFLAGS)
++LDFLAGS = $(LDFLAGS) $(EXTRA_LDFLAGS)
++
++# Libxml object files.
++XML_OBJS = $(XML_INTDIR)\buf.obj\
++	$(XML_INTDIR)\c14n.obj\
++	$(XML_INTDIR)\catalog.obj\
++	$(XML_INTDIR)\chvalid.obj\
++	$(XML_INTDIR)\debugXML.obj\
++	$(XML_INTDIR)\dict.obj\
++	$(XML_INTDIR)\DOCBparser.obj\
++	$(XML_INTDIR)\encoding.obj\
++	$(XML_INTDIR)\entities.obj\
++	$(XML_INTDIR)\error.obj\
++	$(XML_INTDIR)\globals.obj\
++	$(XML_INTDIR)\hash.obj\
++	$(XML_INTDIR)\HTMLparser.obj\
++	$(XML_INTDIR)\HTMLtree.obj\
++	$(XML_INTDIR)\legacy.obj\
++	$(XML_INTDIR)\list.obj\
++	$(XML_INTDIR)\nanoftp.obj\
++	$(XML_INTDIR)\nanohttp.obj\
++	$(XML_INTDIR)\parser.obj\
++	$(XML_INTDIR)\parserInternals.obj\
++	$(XML_INTDIR)\pattern.obj\
++	$(XML_INTDIR)\relaxng.obj\
++	$(XML_INTDIR)\SAX2.obj\
++	$(XML_INTDIR)\SAX.obj\
++	$(XML_INTDIR)\schematron.obj\
++	$(XML_INTDIR)\threads.obj\
++	$(XML_INTDIR)\tree.obj\
++	$(XML_INTDIR)\uri.obj\
++	$(XML_INTDIR)\valid.obj\
++	$(XML_INTDIR)\xinclude.obj\
++	$(XML_INTDIR)\xlink.obj\
++	$(XML_INTDIR)\xmlIO.obj\
++	$(XML_INTDIR)\xmlmemory.obj\
++	$(XML_INTDIR)\xmlreader.obj\
++	$(XML_INTDIR)\xmlregexp.obj\
++	$(XML_INTDIR)\xmlmodule.obj\
++	$(XML_INTDIR)\xmlsave.obj\
++	$(XML_INTDIR)\xmlschemas.obj\
++	$(XML_INTDIR)\xmlschemastypes.obj\
++	$(XML_INTDIR)\xmlunicode.obj\
++	$(XML_INTDIR)\xmlwriter.obj\
++	$(XML_INTDIR)\xpath.obj\
++	$(XML_INTDIR)\xpointer.obj\
++	$(XML_INTDIR)\xmlstring.obj
++
++# Static libxml object files.
++XML_OBJS_A = $(XML_INTDIR_A)\buf.obj\
++	$(XML_INTDIR_A)\c14n.obj\
++	$(XML_INTDIR_A)\catalog.obj\
++	$(XML_INTDIR_A)\chvalid.obj\
++	$(XML_INTDIR_A)\debugXML.obj\
++	$(XML_INTDIR_A)\dict.obj\
++	$(XML_INTDIR_A)\DOCBparser.obj\
++	$(XML_INTDIR_A)\encoding.obj\
++	$(XML_INTDIR_A)\entities.obj\
++	$(XML_INTDIR_A)\error.obj\
++	$(XML_INTDIR_A)\globals.obj\
++	$(XML_INTDIR_A)\hash.obj\
++	$(XML_INTDIR_A)\HTMLparser.obj\
++	$(XML_INTDIR_A)\HTMLtree.obj\
++	$(XML_INTDIR_A)\legacy.obj\
++	$(XML_INTDIR_A)\list.obj\
++	$(XML_INTDIR_A)\nanoftp.obj\
++	$(XML_INTDIR_A)\nanohttp.obj\
++	$(XML_INTDIR_A)\parser.obj\
++	$(XML_INTDIR_A)\parserInternals.obj\
++	$(XML_INTDIR_A)\pattern.obj\
++	$(XML_INTDIR_A)\relaxng.obj\
++	$(XML_INTDIR_A)\SAX2.obj\
++	$(XML_INTDIR_A)\SAX.obj\
++	$(XML_INTDIR_A)\schematron.obj\
++	$(XML_INTDIR_A)\threads.obj\
++	$(XML_INTDIR_A)\tree.obj\
++	$(XML_INTDIR_A)\uri.obj\
++	$(XML_INTDIR_A)\valid.obj\
++	$(XML_INTDIR_A)\xinclude.obj\
++	$(XML_INTDIR_A)\xlink.obj\
++	$(XML_INTDIR_A)\xmlIO.obj\
++	$(XML_INTDIR_A)\xmlmemory.obj\
++	$(XML_INTDIR_A)\xmlreader.obj\
++	$(XML_INTDIR_A)\xmlregexp.obj\
++	$(XML_INTDIR_A)\xmlmodule.obj\
++	$(XML_INTDIR_A)\xmlsave.obj\
++	$(XML_INTDIR_A)\xmlschemas.obj\
++	$(XML_INTDIR_A)\xmlschemastypes.obj\
++	$(XML_INTDIR_A)\xmlunicode.obj\
++	$(XML_INTDIR_A)\xmlwriter.obj\
++	$(XML_INTDIR_A)\xpath.obj\
++	$(XML_INTDIR_A)\xpointer.obj\
++	$(XML_INTDIR_A)\xmlstring.obj
++
++# Static libxml object files.
++XML_OBJS_A_DLL = $(XML_INTDIR_A_DLL)\buf.obj\
++	$(XML_INTDIR_A_DLL)\c14n.obj\
++	$(XML_INTDIR_A_DLL)\catalog.obj\
++	$(XML_INTDIR_A_DLL)\chvalid.obj\
++	$(XML_INTDIR_A_DLL)\debugXML.obj\
++	$(XML_INTDIR_A_DLL)\dict.obj\
++	$(XML_INTDIR_A_DLL)\DOCBparser.obj\
++	$(XML_INTDIR_A_DLL)\encoding.obj\
++	$(XML_INTDIR_A_DLL)\entities.obj\
++	$(XML_INTDIR_A_DLL)\error.obj\
++	$(XML_INTDIR_A_DLL)\globals.obj\
++	$(XML_INTDIR_A_DLL)\hash.obj\
++	$(XML_INTDIR_A_DLL)\HTMLparser.obj\
++	$(XML_INTDIR_A_DLL)\HTMLtree.obj\
++	$(XML_INTDIR_A_DLL)\legacy.obj\
++	$(XML_INTDIR_A_DLL)\list.obj\
++	$(XML_INTDIR_A_DLL)\nanoftp.obj\
++	$(XML_INTDIR_A_DLL)\nanohttp.obj\
++	$(XML_INTDIR_A_DLL)\parser.obj\
++	$(XML_INTDIR_A_DLL)\parserInternals.obj\
++	$(XML_INTDIR_A_DLL)\pattern.obj\
++	$(XML_INTDIR_A_DLL)\relaxng.obj\
++	$(XML_INTDIR_A_DLL)\SAX2.obj\
++	$(XML_INTDIR_A_DLL)\SAX.obj\
++	$(XML_INTDIR_A_DLL)\schematron.obj\
++	$(XML_INTDIR_A_DLL)\threads.obj\
++	$(XML_INTDIR_A_DLL)\tree.obj\
++	$(XML_INTDIR_A_DLL)\uri.obj\
++	$(XML_INTDIR_A_DLL)\valid.obj\
++	$(XML_INTDIR_A_DLL)\xinclude.obj\
++	$(XML_INTDIR_A_DLL)\xlink.obj\
++	$(XML_INTDIR_A_DLL)\xmlIO.obj\
++	$(XML_INTDIR_A_DLL)\xmlmemory.obj\
++	$(XML_INTDIR_A_DLL)\xmlreader.obj\
++	$(XML_INTDIR_A_DLL)\xmlregexp.obj\
++	$(XML_INTDIR_A_DLL)\xmlmodule.obj\
++	$(XML_INTDIR_A_DLL)\xmlsave.obj\
++	$(XML_INTDIR_A_DLL)\xmlschemas.obj\
++	$(XML_INTDIR_A_DLL)\xmlschemastypes.obj\
++	$(XML_INTDIR_A_DLL)\xmlunicode.obj\
++	$(XML_INTDIR_A_DLL)\xmlwriter.obj\
++	$(XML_INTDIR_A_DLL)\xpath.obj\
++	$(XML_INTDIR_A_DLL)\xpointer.obj\
++	$(XML_INTDIR_A_DLL)\xmlstring.obj
++
++!if "$(WITH_LZMA)" == "1"
++XML_OBJS = $(XML_OBJS) $(XML_INTDIR)\xzlib.obj
++XML_OBJS_A = $(XML_OBJS_A) $(XML_INTDIR_A)\xzlib.obj
++XML_OBJS_A_DLL = $(XML_OBJS_A_DLL) $(XML_INTDIR_A_DLL)\xzlib.obj
++!endif
++
++# Xmllint and friends executables.
++UTILS = $(BINDIR)\xmllint.exe\
++	$(BINDIR)\xmlcatalog.exe\
++	$(BINDIR)\testAutomata.exe\
++	$(BINDIR)\testC14N.exe\
++	$(BINDIR)\testDocbook.exe\
++	$(BINDIR)\testHTML.exe\
++	$(BINDIR)\testReader.exe\
++	$(BINDIR)\testRelax.exe\
++	$(BINDIR)\testRegexp.exe\
++	$(BINDIR)\testModule.exe\
++	$(BINDIR)\testSAX.exe\
++	$(BINDIR)\testSchemas.exe\
++	$(BINDIR)\testURI.exe\
++	$(BINDIR)\testXPath.exe\
++	$(BINDIR)\runtest.exe\
++	$(BINDIR)\runsuite.exe\
++	$(BINDIR)\runxmlconf.exe\
++	$(BINDIR)\testapi.exe\
++	$(BINDIR)\testchar.exe\
++	$(BINDIR)\testdict.exe\
++	$(BINDIR)\testlimits.exe\
++	$(BINDIR)\testrecurse.exe
++	
++!if "$(WITH_THREADS)" != "no"
++UTILS = $(UTILS) $(BINDIR)\testThreads.exe
++!endif
++
++!if "$(VCMANIFEST)" == "1"
++_VC_MANIFEST_EMBED_EXE= if exist $@.manifest mt.exe -nologo -manifest $@.manifest -outputresource:$@;1
++_VC_MANIFEST_EMBED_DLL= if exist $@.manifest mt.exe -nologo -manifest $@.manifest -outputresource:$@;2
++!else
++_VC_MANIFEST_EMBED_EXE=
++_VC_MANIFEST_EMBED_DLL=
++!endif
++
++all : libxml libxmla libxmladll utils
++
++libxml : $(BINDIR)\$(XML_SO) 
++
++libxmla : $(BINDIR)\$(XML_A)
++
++libxmladll : $(BINDIR)\$(XML_A_DLL)
++
++utils : $(UTILS)
++
++clean :
++	if exist $(XML_INTDIR) rmdir /S /Q $(XML_INTDIR)
++	if exist $(XML_INTDIR_A) rmdir /S /Q $(XML_INTDIR_A)
++	if exist $(XML_INTDIR_A_DLL) rmdir /S /Q $(XML_INTDIR_A_DLL)
++	if exist $(UTILS_INTDIR) rmdir /S /Q $(UTILS_INTDIR)
++	if exist $(BINDIR) rmdir /S /Q $(BINDIR)
++
++distclean : clean
++	if exist config.* del config.*
++	if exist Makefile del Makefile
++
++rebuild : clean all
++
++install-libs : all
++	if not exist $(INCPREFIX)\libxml2 mkdir $(INCPREFIX)\libxml2
++	if not exist $(INCPREFIX)\libxml2\libxml mkdir $(INCPREFIX)\libxml2\libxml
++	if not exist $(BINPREFIX) mkdir $(BINPREFIX)
++	if not exist $(LIBPREFIX) mkdir $(LIBPREFIX)
++	if not exist $(SOPREFIX) mkdir $(SOPREFIX)
++	copy $(XML_SRCDIR)\include\libxml\*.h $(INCPREFIX)\libxml2\libxml
++	copy $(BINDIR)\$(XML_SO) $(SOPREFIX)
++	copy $(BINDIR)\$(XML_A) $(LIBPREFIX)
++	copy $(BINDIR)\$(XML_A_DLL) $(LIBPREFIX)
++	copy $(BINDIR)\$(XML_IMP) $(LIBPREFIX)
++
++install : install-libs 
++	copy $(BINDIR)\*.exe $(BINPREFIX)
++	-copy $(BINDIR)\*.pdb $(BINPREFIX)
++
++install-dist : install-libs 
++	copy $(BINDIR)\xml*.exe $(BINPREFIX)
++	-copy $(BINDIR)\xml*.pdb $(BINPREFIX)
++
++# This is a target for me, to make a binary distribution. Not for the public use,
++# keep your hands off :-)
++BDVERSION = $(LIBXML_MAJOR_VERSION).$(LIBXML_MINOR_VERSION).$(LIBXML_MICRO_VERSION)
++BDPREFIX = $(XML_BASENAME)-$(BDVERSION).win32
++bindist : all
++	$(MAKE) /nologo PREFIX=$(BDPREFIX) SOPREFIX=$(BDPREFIX)\bin install-dist
++	cscript //NoLogo configure.js genreadme $(XML_BASENAME) $(BDVERSION) $(BDPREFIX)\readme.txt
++
++
++# Makes the output directory.
++$(BINDIR) :
++	if not exist $(BINDIR) mkdir $(BINDIR)
++
++
++# Makes the libxml intermediate directory.
++$(XML_INTDIR) :
++	if not exist $(XML_INTDIR) mkdir $(XML_INTDIR)
++
++# Makes the static libxml intermediate directory.
++$(XML_INTDIR_A) :
++	if not exist $(XML_INTDIR_A) mkdir $(XML_INTDIR_A)
++
++# Makes the static for dll libxml intermediate directory.
++$(XML_INTDIR_A_DLL) :
++	if not exist $(XML_INTDIR_A_DLL) mkdir $(XML_INTDIR_A_DLL)
++
++# An implicit rule for libxml compilation.
++{$(XML_SRCDIR)}.c{$(XML_INTDIR)}.obj::
++	$(CC) $(CFLAGS) /Fo$(XML_INTDIR)\ /c $<
++
++# An implicit rule for static libxml compilation.
++{$(XML_SRCDIR)}.c{$(XML_INTDIR_A)}.obj::
++	$(CC) $(CFLAGS) /D "LIBXML_STATIC" /Fo$(XML_INTDIR_A)\ /c $<
++
++# An implicit rule for static for dll libxml compilation.
++{$(XML_SRCDIR)}.c{$(XML_INTDIR_A_DLL)}.obj::
++	$(CC) $(CFLAGS) /D "LIBXML_STATIC" /D "LIBXML_STATIC_FOR_DLL" /Fo$(XML_INTDIR_A_DLL)\ /c $<
++
++# Compiles libxml source. Uses the implicit rule for commands.
++$(XML_OBJS) : $(XML_INTDIR) 
++
++# Compiles static libxml source. Uses the implicit rule for commands.
++$(XML_OBJS_A) : $(XML_INTDIR_A) 
++
++# Compiles static for dll libxml source. Uses the implicit rule for commands.
++$(XML_OBJS_A_DLL) : $(XML_INTDIR_A_DLL) 
++
++# Creates the export definition file (DEF) for libxml.
++$(XML_INTDIR)\$(XML_DEF) : $(XML_INTDIR) $(XML_DEF).src
++	$(CPP) $(CPPFLAGS) $(XML_DEF).src > $(XML_INTDIR)\$(XML_DEF)
++$(XML_INTDIR)\$(XML_RES) : $(XML_INTDIR) libxml2.rc
++	rc -Fo $(XML_INTDIR)\$(XML_RES) libxml2.rc
++
++# Creates the libxml shared object.
++$(BINDIR)\$(XML_SO) : $(BINDIR) $(XML_OBJS) $(XML_INTDIR)\$(XML_DEF) $(XML_INTDIR)\$(XML_RES)
++	$(LD) $(LDFLAGS) /DLL \
++		/IMPLIB:$(BINDIR)\$(XML_IMP) /OUT:$(BINDIR)\$(XML_SO) $(XML_OBJS) $(XML_INTDIR)\$(XML_RES) $(LIBS)
++	@$(_VC_MANIFEST_EMBED_DLL)
++
++#$(BINDIR)\$(XML_SO) : $(BINDIR) $(XML_OBJS) $(XML_INTDIR)\$(XML_DEF)
++#	$(LD) $(LDFLAGS) /DLL /DEF:$(XML_INTDIR)\$(XML_DEF) \
++#		/IMPLIB:$(BINDIR)\$(XML_IMP) /OUT:$(BINDIR)\$(XML_SO) $(XML_OBJS) $(LIBS)
++
++# Creates the libxml archive.
++$(BINDIR)\$(XML_A) : $(BINDIR) $(XML_OBJS_A)
++	$(AR) $(ARFLAGS) /OUT:$(BINDIR)\$(XML_A) $(XML_OBJS_A)
++
++# Creates the libxml static for dll archive.
++$(BINDIR)\$(XML_A_DLL) : $(BINDIR) $(XML_OBJS_A_DLL)
++	$(AR) $(ARFLAGS) /OUT:$(BINDIR)\$(XML_A_DLL) $(XML_OBJS_A_DLL)
++
++# Makes the utils intermediate directory.
++$(UTILS_INTDIR) :
++	if not exist $(UTILS_INTDIR) mkdir $(UTILS_INTDIR)
++
++# An implicit rule for xmllint and friends.
++!if "$(STATIC)" == "1"
++{$(UTILS_SRCDIR)}.c{$(BINDIR)}.exe:
++	$(CC) /D "LIBXML_STATIC" $(CFLAGS) /Fo$(UTILS_INTDIR)\ /c $< 
++	$(LD) $(LDFLAGS) /OUT:$@ $(XML_A) $(LIBS) $(UTILS_INTDIR)\$(<B).obj
++	@$(_VC_MANIFEST_EMBED_EXE)
++!else
++{$(UTILS_SRCDIR)}.c{$(BINDIR)}.exe:
++	$(CC) $(CFLAGS) /Fo$(UTILS_INTDIR)\ /c $< 
++	$(LD) $(LDFLAGS) /OUT:$@ $(XML_IMP) $(LIBS) $(UTILS_INTDIR)\$(<B).obj
++	@$(_VC_MANIFEST_EMBED_EXE)
++!endif
++
++# Builds xmllint and friends. Uses the implicit rule for commands.
++$(UTILS) : $(UTILS_INTDIR) $(BINDIR) libxml libxmla libxmladll
++
++# Source dependences should be autogenerated somehow here, but how to
++# do it? I have no clue.
++
++# TESTS
++
++tests : checktests XPathtests
++
++checktests : $(UTILS)
++	cd .. && win32\$(BINDIR)\runtest.exe
++	cd .. && win32\$(BINDIR)\testrecurse.exe
++	cd .. && win32\$(BINDIR)\testapi.exe
++	cd .. && win32\$(BINDIR)\testchar.exe
++	cd .. && win32\$(BINDIR)\testdict.exe
++	cd .. && win32\$(BINDIR)\runxmlconf.exe
++
++XPathtests : $(BINDIR)\testXPath.exe
++	@echo. 2> .memdump
++	@echo ## XPath regression tests
++	@-$(BINDIR)\testXPath.exe | find /C "support not compiled in" 1>nul
++	@if %ERRORLEVEL% NEQ 0 @( \
++		echo Skipping debug not compiled in\
++		@exit 0 \
++	)
++	@for %%I in ($(XML_SRCDIR)\test\XPath\expr\*.*) do @( \
++		@IF NOT EXIST $(XML_SRCDIR)\result\XPath\expr\%%~nxI ( \
++			@echo New test %%~nxI &&\
++			@echo %%~nxI &&\
++			$(BINDIR)\testXPath.exe -f --expr %%I > $(XML_SRCDIR)/result/XPath/expr/%%~nxI &&\
++			findstr /C:"MEMORY ALLOCATED : 0" \
++		) ELSE ( \
++			$(BINDIR)\testXPath.exe -f --expr %%I 2>&1 > result.%%~nxI &&\
++			fc $(XML_SRCDIR)\result\XPath\expr\%%~nxI result.%%~nxI >nul &\
++			iF ERRORLEVEL 1 exit 1 & \
++			findstr "MEMORY ALLOCATED" .memdump | findstr /C:"MEMORY ALLOCATED : 0" >nul &&\
++			del result.%%~nxI \
++		) \
++	)
++	@for %%I in ($(XML_SRCDIR)\test\XPath\docs\*.*) do @( \
++		for %%J in ($(XML_SRCDIR)\test\XPath\tests\%%~nxI*.*) do @( \
++			if not exist $(XML_SRCDIR)\result\XPath\tests\%%~nxJ ( \
++				$(BINDIR)\testXPath.exe -f -i %%I %%J > $(XML_SRCDIR)\result\XPath\tests\%%~nxJ &&\
++				findstr /C:"MEMORY ALLOCATED" .memdump | findstr /C:"MEMORY ALLOCATED : 0" > nul \
++			) ELSE ( \
++				$(BINDIR)\testXPAth.exe -f -i %%I %%J 2>&1 > result.%%~nxJ &&\
++				findstr /C:"MEMORY ALLOCATED" .memdump | findstr /C:"MEMORY ALLOCATED : 0">null &&\
++				fc $(XML_SRCDIR)\result\XPath\tests\%%~nxJ result.%%~nxJ >null & \
++				IF ERRORLEVEL 1 (echo Error: %%I %%J & exit 1) & \
++				del result.%%~nxJ \
++			)\
++		)\
++	)
++
++XMLtests : $(BINDIR)\xmllint.exe
++	@echo. 2> .memdump
++	@echo ## XML regression tests
++	-@for %%I in ($(XML_SRCDIR)\test\*) do @( \
++		if not exist $(XML_SRCDIR)\result\%%~nxI ( \
++			echo New test file %%~nxI &\
++			$(BINDIR)\xmllint.exe  %%I > $(XML_SRCDIR)\result\%%~nxI && \
++			findstr /C:"MEMORY ALLOCATED" .memdump | findstr /C:"MEMORY ALLOCATED : 0" > null \
++		) ELSE ( \
++			$(BINDIR)\xmllint.exe %%I 2>&1 > result.%%~nxI && \
++			findstr /C:"MEMORY ALLOC" .memdump | findstr /C:"MEMORY ALLOCATED : 0" > null && \
++			fc $(XML_SRCDIR)\result\%%~nxI result.%%~nxI > null && \
++			$(BINDIR)\xmllint.exe result.%%~nxI 2>&1 > result2.%%~nxI | findstr /V /C:"failed to load external entity" && \
++			fc result.%%~nxI result2.%%~nxI & \
++			del result.%%~nxI result2.%%~nxI\
++		) \
++	)	
++
++				
++
++
++
++	
+diff --git a/win32/configure.js b/win32/configure.js
+index e2ab31da..725f7b32 100644
+--- a/win32/configure.js
++++ b/win32/configure.js
+@@ -1,718 +1,718 @@
+-/* Configure script for libxml, specific for Windows with Scripting Host.
+- * 
+- * This script will configure the libxml build process and create necessary files.
+- * Run it with an 'help', or an invalid option and it will tell you what options
+- * it accepts.
+- *
+- * March 2002, Igor Zlatkovic <igor@zlatkovic.com>
+- */
+-
+-/* The source directory, relative to the one where this file resides. */
+-var srcDirXml = "..";
+-var srcDirUtils = "..";
+-/* Base name of what we are building. */
+-var baseName = "libxml2";
+-/* Configure file which contains the version and the output file where
+-   we can store our build configuration. */
+-var configFile = srcDirXml + "\\configure.ac";
+-var versionFile = ".\\config.msvc";
+-/* Input and output files regarding the libxml features. */
+-var optsFileIn = srcDirXml + "\\include\\libxml\\xmlversion.h.in";
+-var optsFile = srcDirXml + "\\include\\libxml\\xmlversion.h";
+-/* Version strings for the binary distribution. Will be filled later 
+-   in the code. */
+-var verMajor;
+-var verMinor;
+-var verMicro;
+-var verMicroSuffix;
+-var verCvs;
+-var useCvsVer = true;
+-/* Libxml features. */
+-var withTrio = false;
+-var withThreads = "native";
+-var withFtp = true;
+-var withHttp = true;
+-var withHtml = true;
+-var withC14n = true;
+-var withCatalog = true;
+-var withDocb = true;
+-var withXpath = true;
+-var withXptr = true;
+-var withXinclude = true;
+-var withIconv = true;
+-var withIcu = false;
+-var withIso8859x = false;
+-var withZlib = false;
+-var withLzma = false;
+-var withDebug = true;
+-var withMemDebug = false;
+-var withRunDebug = false;
+-var withSchemas = true;
+-var withSchematron = true;
+-var withRegExps = true;
+-var withModules = true;
+-var withTree = true;
+-var withReader = true;
+-var withWriter = true;
+-var withWalker = true;
+-var withPattern = true;
+-var withPush = true;
+-var withValid = true;
+-var withSax1 = true;
+-var withLegacy = true;
+-var withOutput = true;
+-var withPython = false;
+-/* Win32 build options. */
+-var dirSep = "\\";
+-var compiler = "msvc";
+-var cruntime = "/MD";
+-var dynruntime = true;
+-var vcmanifest = false;
+-var buildDebug = 0;
+-var buildStatic = 0;
+-var buildPrefix = ".";
+-var buildBinPrefix = "";
+-var buildIncPrefix = "";
+-var buildLibPrefix = "";
+-var buildSoPrefix = "";
+-var buildInclude = ".";
+-var buildLib = ".";
+-/* Local stuff */
+-var error = 0;
+-
+-/* Helper function, transforms the option variable into the 'Enabled'
+-   or 'Disabled' string. */
+-function boolToStr(opt)
+-{
+-	if (opt == false)
+-		return "no";
+-	else if (opt == true)
+-		return "yes";
+-	error = 1;
+-	return "*** undefined ***";
+-}
+-
+-/* Helper function, transforms the argument string into a boolean
+-   value. */
+-function strToBool(opt)
+-{
+-	if (opt == 0 || opt == "no")
+-		return false;
+-	else if (opt == 1 || opt == "yes")
+-		return true;
+-	error = 1;
+-	return false;
+-}
+-
+-/* Displays the details about how to use this script. */
+-function usage()
+-{
+-	var txt;
+-	txt = "Usage:\n";
+-	txt += "  cscript " + WScript.ScriptName + " <options>\n";
+-	txt += "  cscript " + WScript.ScriptName + " help\n\n";
+-	txt += "Options can be specified in the form <option>=<value>, where the value is\n";
+-	txt += "either 'yes' or 'no', if not stated otherwise.\n\n";
+-	txt += "\nXML processor options, default value given in parentheses:\n\n";
+-	txt += "  trio:       Enable TRIO string manipulator (" + (withTrio? "yes" : "no")  + ")\n";
+-	txt += "  threads:    Enable thread safety [no|ctls|native|posix] (" + (withThreads)  + ") \n";
+-	txt += "  ftp:        Enable FTP client (" + (withFtp? "yes" : "no")  + ")\n";
+-	txt += "  http:       Enable HTTP client (" + (withHttp? "yes" : "no")  + ")\n";
+-	txt += "  html:       Enable HTML processor (" + (withHtml? "yes" : "no")  + ")\n";
+-	txt += "  c14n:       Enable C14N support (" + (withC14n? "yes" : "no")  + ")\n";
+-	txt += "  catalog:    Enable catalog support (" + (withCatalog? "yes" : "no")  + ")\n";
+-	txt += "  docb:       Enable DocBook support (" + (withDocb? "yes" : "no")  + ")\n";
+-	txt += "  xpath:      Enable XPath support (" + (withXpath? "yes" : "no")  + ")\n";
+-	txt += "  xptr:       Enable XPointer support (" + (withXptr? "yes" : "no")  + ")\n";
+-	txt += "  xinclude:   Enable XInclude support (" + (withXinclude? "yes" : "no")  + ")\n";
+-	txt += "  iconv:      Enable iconv support (" + (withIconv? "yes" : "no")  + ")\n";
+-	txt += "  icu:        Enable icu support (" + (withIcu? "yes" : "no")  + ")\n";
+-	txt += "  iso8859x:   Enable ISO8859X support (" + (withIso8859x? "yes" : "no")  + ")\n";
+-	txt += "  zlib:       Enable zlib support (" + (withZlib? "yes" : "no")  + ")\n";
+-	txt += "  lzma:       Enable lzma support (" + (withLzma? "yes" : "no")  + ")\n";
+-	txt += "  xml_debug:  Enable XML debbugging module (" + (withDebug? "yes" : "no")  + ")\n";
+-	txt += "  mem_debug:  Enable memory debugger (" + (withMemDebug? "yes" : "no")  + ")\n";
+-	txt += "  run_debug:  Enable memory debugger (" + (withRunDebug? "yes" : "no")  + ")\n";
+-	txt += "  regexps:    Enable regular expressions (" + (withRegExps? "yes" : "no") + ")\n";
+-	txt += "  modules:    Enable module support (" + (withModules? "yes" : "no") + ")\n";
+-	txt += "  tree:       Enable tree api (" + (withTree? "yes" : "no") + ")\n";
+-	txt += "  reader:     Enable xmlReader api (" + (withReader? "yes" : "no") + ")\n";
+-	txt += "  writer:     Enable xmlWriter api (" + (withWriter? "yes" : "no") + ")\n";
+-	txt += "  walker:     Enable xmlDocWalker api (" + (withWalker? "yes" : "no") + ")\n";
+-	txt += "  pattern:    Enable xmlPattern api (" + (withPattern? "yes" : "no")  + ")\n";
+-	txt += "  push:       Enable push api (" + (withPush? "yes" : "no") + ")\n";
+-	txt += "  valid:      Enable DTD validation support (" + (withValid? "yes" : "no") + ")\n";
+-	txt += "  sax1:       Enable SAX1 api (" + (withSax1? "yes" : "no") + ")\n";
+-	txt += "  legacy:     Enable Deprecated api's (" + (withLegacy? "yes" : "no") + ")\n";
+-	txt += "  output:     Enable serialization support (" + (withOutput? "yes" : "no") + ")\n";
+-	txt += "  schemas:    Enable XML Schema support (" + (withSchemas? "yes" : "no")  + ")\n";
+-	txt += "  schematron: Enable Schematron support (" + (withSchematron? "yes" : "no")  + ")\n";
+-	txt += "  python:     Build Python bindings (" + (withPython? "yes" : "no")  + ")\n";
+-	txt += "\nWin32 build options, default value given in parentheses:\n\n";
+-	txt += "  compiler:   Compiler to be used [msvc|mingw|bcb] (" + compiler + ")\n";
+-	txt += "  cruntime:   C-runtime compiler option (only msvc) (" + cruntime + ")\n";
+-	txt += "  dynruntime: Use the dynamic RTL (only bcb) (" + dynruntime + ")\n";
+-	txt += "  vcmanifest: Embed VC manifest (only msvc) (" + (vcmanifest? "yes" : "no") + ")\n";
+-	txt += "  debug:      Build unoptimised debug executables (" + (buildDebug? "yes" : "no")  + ")\n";
+-	txt += "  static:     Link xmllint statically to libxml2 (" + (buildStatic? "yes" : "no")  + ")\n";
+-	txt += "              Note: automatically enabled if cruntime is not /MD or /MDd\n";
+-	txt += "  prefix:     Base directory for the installation (" + buildPrefix + ")\n";
+-	txt += "  bindir:     Directory where xmllint and friends should be installed\n";
+-	txt += "              (" + buildBinPrefix + ")\n";
+-	txt += "  incdir:     Directory where headers should be installed\n";
+-	txt += "              (" + buildIncPrefix + ")\n";
+-	txt += "  libdir:     Directory where static and import libraries should be\n";
+-	txt += "              installed (" + buildLibPrefix + ")\n";
+-	txt += "  sodir:      Directory where shared libraries should be installed\n"; 
+-	txt += "              (" + buildSoPrefix + ")\n";
+-	txt += "  include:    Additional search path for the compiler, particularly\n";
+-	txt += "              where iconv headers can be found (" + buildInclude + ")\n";
+-	txt += "  lib:        Additional search path for the linker, particularly\n";
+-	txt += "              where iconv library can be found (" + buildLib + ")\n";
+-	WScript.Echo(txt);
+-}
+-
+-/* Discovers the version we are working with by reading the appropriate
+-   configuration file. Despite its name, this also writes the configuration
+-   file included by our makefile. */
+-function discoverVersion()
+-{
+-	var fso, cf, vf, ln, s, iDot, iSlash;
+-	fso = new ActiveXObject("Scripting.FileSystemObject");
+-	verCvs = "";
+-	if (useCvsVer && fso.FileExists("..\\CVS\\Entries")) {
+-		cf = fso.OpenTextFile("..\\CVS\\Entries", 1);
+-		while (cf.AtEndOfStream != true) {
+-			ln = cf.ReadLine();
+-			s = new String(ln);
+-			if (s.search(/^\/ChangeLog\//) != -1) {
+-				iDot = s.indexOf(".");
+-				iSlash = s.indexOf("/", iDot);
+-				verCvs = "CVS" + s.substring(iDot + 1, iSlash);
+-				break;
+-			}
+-		}
+-		cf.Close();
+-	}
+-	cf = fso.OpenTextFile(configFile, 1);
+-	if (compiler == "msvc")
+-		versionFile = ".\\config.msvc";
+-	else if (compiler == "mingw")
+-		versionFile = ".\\config.mingw";
+-	else if (compiler == "bcb")
+-		versionFile = ".\\config.bcb";
+-	vf = fso.CreateTextFile(versionFile, true);
+-	vf.WriteLine("# " + versionFile);
+-	vf.WriteLine("# This file is generated automatically by " + WScript.ScriptName + ".");
+-	vf.WriteBlankLines(1);
+-	while (cf.AtEndOfStream != true) {
+-		ln = cf.ReadLine();
+-		s = new String(ln);
+-		if (s.search(/^LIBXML_MAJOR_VERSION=/) != -1) {
+-			vf.WriteLine(s);
+-			verMajor = s.substring(s.indexOf("=") + 1, s.length);
+-		} else if(s.search(/^LIBXML_MINOR_VERSION=/) != -1) {
+-			vf.WriteLine(s);
+-			verMinor = s.substring(s.indexOf("=") + 1, s.length);
+-		} else if(s.search(/^LIBXML_MICRO_VERSION=/) != -1) {
+-			vf.WriteLine(s);
+-			verMicro = s.substring(s.indexOf("=") + 1, s.length);
+-		} else if(s.search(/^LIBXML_MICRO_VERSION_SUFFIX=/) != -1) {
+-			vf.WriteLine(s);
+-			verMicroSuffix = s.substring(s.indexOf("=") + 1, s.length);
+-		}
+-	}
+-	cf.Close();
+-	vf.WriteLine("XML_SRCDIR=" + srcDirXml);
+-	vf.WriteLine("UTILS_SRCDIR=" + srcDirUtils);
+-	vf.WriteLine("WITH_TRIO=" + (withTrio? "1" : "0"));
+-	vf.WriteLine("WITH_THREADS=" + withThreads);
+-	vf.WriteLine("WITH_FTP=" + (withFtp? "1" : "0"));
+-	vf.WriteLine("WITH_HTTP=" + (withHttp? "1" : "0"));
+-	vf.WriteLine("WITH_HTML=" + (withHtml? "1" : "0"));
+-	vf.WriteLine("WITH_C14N=" + (withC14n? "1" : "0"));
+-	vf.WriteLine("WITH_CATALOG=" + (withCatalog? "1" : "0"));
+-	vf.WriteLine("WITH_DOCB=" + (withDocb? "1" : "0"));
+-	vf.WriteLine("WITH_XPATH=" + (withXpath? "1" : "0"));
+-	vf.WriteLine("WITH_XPTR=" + (withXptr? "1" : "0"));
+-	vf.WriteLine("WITH_XINCLUDE=" + (withXinclude? "1" : "0"));
+-	vf.WriteLine("WITH_ICONV=" + (withIconv? "1" : "0"));
+-	vf.WriteLine("WITH_ICU=" + (withIcu? "1" : "0"));
+-	vf.WriteLine("WITH_ISO8859X=" + (withIso8859x? "1" : "0"));
+-	vf.WriteLine("WITH_ZLIB=" + (withZlib? "1" : "0"));
+-	vf.WriteLine("WITH_LZMA=" + (withLzma? "1" : "0"));
+-	vf.WriteLine("WITH_DEBUG=" + (withDebug? "1" : "0"));
+-	vf.WriteLine("WITH_MEM_DEBUG=" + (withMemDebug? "1" : "0"));
+-	vf.WriteLine("WITH_RUN_DEBUG=" + (withRunDebug? "1" : "0"));
+-	vf.WriteLine("WITH_SCHEMAS=" + (withSchemas? "1" : "0"));
+-	vf.WriteLine("WITH_SCHEMATRON=" + (withSchematron? "1" : "0"));
+-	vf.WriteLine("WITH_REGEXPS=" + (withRegExps? "1" : "0"));
+-	vf.WriteLine("WITH_MODULES=" + (withModules? "1" : "0"));
+-	vf.WriteLine("WITH_TREE=" + (withTree? "1" : "0"));
+-	vf.WriteLine("WITH_READER=" + (withReader? "1" : "0"));
+-	vf.WriteLine("WITH_WRITER=" + (withWriter? "1" : "0"));
+-	vf.WriteLine("WITH_WALKER=" + (withWalker? "1" : "0"));
+-	vf.WriteLine("WITH_PATTERN=" + (withPattern? "1" : "0"));
+-	vf.WriteLine("WITH_PUSH=" + (withPush? "1" : "0"));
+-	vf.WriteLine("WITH_VALID=" + (withValid? "1" : "0"));
+-	vf.WriteLine("WITH_SAX1=" + (withSax1? "1" : "0"));
+-	vf.WriteLine("WITH_LEGACY=" + (withLegacy? "1" : "0"));
+-	vf.WriteLine("WITH_OUTPUT=" + (withOutput? "1" : "0"));
+-	vf.WriteLine("WITH_PYTHON=" + (withPython? "1" : "0"));
+-	vf.WriteLine("DEBUG=" + (buildDebug? "1" : "0"));
+-	vf.WriteLine("STATIC=" + (buildStatic? "1" : "0"));
+-	vf.WriteLine("PREFIX=" + buildPrefix);
+-	vf.WriteLine("BINPREFIX=" + buildBinPrefix);
+-	vf.WriteLine("INCPREFIX=" + buildIncPrefix);
+-	vf.WriteLine("LIBPREFIX=" + buildLibPrefix);
+-	vf.WriteLine("SOPREFIX=" + buildSoPrefix);
+-	if (compiler == "msvc") {
+-		vf.WriteLine("INCLUDE=$(INCLUDE);" + buildInclude);
+-		vf.WriteLine("LIB=$(LIB);" + buildLib);
+-		vf.WriteLine("CRUNTIME=" + cruntime);
+-		vf.WriteLine("VCMANIFEST=" + (vcmanifest? "1" : "0"));
+-	} else if (compiler == "mingw") {
+-		vf.WriteLine("INCLUDE+= -I" + buildInclude);
+-		vf.WriteLine("LIB+= -L" + buildLib);
+-	} else if (compiler == "bcb") {
+-		vf.WriteLine("INCLUDE=" + buildInclude);
+-		vf.WriteLine("LIB=" + buildLib);
+-		vf.WriteLine("DYNRUNTIME=" + (dynruntime? "1" : "0"));
+-	}
+-	vf.Close();
+-	versionFile = "rcVersion.h";
+-	vf = fso.CreateTextFile(versionFile, true);
+-	vf.WriteLine("/*");
+-	vf.WriteLine("  " + versionFile);
+-	vf.WriteLine("  This file is generated automatically by " + WScript.ScriptName + ".");
+-	vf.WriteLine("*/");
+-	vf.WriteBlankLines(1);
+-	vf.WriteLine("#define LIBXML_MAJOR_VERSION " + verMajor);
+-	vf.WriteLine("#define LIBXML_MINOR_VERSION " + verMinor);
+-	vf.WriteLine("#define LIBXML_MICRO_VERSION " + verMicro);
+-	vf.WriteLine("#define LIBXML_DOTTED_VERSION " + "\"" + verMajor + "." + verMinor + "." + verMicro + "\"");
+-	vf.Close();
+-}
+-
+-/* Configures libxml. This one will generate xmlversion.h from xmlversion.h.in
+-   taking what the user passed on the command line into account. */
+-function configureLibxml()
+-{
+-	var fso, ofi, of, ln, s;
+-	fso = new ActiveXObject("Scripting.FileSystemObject");
+-	ofi = fso.OpenTextFile(optsFileIn, 1);
+-	of = fso.CreateTextFile(optsFile, true);
+-	while (ofi.AtEndOfStream != true) {
+-		ln = ofi.ReadLine();
+-		s = new String(ln);
+-		if (s.search(/\@VERSION\@/) != -1) {
+-			of.WriteLine(s.replace(/\@VERSION\@/, 
+-				verMajor + "." + verMinor + "." + verMicro + verMicroSuffix));
+-		} else if (s.search(/\@LIBXML_VERSION_NUMBER\@/) != -1) {
+-			of.WriteLine(s.replace(/\@LIBXML_VERSION_NUMBER\@/, 
+-				verMajor*10000 + verMinor*100 + verMicro*1));
+-		} else if (s.search(/\@LIBXML_VERSION_EXTRA\@/) != -1) {
+-			of.WriteLine(s.replace(/\@LIBXML_VERSION_EXTRA\@/, verCvs));
+-		} else if (s.search(/\@WITH_TRIO\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_TRIO\@/, withTrio? "1" : "0"));
+-		} else if (s.search(/\@WITH_THREADS\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_THREADS\@/, withThreads == "no"? "0" : "1"));
+-		} else if (s.search(/\@WITH_THREAD_ALLOC\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_THREAD_ALLOC\@/, "0"));
+-		} else if (s.search(/\@WITH_FTP\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_FTP\@/, withFtp? "1" : "0"));
+-		} else if (s.search(/\@WITH_HTTP\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_HTTP\@/, withHttp? "1" : "0"));
+-		} else if (s.search(/\@WITH_HTML\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_HTML\@/, withHtml? "1" : "0"));
+-		} else if (s.search(/\@WITH_C14N\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_C14N\@/, withC14n? "1" : "0"));
+-		} else if (s.search(/\@WITH_CATALOG\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_CATALOG\@/, withCatalog? "1" : "0"));
+-		} else if (s.search(/\@WITH_DOCB\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_DOCB\@/, withDocb? "1" : "0"));
+-		} else if (s.search(/\@WITH_XPATH\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_XPATH\@/, withXpath? "1" : "0"));
+-		} else if (s.search(/\@WITH_XPTR\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_XPTR\@/, withXptr? "1" : "0"));
+-		} else if (s.search(/\@WITH_XINCLUDE\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_XINCLUDE\@/, withXinclude? "1" : "0"));
+-		} else if (s.search(/\@WITH_ICONV\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_ICONV\@/, withIconv? "1" : "0"));
+-		} else if (s.search(/\@WITH_ICU\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_ICU\@/, withIcu? "1" : "0"));
+-		} else if (s.search(/\@WITH_ISO8859X\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_ISO8859X\@/, withIso8859x? "1" : "0"));
+-		} else if (s.search(/\@WITH_ZLIB\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_ZLIB\@/, withZlib? "1" : "0"));
+-		} else if (s.search(/\@WITH_LZMA\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_LZMA\@/, withLzma? "1" : "0"));
+-		} else if (s.search(/\@WITH_DEBUG\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_DEBUG\@/, withDebug? "1" : "0"));
+-		} else if (s.search(/\@WITH_MEM_DEBUG\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_MEM_DEBUG\@/, withMemDebug? "1" : "0"));
+-		} else if (s.search(/\@WITH_RUN_DEBUG\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_RUN_DEBUG\@/, withRunDebug? "1" : "0"));
+-		} else if (s.search(/\@WITH_SCHEMAS\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_SCHEMAS\@/, withSchemas? "1" : "0"));
+-		} else if (s.search(/\@WITH_SCHEMATRON\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_SCHEMATRON\@/, withSchematron? "1" : "0"));
+-		} else if (s.search(/\@WITH_REGEXPS\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_REGEXPS\@/, withRegExps? "1" : "0"));
+-		} else if (s.search(/\@WITH_MODULES\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_MODULES\@/, withModules? "1" : "0"));
+-		} else if (s.search(/\@MODULE_EXTENSION\@/) != -1) {
+-			of.WriteLine(s.replace(/\@MODULE_EXTENSION\@/, ".dll"));
+-		} else if (s.search(/\@WITH_TREE\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_TREE\@/, withTree? "1" : "0"));
+-		} else if (s.search(/\@WITH_READER\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_READER\@/, withReader? "1" : "0"));
+-		} else if (s.search(/\@WITH_WRITER\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_WRITER\@/, withWriter? "1" : "0"));
+-		} else if (s.search(/\@WITH_WALKER\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_WALKER\@/, withWalker? "1" : "0"));
+-		} else if (s.search(/\@WITH_PATTERN\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_PATTERN\@/, withPattern? "1" : "0"));
+-		} else if (s.search(/\@WITH_PUSH\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_PUSH\@/, withPush? "1" : "0"));
+-		} else if (s.search(/\@WITH_VALID\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_VALID\@/, withValid? "1" : "0"));
+-		} else if (s.search(/\@WITH_SAX1\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_SAX1\@/, withSax1? "1" : "0"));
+-		} else if (s.search(/\@WITH_LEGACY\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_LEGACY\@/, withLegacy? "1" : "0"));
+-		} else if (s.search(/\@WITH_OUTPUT\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_OUTPUT\@/, withOutput? "1" : "0"));
+-		} else
+-			of.WriteLine(ln);
+-	}
+-	ofi.Close();
+-	of.Close();
+-}
+-/* Configures Python bindings. Otherwise identical to the above */
+-function configureLibxmlPy()
+-{
+-	var pyOptsFileIn = srcDirXml + "\\python\\setup.py.in";
+-	var pyOptsFile = srcDirXml + "\\python\\setup.py";
+-	var fso, ofi, of, ln, s;
+-	fso = new ActiveXObject("Scripting.FileSystemObject");
+-	ofi = fso.OpenTextFile(pyOptsFileIn, 1);
+-	of = fso.CreateTextFile(pyOptsFile, true);
+-	while (ofi.AtEndOfStream != true) {
+-		ln = ofi.ReadLine();
+-		s = new String(ln);
+-		if (s.search(/\@LIBXML_VERSION\@/) != -1) {
+-			of.WriteLine(s.replace(/\@LIBXML_VERSION\@/, 
+-				verMajor + "." + verMinor + "." + verMicro));
+-		} else if (s.search(/\@prefix\@/) != -1) {
+-			of.WriteLine(s.replace(/\@prefix\@/, buildPrefix));
+-		} else if (s.search(/\@WITH_THREADS\@/) != -1) {
+-			of.WriteLine(s.replace(/\@WITH_THREADS\@/, withThreads == "no"? "0" : "1"));
+-		} else
+-			of.WriteLine(ln);
+-	}
+-	ofi.Close();
+-	of.Close();
+-}
+-
+-/* Creates the readme file for the binary distribution of 'bname', for the
+-   version 'ver' in the file 'file'. This one is called from the Makefile when
+-   generating a binary distribution. The parameters are passed by make. */
+-function genReadme(bname, ver, file)
+-{
+-	var fso, f;
+-	fso = new ActiveXObject("Scripting.FileSystemObject");
+-	f = fso.CreateTextFile(file, true);
+-	f.WriteLine("  " + bname + " " + ver);
+-	f.WriteLine("  --------------");
+-	f.WriteBlankLines(1);
+-	f.WriteLine("  This is " + bname + ", version " + ver + ", binary package for the native Win32/IA32");
+-	f.WriteLine("platform.");
+-	f.WriteBlankLines(1);
+-	f.WriteLine("  The files in this package do not require any special installation");
+-	f.WriteLine("steps. Extract the contents of the archive wherever you wish and");
+-	f.WriteLine("make sure that your tools which use " + bname + " can find it.");
+-	f.WriteBlankLines(1);
+-	f.WriteLine("  For example, if you want to run the supplied utilities from the command");
+-	f.WriteLine("line, you can, if you wish, add the 'bin' subdirectory to the PATH");
+-	f.WriteLine("environment variable.");
+-	f.WriteLine("  If you want to make programmes in C which use " + bname + ", you'll");
+-	f.WriteLine("likely know how to use the contents of this package. If you don't, please");
+-	f.WriteLine("refer to your compiler's documentation."); 
+-	f.WriteBlankLines(1);
+-	f.WriteLine("  If there is something you cannot keep for yourself, such as a problem,");
+-	f.WriteLine("a cheer of joy, a comment or a suggestion, feel free to contact me using");
+-	f.WriteLine("the address below.");
+-	f.WriteBlankLines(1);
+-	f.WriteLine("                              Igor Zlatkovic (igor@zlatkovic.com)");
+-	f.Close();
+-}
+-
+-
+-/*
+- * main(),
+- * Execution begins here.
+- */
+-
+-// Parse the command-line arguments.
+-for (i = 0; (i < WScript.Arguments.length) && (error == 0); i++) {
+-	var arg, opt;
+-	arg = WScript.Arguments(i);
+-	opt = arg.substring(0, arg.indexOf("="));
+-	if (opt.length == 0)
+-		opt = arg.substring(0, arg.indexOf(":"));
+-	if (opt.length > 0) {
+-		if (opt == "trio")
+-			withTrio = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "threads")
+-			withThreads = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "ftp")
+-			withFtp = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "http")
+-			withHttp = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "html")
+-			withHtml = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "c14n")
+-			withC14n = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "catalog")
+-			withCatalog = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "docb")
+-			withDocb = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "xpath")
+-			withXpath = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "xptr")
+-			withXptr = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "xinclude")
+-			withXinclude = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "iconv")
+-			withIconv = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "icu")
+-			withIcu = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "iso8859x")
+-			withIso8859x = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "zlib")
+-			withZlib = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "lzma")
+-			withLzma = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "xml_debug")
+-			withDebug = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "mem_debug")
+-			withMemDebug = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "run_debug")
+-			withRunDebug = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "schemas")
+-			withSchemas = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "schematron")
+-			withSchematron = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "regexps")
+-			withRegExps = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "modules")
+-			withModules = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "tree")
+-			withTree = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "reader")
+-			withReader = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "writer")
+-			withWriter = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "walker")
+-			withWalker = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "pattern")
+-			withPattern = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "push")
+-			withPush = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "valid")
+-			withValid = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "sax1")
+-			withSax1 = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "legacy")
+-			withLegacy = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "output")
+-			withOutput = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "python")
+-			withPython = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "compiler")
+-			compiler = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "cruntime")
+-			cruntime = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "dynruntime")
+-			dynruntime = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "vcmanifest")
+-			vcmanifest = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "debug")
+-			buildDebug = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "static")
+-			buildStatic = strToBool(arg.substring(opt.length + 1, arg.length));
+-		else if (opt == "prefix")
+-			buildPrefix = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "bindir")
+-			buildBinPrefix = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "libdir")
+-			buildLibPrefix = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "sodir")
+-			buildSoPrefix = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "incdir")
+-			buildIncPrefix = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "include")
+-			buildInclude = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "lib")
+-			buildLib = arg.substring(opt.length + 1, arg.length);
+-		else if (opt == "release")
+-			useCvsVer = false;
+-		else
+-			error = 1;
+-	} else if (i == 0) {
+-		if (arg == "genreadme") {
+-			// This command comes from the Makefile and will not be checked
+-			// for errors, because Makefile will always supply right the parameters.
+-			genReadme(WScript.Arguments(1), WScript.Arguments(2), WScript.Arguments(3));
+-			WScript.Quit(0);
+-		} else if (arg == "help") {
+-			usage();
+-			WScript.Quit(0);
+-		}
+-
+-	} else {
+-		error = 1;
+-	}
+-}
+-
+-
+-// If we fail here, it is because the user supplied an unrecognised argument.
+-if (error != 0) {
+-	usage();
+-	WScript.Quit(error);
+-}
+-
+-// if user choses to link the c-runtime library statically into libxml2
+-// with /MT and friends, then we need to enable static linking for xmllint
+-if (cruntime == "/MT" || cruntime == "/MTd" ||
+-		cruntime == "/ML" || cruntime == "/MLd") {
+-	buildStatic = 1;
+-}
+-
+-dirSep = "\\";
+-if (buildBinPrefix == "")
+-	buildBinPrefix = "$(PREFIX)" + dirSep + "bin";
+-if (buildIncPrefix == "")
+-	buildIncPrefix = "$(PREFIX)" + dirSep + "include";
+-if (buildLibPrefix == "")
+-	buildLibPrefix = "$(PREFIX)" + dirSep + "lib";
+-if (buildSoPrefix == "")
+-	buildSoPrefix = "$(PREFIX)" + dirSep + "bin";
+-
+-// Discover the version.
+-discoverVersion();
+-if (error != 0) {
+-	WScript.Echo("Version discovery failed, aborting.");
+-	WScript.Quit(error);
+-}
+-
+-var outVerString = baseName + " version: " + verMajor + "." + verMinor + "." + verMicro;
+-if (verMicroSuffix && verMicroSuffix != "")
+-	outVerString += "-" + verMicroSuffix;
+-if (verCvs && verCvs != "")
+-	outVerString += "-" + verCvs;
+-WScript.Echo(outVerString);
+-
+-// Configure libxml.
+-configureLibxml();
+-if (error != 0) {
+-	WScript.Echo("Configuration failed, aborting.");
+-	WScript.Quit(error);
+-}
+-
+-if (withPython == true) {
+-	configureLibxmlPy();
+-	if (error != 0) {
+-		WScript.Echo("Configuration failed, aborting.");
+-		WScript.Quit(error);
+-	}
+-
+-}
+-
+-// Create the makefile.
+-var fso = new ActiveXObject("Scripting.FileSystemObject");
+-var makefile = ".\\Makefile.msvc";
+-if (compiler == "mingw")
+-	makefile = ".\\Makefile.mingw";
+-else if (compiler == "bcb")
+-	makefile = ".\\Makefile.bcb";
+-var new_makefile = ".\\Makefile";
+-var f = fso.FileExists(new_makefile);
+-if (f) {
+-       var t = fso.GetFile(new_makefile);
+-       t.Attributes =0;
+-}
+-fso.CopyFile(makefile, new_makefile, true);
+-WScript.Echo("Created Makefile.");
+-// Create the config.h.
+-var confighsrc = "..\\include\\win32config.h";
+-var configh = "..\\config.h";
+-var f = fso.FileExists(configh);
+-if (f) {
+-	var t = fso.GetFile(configh);
+-	t.Attributes =0;
+-}
+-fso.CopyFile(confighsrc, configh, true);
+-WScript.Echo("Created config.h.");
+-
+-
+-// Display the final configuration. 
+-var txtOut = "\nXML processor configuration\n";
+-txtOut += "---------------------------\n";
+-txtOut += "              Trio: " + boolToStr(withTrio) + "\n";
+-txtOut += "     Thread safety: " + withThreads + "\n";
+-txtOut += "        FTP client: " + boolToStr(withFtp) + "\n";
+-txtOut += "       HTTP client: " + boolToStr(withHttp) + "\n";
+-txtOut += "    HTML processor: " + boolToStr(withHtml) + "\n";
+-txtOut += "      C14N support: " + boolToStr(withC14n) + "\n";
+-txtOut += "   Catalog support: " + boolToStr(withCatalog) + "\n";
+-txtOut += "   DocBook support: " + boolToStr(withDocb) + "\n";
+-txtOut += "     XPath support: " + boolToStr(withXpath) + "\n";
+-txtOut += "  XPointer support: " + boolToStr(withXptr) + "\n";
+-txtOut += "  XInclude support: " + boolToStr(withXinclude) + "\n";
+-txtOut += "     iconv support: " + boolToStr(withIconv) + "\n";
+-txtOut += "     icu   support: " + boolToStr(withIcu) + "\n";
+-txtOut += "  iso8859x support: " + boolToStr(withIso8859x) + "\n";
+-txtOut += "      zlib support: " + boolToStr(withZlib) + "\n";
+-txtOut += "      lzma support: " + boolToStr(withLzma) + "\n";
+-txtOut += "  Debugging module: " + boolToStr(withDebug) + "\n";
+-txtOut += "  Memory debugging: " + boolToStr(withMemDebug) + "\n";
+-txtOut += " Runtime debugging: " + boolToStr(withRunDebug) + "\n";
+-txtOut += "    Regexp support: " + boolToStr(withRegExps) + "\n";
+-txtOut += "    Module support: " + boolToStr(withModules) + "\n";
+-txtOut += "      Tree support: " + boolToStr(withTree) + "\n";
+-txtOut += "    Reader support: " + boolToStr(withReader) + "\n";
+-txtOut += "    Writer support: " + boolToStr(withWriter) + "\n";
+-txtOut += "    Walker support: " + boolToStr(withWalker) + "\n";
+-txtOut += "   Pattern support: " + boolToStr(withPattern) + "\n";
+-txtOut += "      Push support: " + boolToStr(withPush) + "\n";
+-txtOut += "Validation support: " + boolToStr(withValid) + "\n";
+-txtOut += "      SAX1 support: " + boolToStr(withSax1) + "\n";
+-txtOut += "    Legacy support: " + boolToStr(withLegacy) + "\n";
+-txtOut += "    Output support: " + boolToStr(withOutput) + "\n";
+-txtOut += "XML Schema support: " + boolToStr(withSchemas) + "\n";
+-txtOut += "Schematron support: " + boolToStr(withSchematron) + "\n";
+-txtOut += "   Python bindings: " + boolToStr(withPython) + "\n";
+-txtOut += "\n";
+-txtOut += "Win32 build configuration\n";
+-txtOut += "-------------------------\n";
+-txtOut += "          Compiler: " + compiler + "\n";
+-if (compiler == "msvc") {
+-	txtOut += "  C-Runtime option: " + cruntime + "\n";
+-	txtOut += "    Embed Manifest: " + boolToStr(vcmanifest) + "\n";
+-} else if (compiler == "bcb")
+-	txtOut += "   Use dynamic RTL: " + dynruntime + "\n";
+-txtOut += "     Debug symbols: " + boolToStr(buildDebug) + "\n";
+-txtOut += "    Static xmllint: " + boolToStr(buildStatic) + "\n";
+-txtOut += "    Install prefix: " + buildPrefix + "\n";
+-txtOut += "      Put tools in: " + buildBinPrefix + "\n";
+-txtOut += "    Put headers in: " + buildIncPrefix + "\n";
+-txtOut += "Put static libs in: " + buildLibPrefix + "\n";
+-txtOut += "Put shared libs in: " + buildSoPrefix + "\n";
+-txtOut += "      Include path: " + buildInclude + "\n";
+-txtOut += "          Lib path: " + buildLib + "\n";
+-WScript.Echo(txtOut);
+-
+-//
+-
++/* Configure script for libxml, specific for Windows with Scripting Host.
++ * 
++ * This script will configure the libxml build process and create necessary files.
++ * Run it with an 'help', or an invalid option and it will tell you what options
++ * it accepts.
++ *
++ * March 2002, Igor Zlatkovic <igor@zlatkovic.com>
++ */
++
++/* The source directory, relative to the one where this file resides. */
++var srcDirXml = "..";
++var srcDirUtils = "..";
++/* Base name of what we are building. */
++var baseName = "libxml2";
++/* Configure file which contains the version and the output file where
++   we can store our build configuration. */
++var configFile = srcDirXml + "\\configure.ac";
++var versionFile = ".\\config.msvc";
++/* Input and output files regarding the libxml features. */
++var optsFileIn = srcDirXml + "\\include\\libxml\\xmlversion.h.in";
++var optsFile = srcDirXml + "\\include\\libxml\\xmlversion.h";
++/* Version strings for the binary distribution. Will be filled later 
++   in the code. */
++var verMajor;
++var verMinor;
++var verMicro;
++var verMicroSuffix;
++var verCvs;
++var useCvsVer = true;
++/* Libxml features. */
++var withTrio = false;
++var withThreads = "native";
++var withFtp = true;
++var withHttp = true;
++var withHtml = true;
++var withC14n = true;
++var withCatalog = true;
++var withDocb = true;
++var withXpath = true;
++var withXptr = true;
++var withXinclude = true;
++var withIconv = true;
++var withIcu = false;
++var withIso8859x = false;
++var withZlib = false;
++var withLzma = false;
++var withDebug = true;
++var withMemDebug = false;
++var withRunDebug = false;
++var withSchemas = true;
++var withSchematron = true;
++var withRegExps = true;
++var withModules = true;
++var withTree = true;
++var withReader = true;
++var withWriter = true;
++var withWalker = true;
++var withPattern = true;
++var withPush = true;
++var withValid = true;
++var withSax1 = true;
++var withLegacy = true;
++var withOutput = true;
++var withPython = false;
++/* Win32 build options. */
++var dirSep = "\\";
++var compiler = "msvc";
++var cruntime = "/MT";
++var dynruntime = false;
++var vcmanifest = false;
++var buildDebug = 0;
++var buildStatic = 1;
++var buildPrefix = ".";
++var buildBinPrefix = "";
++var buildIncPrefix = "";
++var buildLibPrefix = "";
++var buildSoPrefix = "";
++var buildInclude = ".";
++var buildLib = ".";
++/* Local stuff */
++var error = 0;
++
++/* Helper function, transforms the option variable into the 'Enabled'
++   or 'Disabled' string. */
++function boolToStr(opt)
++{
++	if (opt == false)
++		return "no";
++	else if (opt == true)
++		return "yes";
++	error = 1;
++	return "*** undefined ***";
++}
++
++/* Helper function, transforms the argument string into a boolean
++   value. */
++function strToBool(opt)
++{
++	if (opt == 0 || opt == "no")
++		return false;
++	else if (opt == 1 || opt == "yes")
++		return true;
++	error = 1;
++	return false;
++}
++
++/* Displays the details about how to use this script. */
++function usage()
++{
++	var txt;
++	txt = "Usage:\n";
++	txt += "  cscript " + WScript.ScriptName + " <options>\n";
++	txt += "  cscript " + WScript.ScriptName + " help\n\n";
++	txt += "Options can be specified in the form <option>=<value>, where the value is\n";
++	txt += "either 'yes' or 'no', if not stated otherwise.\n\n";
++	txt += "\nXML processor options, default value given in parentheses:\n\n";
++	txt += "  trio:       Enable TRIO string manipulator (" + (withTrio? "yes" : "no")  + ")\n";
++	txt += "  threads:    Enable thread safety [no|ctls|native|posix] (" + (withThreads)  + ") \n";
++	txt += "  ftp:        Enable FTP client (" + (withFtp? "yes" : "no")  + ")\n";
++	txt += "  http:       Enable HTTP client (" + (withHttp? "yes" : "no")  + ")\n";
++	txt += "  html:       Enable HTML processor (" + (withHtml? "yes" : "no")  + ")\n";
++	txt += "  c14n:       Enable C14N support (" + (withC14n? "yes" : "no")  + ")\n";
++	txt += "  catalog:    Enable catalog support (" + (withCatalog? "yes" : "no")  + ")\n";
++	txt += "  docb:       Enable DocBook support (" + (withDocb? "yes" : "no")  + ")\n";
++	txt += "  xpath:      Enable XPath support (" + (withXpath? "yes" : "no")  + ")\n";
++	txt += "  xptr:       Enable XPointer support (" + (withXptr? "yes" : "no")  + ")\n";
++	txt += "  xinclude:   Enable XInclude support (" + (withXinclude? "yes" : "no")  + ")\n";
++	txt += "  iconv:      Enable iconv support (" + (withIconv? "yes" : "no")  + ")\n";
++	txt += "  icu:        Enable icu support (" + (withIcu? "yes" : "no")  + ")\n";
++	txt += "  iso8859x:   Enable ISO8859X support (" + (withIso8859x? "yes" : "no")  + ")\n";
++	txt += "  zlib:       Enable zlib support (" + (withZlib? "yes" : "no")  + ")\n";
++	txt += "  lzma:       Enable lzma support (" + (withLzma? "yes" : "no")  + ")\n";
++	txt += "  xml_debug:  Enable XML debbugging module (" + (withDebug? "yes" : "no")  + ")\n";
++	txt += "  mem_debug:  Enable memory debugger (" + (withMemDebug? "yes" : "no")  + ")\n";
++	txt += "  run_debug:  Enable memory debugger (" + (withRunDebug? "yes" : "no")  + ")\n";
++	txt += "  regexps:    Enable regular expressions (" + (withRegExps? "yes" : "no") + ")\n";
++	txt += "  modules:    Enable module support (" + (withModules? "yes" : "no") + ")\n";
++	txt += "  tree:       Enable tree api (" + (withTree? "yes" : "no") + ")\n";
++	txt += "  reader:     Enable xmlReader api (" + (withReader? "yes" : "no") + ")\n";
++	txt += "  writer:     Enable xmlWriter api (" + (withWriter? "yes" : "no") + ")\n";
++	txt += "  walker:     Enable xmlDocWalker api (" + (withWalker? "yes" : "no") + ")\n";
++	txt += "  pattern:    Enable xmlPattern api (" + (withPattern? "yes" : "no")  + ")\n";
++	txt += "  push:       Enable push api (" + (withPush? "yes" : "no") + ")\n";
++	txt += "  valid:      Enable DTD validation support (" + (withValid? "yes" : "no") + ")\n";
++	txt += "  sax1:       Enable SAX1 api (" + (withSax1? "yes" : "no") + ")\n";
++	txt += "  legacy:     Enable Deprecated api's (" + (withLegacy? "yes" : "no") + ")\n";
++	txt += "  output:     Enable serialization support (" + (withOutput? "yes" : "no") + ")\n";
++	txt += "  schemas:    Enable XML Schema support (" + (withSchemas? "yes" : "no")  + ")\n";
++	txt += "  schematron: Enable Schematron support (" + (withSchematron? "yes" : "no")  + ")\n";
++	txt += "  python:     Build Python bindings (" + (withPython? "yes" : "no")  + ")\n";
++	txt += "\nWin32 build options, default value given in parentheses:\n\n";
++	txt += "  compiler:   Compiler to be used [msvc|mingw|bcb] (" + compiler + ")\n";
++	txt += "  cruntime:   C-runtime compiler option (only msvc) (" + cruntime + ")\n";
++	txt += "  dynruntime: Use the dynamic RTL (only bcb) (" + dynruntime + ")\n";
++	txt += "  vcmanifest: Embed VC manifest (only msvc) (" + (vcmanifest? "yes" : "no") + ")\n";
++	txt += "  debug:      Build unoptimised debug executables (" + (buildDebug? "yes" : "no")  + ")\n";
++	txt += "  static:     Link xmllint statically to libxml2 (" + (buildStatic? "yes" : "no")  + ")\n";
++	txt += "              Note: automatically enabled if cruntime is not /MD or /MDd\n";
++	txt += "  prefix:     Base directory for the installation (" + buildPrefix + ")\n";
++	txt += "  bindir:     Directory where xmllint and friends should be installed\n";
++	txt += "              (" + buildBinPrefix + ")\n";
++	txt += "  incdir:     Directory where headers should be installed\n";
++	txt += "              (" + buildIncPrefix + ")\n";
++	txt += "  libdir:     Directory where static and import libraries should be\n";
++	txt += "              installed (" + buildLibPrefix + ")\n";
++	txt += "  sodir:      Directory where shared libraries should be installed\n"; 
++	txt += "              (" + buildSoPrefix + ")\n";
++	txt += "  include:    Additional search path for the compiler, particularly\n";
++	txt += "              where iconv headers can be found (" + buildInclude + ")\n";
++	txt += "  lib:        Additional search path for the linker, particularly\n";
++	txt += "              where iconv library can be found (" + buildLib + ")\n";
++	WScript.Echo(txt);
++}
++
++/* Discovers the version we are working with by reading the appropriate
++   configuration file. Despite its name, this also writes the configuration
++   file included by our makefile. */
++function discoverVersion()
++{
++	var fso, cf, vf, ln, s, iDot, iSlash;
++	fso = new ActiveXObject("Scripting.FileSystemObject");
++	verCvs = "";
++	if (useCvsVer && fso.FileExists("..\\CVS\\Entries")) {
++		cf = fso.OpenTextFile("..\\CVS\\Entries", 1);
++		while (cf.AtEndOfStream != true) {
++			ln = cf.ReadLine();
++			s = new String(ln);
++			if (s.search(/^\/ChangeLog\//) != -1) {
++				iDot = s.indexOf(".");
++				iSlash = s.indexOf("/", iDot);
++				verCvs = "CVS" + s.substring(iDot + 1, iSlash);
++				break;
++			}
++		}
++		cf.Close();
++	}
++	cf = fso.OpenTextFile(configFile, 1);
++	if (compiler == "msvc")
++		versionFile = ".\\config.msvc";
++	else if (compiler == "mingw")
++		versionFile = ".\\config.mingw";
++	else if (compiler == "bcb")
++		versionFile = ".\\config.bcb";
++	vf = fso.CreateTextFile(versionFile, true);
++	vf.WriteLine("# " + versionFile);
++	vf.WriteLine("# This file is generated automatically by " + WScript.ScriptName + ".");
++	vf.WriteBlankLines(1);
++	while (cf.AtEndOfStream != true) {
++		ln = cf.ReadLine();
++		s = new String(ln);
++		if (s.search(/^LIBXML_MAJOR_VERSION=/) != -1) {
++			vf.WriteLine(s);
++			verMajor = s.substring(s.indexOf("=") + 1, s.length);
++		} else if(s.search(/^LIBXML_MINOR_VERSION=/) != -1) {
++			vf.WriteLine(s);
++			verMinor = s.substring(s.indexOf("=") + 1, s.length);
++		} else if(s.search(/^LIBXML_MICRO_VERSION=/) != -1) {
++			vf.WriteLine(s);
++			verMicro = s.substring(s.indexOf("=") + 1, s.length);
++		} else if(s.search(/^LIBXML_MICRO_VERSION_SUFFIX=/) != -1) {
++			vf.WriteLine(s);
++			verMicroSuffix = s.substring(s.indexOf("=") + 1, s.length);
++		}
++	}
++	cf.Close();
++	vf.WriteLine("XML_SRCDIR=" + srcDirXml);
++	vf.WriteLine("UTILS_SRCDIR=" + srcDirUtils);
++	vf.WriteLine("WITH_TRIO=" + (withTrio? "1" : "0"));
++	vf.WriteLine("WITH_THREADS=" + withThreads);
++	vf.WriteLine("WITH_FTP=" + (withFtp? "1" : "0"));
++	vf.WriteLine("WITH_HTTP=" + (withHttp? "1" : "0"));
++	vf.WriteLine("WITH_HTML=" + (withHtml? "1" : "0"));
++	vf.WriteLine("WITH_C14N=" + (withC14n? "1" : "0"));
++	vf.WriteLine("WITH_CATALOG=" + (withCatalog? "1" : "0"));
++	vf.WriteLine("WITH_DOCB=" + (withDocb? "1" : "0"));
++	vf.WriteLine("WITH_XPATH=" + (withXpath? "1" : "0"));
++	vf.WriteLine("WITH_XPTR=" + (withXptr? "1" : "0"));
++	vf.WriteLine("WITH_XINCLUDE=" + (withXinclude? "1" : "0"));
++	vf.WriteLine("WITH_ICONV=" + (withIconv? "1" : "0"));
++	vf.WriteLine("WITH_ICU=" + (withIcu? "1" : "0"));
++	vf.WriteLine("WITH_ISO8859X=" + (withIso8859x? "1" : "0"));
++	vf.WriteLine("WITH_ZLIB=" + (withZlib? "1" : "0"));
++	vf.WriteLine("WITH_LZMA=" + (withLzma? "1" : "0"));
++	vf.WriteLine("WITH_DEBUG=" + (withDebug? "1" : "0"));
++	vf.WriteLine("WITH_MEM_DEBUG=" + (withMemDebug? "1" : "0"));
++	vf.WriteLine("WITH_RUN_DEBUG=" + (withRunDebug? "1" : "0"));
++	vf.WriteLine("WITH_SCHEMAS=" + (withSchemas? "1" : "0"));
++	vf.WriteLine("WITH_SCHEMATRON=" + (withSchematron? "1" : "0"));
++	vf.WriteLine("WITH_REGEXPS=" + (withRegExps? "1" : "0"));
++	vf.WriteLine("WITH_MODULES=" + (withModules? "1" : "0"));
++	vf.WriteLine("WITH_TREE=" + (withTree? "1" : "0"));
++	vf.WriteLine("WITH_READER=" + (withReader? "1" : "0"));
++	vf.WriteLine("WITH_WRITER=" + (withWriter? "1" : "0"));
++	vf.WriteLine("WITH_WALKER=" + (withWalker? "1" : "0"));
++	vf.WriteLine("WITH_PATTERN=" + (withPattern? "1" : "0"));
++	vf.WriteLine("WITH_PUSH=" + (withPush? "1" : "0"));
++	vf.WriteLine("WITH_VALID=" + (withValid? "1" : "0"));
++	vf.WriteLine("WITH_SAX1=" + (withSax1? "1" : "0"));
++	vf.WriteLine("WITH_LEGACY=" + (withLegacy? "1" : "0"));
++	vf.WriteLine("WITH_OUTPUT=" + (withOutput? "1" : "0"));
++	vf.WriteLine("WITH_PYTHON=" + (withPython? "1" : "0"));
++	vf.WriteLine("DEBUG=" + (buildDebug? "1" : "0"));
++	vf.WriteLine("STATIC=" + (buildStatic? "1" : "0"));
++	vf.WriteLine("PREFIX=" + buildPrefix);
++	vf.WriteLine("BINPREFIX=" + buildBinPrefix);
++	vf.WriteLine("INCPREFIX=" + buildIncPrefix);
++	vf.WriteLine("LIBPREFIX=" + buildLibPrefix);
++	vf.WriteLine("SOPREFIX=" + buildSoPrefix);
++	if (compiler == "msvc") {
++		vf.WriteLine("INCLUDE=$(INCLUDE);" + buildInclude);
++		vf.WriteLine("LIB=$(LIB);" + buildLib);
++		vf.WriteLine("CRUNTIME=" + cruntime);
++		vf.WriteLine("VCMANIFEST=" + (vcmanifest? "1" : "0"));
++	} else if (compiler == "mingw") {
++		vf.WriteLine("INCLUDE+= -I" + buildInclude);
++		vf.WriteLine("LIB+= -L" + buildLib);
++	} else if (compiler == "bcb") {
++		vf.WriteLine("INCLUDE=" + buildInclude);
++		vf.WriteLine("LIB=" + buildLib);
++		vf.WriteLine("DYNRUNTIME=" + (dynruntime? "1" : "0"));
++	}
++	vf.Close();
++	versionFile = "rcVersion.h";
++	vf = fso.CreateTextFile(versionFile, true);
++	vf.WriteLine("/*");
++	vf.WriteLine("  " + versionFile);
++	vf.WriteLine("  This file is generated automatically by " + WScript.ScriptName + ".");
++	vf.WriteLine("*/");
++	vf.WriteBlankLines(1);
++	vf.WriteLine("#define LIBXML_MAJOR_VERSION " + verMajor);
++	vf.WriteLine("#define LIBXML_MINOR_VERSION " + verMinor);
++	vf.WriteLine("#define LIBXML_MICRO_VERSION " + verMicro);
++	vf.WriteLine("#define LIBXML_DOTTED_VERSION " + "\"" + verMajor + "." + verMinor + "." + verMicro + "\"");
++	vf.Close();
++}
++
++/* Configures libxml. This one will generate xmlversion.h from xmlversion.h.in
++   taking what the user passed on the command line into account. */
++function configureLibxml()
++{
++	var fso, ofi, of, ln, s;
++	fso = new ActiveXObject("Scripting.FileSystemObject");
++	ofi = fso.OpenTextFile(optsFileIn, 1);
++	of = fso.CreateTextFile(optsFile, true);
++	while (ofi.AtEndOfStream != true) {
++		ln = ofi.ReadLine();
++		s = new String(ln);
++		if (s.search(/\@VERSION\@/) != -1) {
++			of.WriteLine(s.replace(/\@VERSION\@/, 
++				verMajor + "." + verMinor + "." + verMicro + verMicroSuffix));
++		} else if (s.search(/\@LIBXML_VERSION_NUMBER\@/) != -1) {
++			of.WriteLine(s.replace(/\@LIBXML_VERSION_NUMBER\@/, 
++				verMajor*10000 + verMinor*100 + verMicro*1));
++		} else if (s.search(/\@LIBXML_VERSION_EXTRA\@/) != -1) {
++			of.WriteLine(s.replace(/\@LIBXML_VERSION_EXTRA\@/, verCvs));
++		} else if (s.search(/\@WITH_TRIO\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_TRIO\@/, withTrio? "1" : "0"));
++		} else if (s.search(/\@WITH_THREADS\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_THREADS\@/, withThreads == "no"? "0" : "1"));
++		} else if (s.search(/\@WITH_THREAD_ALLOC\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_THREAD_ALLOC\@/, "0"));
++		} else if (s.search(/\@WITH_FTP\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_FTP\@/, withFtp? "1" : "0"));
++		} else if (s.search(/\@WITH_HTTP\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_HTTP\@/, withHttp? "1" : "0"));
++		} else if (s.search(/\@WITH_HTML\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_HTML\@/, withHtml? "1" : "0"));
++		} else if (s.search(/\@WITH_C14N\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_C14N\@/, withC14n? "1" : "0"));
++		} else if (s.search(/\@WITH_CATALOG\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_CATALOG\@/, withCatalog? "1" : "0"));
++		} else if (s.search(/\@WITH_DOCB\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_DOCB\@/, withDocb? "1" : "0"));
++		} else if (s.search(/\@WITH_XPATH\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_XPATH\@/, withXpath? "1" : "0"));
++		} else if (s.search(/\@WITH_XPTR\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_XPTR\@/, withXptr? "1" : "0"));
++		} else if (s.search(/\@WITH_XINCLUDE\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_XINCLUDE\@/, withXinclude? "1" : "0"));
++		} else if (s.search(/\@WITH_ICONV\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_ICONV\@/, withIconv? "1" : "0"));
++		} else if (s.search(/\@WITH_ICU\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_ICU\@/, withIcu? "1" : "0"));
++		} else if (s.search(/\@WITH_ISO8859X\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_ISO8859X\@/, withIso8859x? "1" : "0"));
++		} else if (s.search(/\@WITH_ZLIB\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_ZLIB\@/, withZlib? "1" : "0"));
++		} else if (s.search(/\@WITH_LZMA\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_LZMA\@/, withLzma? "1" : "0"));
++		} else if (s.search(/\@WITH_DEBUG\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_DEBUG\@/, withDebug? "1" : "0"));
++		} else if (s.search(/\@WITH_MEM_DEBUG\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_MEM_DEBUG\@/, withMemDebug? "1" : "0"));
++		} else if (s.search(/\@WITH_RUN_DEBUG\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_RUN_DEBUG\@/, withRunDebug? "1" : "0"));
++		} else if (s.search(/\@WITH_SCHEMAS\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_SCHEMAS\@/, withSchemas? "1" : "0"));
++		} else if (s.search(/\@WITH_SCHEMATRON\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_SCHEMATRON\@/, withSchematron? "1" : "0"));
++		} else if (s.search(/\@WITH_REGEXPS\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_REGEXPS\@/, withRegExps? "1" : "0"));
++		} else if (s.search(/\@WITH_MODULES\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_MODULES\@/, withModules? "1" : "0"));
++		} else if (s.search(/\@MODULE_EXTENSION\@/) != -1) {
++			of.WriteLine(s.replace(/\@MODULE_EXTENSION\@/, ".dll"));
++		} else if (s.search(/\@WITH_TREE\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_TREE\@/, withTree? "1" : "0"));
++		} else if (s.search(/\@WITH_READER\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_READER\@/, withReader? "1" : "0"));
++		} else if (s.search(/\@WITH_WRITER\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_WRITER\@/, withWriter? "1" : "0"));
++		} else if (s.search(/\@WITH_WALKER\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_WALKER\@/, withWalker? "1" : "0"));
++		} else if (s.search(/\@WITH_PATTERN\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_PATTERN\@/, withPattern? "1" : "0"));
++		} else if (s.search(/\@WITH_PUSH\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_PUSH\@/, withPush? "1" : "0"));
++		} else if (s.search(/\@WITH_VALID\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_VALID\@/, withValid? "1" : "0"));
++		} else if (s.search(/\@WITH_SAX1\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_SAX1\@/, withSax1? "1" : "0"));
++		} else if (s.search(/\@WITH_LEGACY\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_LEGACY\@/, withLegacy? "1" : "0"));
++		} else if (s.search(/\@WITH_OUTPUT\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_OUTPUT\@/, withOutput? "1" : "0"));
++		} else
++			of.WriteLine(ln);
++	}
++	ofi.Close();
++	of.Close();
++}
++/* Configures Python bindings. Otherwise identical to the above */
++function configureLibxmlPy()
++{
++	var pyOptsFileIn = srcDirXml + "\\python\\setup.py.in";
++	var pyOptsFile = srcDirXml + "\\python\\setup.py";
++	var fso, ofi, of, ln, s;
++	fso = new ActiveXObject("Scripting.FileSystemObject");
++	ofi = fso.OpenTextFile(pyOptsFileIn, 1);
++	of = fso.CreateTextFile(pyOptsFile, true);
++	while (ofi.AtEndOfStream != true) {
++		ln = ofi.ReadLine();
++		s = new String(ln);
++		if (s.search(/\@LIBXML_VERSION\@/) != -1) {
++			of.WriteLine(s.replace(/\@LIBXML_VERSION\@/, 
++				verMajor + "." + verMinor + "." + verMicro));
++		} else if (s.search(/\@prefix\@/) != -1) {
++			of.WriteLine(s.replace(/\@prefix\@/, buildPrefix));
++		} else if (s.search(/\@WITH_THREADS\@/) != -1) {
++			of.WriteLine(s.replace(/\@WITH_THREADS\@/, withThreads == "no"? "0" : "1"));
++		} else
++			of.WriteLine(ln);
++	}
++	ofi.Close();
++	of.Close();
++}
++
++/* Creates the readme file for the binary distribution of 'bname', for the
++   version 'ver' in the file 'file'. This one is called from the Makefile when
++   generating a binary distribution. The parameters are passed by make. */
++function genReadme(bname, ver, file)
++{
++	var fso, f;
++	fso = new ActiveXObject("Scripting.FileSystemObject");
++	f = fso.CreateTextFile(file, true);
++	f.WriteLine("  " + bname + " " + ver);
++	f.WriteLine("  --------------");
++	f.WriteBlankLines(1);
++	f.WriteLine("  This is " + bname + ", version " + ver + ", binary package for the native Win32/IA32");
++	f.WriteLine("platform.");
++	f.WriteBlankLines(1);
++	f.WriteLine("  The files in this package do not require any special installation");
++	f.WriteLine("steps. Extract the contents of the archive wherever you wish and");
++	f.WriteLine("make sure that your tools which use " + bname + " can find it.");
++	f.WriteBlankLines(1);
++	f.WriteLine("  For example, if you want to run the supplied utilities from the command");
++	f.WriteLine("line, you can, if you wish, add the 'bin' subdirectory to the PATH");
++	f.WriteLine("environment variable.");
++	f.WriteLine("  If you want to make programmes in C which use " + bname + ", you'll");
++	f.WriteLine("likely know how to use the contents of this package. If you don't, please");
++	f.WriteLine("refer to your compiler's documentation."); 
++	f.WriteBlankLines(1);
++	f.WriteLine("  If there is something you cannot keep for yourself, such as a problem,");
++	f.WriteLine("a cheer of joy, a comment or a suggestion, feel free to contact me using");
++	f.WriteLine("the address below.");
++	f.WriteBlankLines(1);
++	f.WriteLine("                              Igor Zlatkovic (igor@zlatkovic.com)");
++	f.Close();
++}
++
++
++/*
++ * main(),
++ * Execution begins here.
++ */
++
++// Parse the command-line arguments.
++for (i = 0; (i < WScript.Arguments.length) && (error == 0); i++) {
++	var arg, opt;
++	arg = WScript.Arguments(i);
++	opt = arg.substring(0, arg.indexOf("="));
++	if (opt.length == 0)
++		opt = arg.substring(0, arg.indexOf(":"));
++	if (opt.length > 0) {
++		if (opt == "trio")
++			withTrio = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "threads")
++			withThreads = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "ftp")
++			withFtp = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "http")
++			withHttp = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "html")
++			withHtml = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "c14n")
++			withC14n = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "catalog")
++			withCatalog = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "docb")
++			withDocb = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "xpath")
++			withXpath = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "xptr")
++			withXptr = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "xinclude")
++			withXinclude = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "iconv")
++			withIconv = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "icu")
++			withIcu = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "iso8859x")
++			withIso8859x = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "zlib")
++			withZlib = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "lzma")
++			withLzma = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "xml_debug")
++			withDebug = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "mem_debug")
++			withMemDebug = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "run_debug")
++			withRunDebug = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "schemas")
++			withSchemas = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "schematron")
++			withSchematron = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "regexps")
++			withRegExps = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "modules")
++			withModules = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "tree")
++			withTree = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "reader")
++			withReader = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "writer")
++			withWriter = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "walker")
++			withWalker = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "pattern")
++			withPattern = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "push")
++			withPush = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "valid")
++			withValid = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "sax1")
++			withSax1 = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "legacy")
++			withLegacy = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "output")
++			withOutput = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "python")
++			withPython = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "compiler")
++			compiler = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "cruntime")
++			cruntime = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "dynruntime")
++			dynruntime = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "vcmanifest")
++			vcmanifest = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "debug")
++			buildDebug = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "static")
++			buildStatic = strToBool(arg.substring(opt.length + 1, arg.length));
++		else if (opt == "prefix")
++			buildPrefix = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "bindir")
++			buildBinPrefix = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "libdir")
++			buildLibPrefix = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "sodir")
++			buildSoPrefix = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "incdir")
++			buildIncPrefix = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "include")
++			buildInclude = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "lib")
++			buildLib = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "release")
++			useCvsVer = false;
++		else
++			error = 1;
++	} else if (i == 0) {
++		if (arg == "genreadme") {
++			// This command comes from the Makefile and will not be checked
++			// for errors, because Makefile will always supply right the parameters.
++			genReadme(WScript.Arguments(1), WScript.Arguments(2), WScript.Arguments(3));
++			WScript.Quit(0);
++		} else if (arg == "help") {
++			usage();
++			WScript.Quit(0);
++		}
++
++	} else {
++		error = 1;
++	}
++}
++
++
++// If we fail here, it is because the user supplied an unrecognised argument.
++if (error != 0) {
++	usage();
++	WScript.Quit(error);
++}
++
++// if user choses to link the c-runtime library statically into libxml2
++// with /MT and friends, then we need to enable static linking for xmllint
++if (cruntime == "/MT" || cruntime == "/MTd" ||
++		cruntime == "/ML" || cruntime == "/MLd") {
++	buildStatic = 1;
++}
++
++dirSep = "\\";
++if (buildBinPrefix == "")
++	buildBinPrefix = "$(PREFIX)" + dirSep + "bin";
++if (buildIncPrefix == "")
++	buildIncPrefix = "$(PREFIX)" + dirSep + "include";
++if (buildLibPrefix == "")
++	buildLibPrefix = "$(PREFIX)" + dirSep + "lib";
++if (buildSoPrefix == "")
++	buildSoPrefix = "$(PREFIX)" + dirSep + "bin";
++
++// Discover the version.
++discoverVersion();
++if (error != 0) {
++	WScript.Echo("Version discovery failed, aborting.");
++	WScript.Quit(error);
++}
++
++var outVerString = baseName + " version: " + verMajor + "." + verMinor + "." + verMicro;
++if (verMicroSuffix && verMicroSuffix != "")
++	outVerString += "-" + verMicroSuffix;
++if (verCvs && verCvs != "")
++	outVerString += "-" + verCvs;
++WScript.Echo(outVerString);
++
++// Configure libxml.
++configureLibxml();
++if (error != 0) {
++	WScript.Echo("Configuration failed, aborting.");
++	WScript.Quit(error);
++}
++
++if (withPython == true) {
++	configureLibxmlPy();
++	if (error != 0) {
++		WScript.Echo("Configuration failed, aborting.");
++		WScript.Quit(error);
++	}
++
++}
++
++// Create the makefile.
++var fso = new ActiveXObject("Scripting.FileSystemObject");
++var makefile = ".\\Makefile.msvc";
++if (compiler == "mingw")
++	makefile = ".\\Makefile.mingw";
++else if (compiler == "bcb")
++	makefile = ".\\Makefile.bcb";
++var new_makefile = ".\\Makefile";
++var f = fso.FileExists(new_makefile);
++if (f) {
++       var t = fso.GetFile(new_makefile);
++       t.Attributes =0;
++}
++fso.CopyFile(makefile, new_makefile, true);
++WScript.Echo("Created Makefile.");
++// Create the config.h.
++var confighsrc = "..\\include\\win32config.h";
++var configh = "..\\config.h";
++var f = fso.FileExists(configh);
++if (f) {
++	var t = fso.GetFile(configh);
++	t.Attributes =0;
++}
++fso.CopyFile(confighsrc, configh, true);
++WScript.Echo("Created config.h.");
++
++
++// Display the final configuration. 
++var txtOut = "\nXML processor configuration\n";
++txtOut += "---------------------------\n";
++txtOut += "              Trio: " + boolToStr(withTrio) + "\n";
++txtOut += "     Thread safety: " + withThreads + "\n";
++txtOut += "        FTP client: " + boolToStr(withFtp) + "\n";
++txtOut += "       HTTP client: " + boolToStr(withHttp) + "\n";
++txtOut += "    HTML processor: " + boolToStr(withHtml) + "\n";
++txtOut += "      C14N support: " + boolToStr(withC14n) + "\n";
++txtOut += "   Catalog support: " + boolToStr(withCatalog) + "\n";
++txtOut += "   DocBook support: " + boolToStr(withDocb) + "\n";
++txtOut += "     XPath support: " + boolToStr(withXpath) + "\n";
++txtOut += "  XPointer support: " + boolToStr(withXptr) + "\n";
++txtOut += "  XInclude support: " + boolToStr(withXinclude) + "\n";
++txtOut += "     iconv support: " + boolToStr(withIconv) + "\n";
++txtOut += "     icu   support: " + boolToStr(withIcu) + "\n";
++txtOut += "  iso8859x support: " + boolToStr(withIso8859x) + "\n";
++txtOut += "      zlib support: " + boolToStr(withZlib) + "\n";
++txtOut += "      lzma support: " + boolToStr(withLzma) + "\n";
++txtOut += "  Debugging module: " + boolToStr(withDebug) + "\n";
++txtOut += "  Memory debugging: " + boolToStr(withMemDebug) + "\n";
++txtOut += " Runtime debugging: " + boolToStr(withRunDebug) + "\n";
++txtOut += "    Regexp support: " + boolToStr(withRegExps) + "\n";
++txtOut += "    Module support: " + boolToStr(withModules) + "\n";
++txtOut += "      Tree support: " + boolToStr(withTree) + "\n";
++txtOut += "    Reader support: " + boolToStr(withReader) + "\n";
++txtOut += "    Writer support: " + boolToStr(withWriter) + "\n";
++txtOut += "    Walker support: " + boolToStr(withWalker) + "\n";
++txtOut += "   Pattern support: " + boolToStr(withPattern) + "\n";
++txtOut += "      Push support: " + boolToStr(withPush) + "\n";
++txtOut += "Validation support: " + boolToStr(withValid) + "\n";
++txtOut += "      SAX1 support: " + boolToStr(withSax1) + "\n";
++txtOut += "    Legacy support: " + boolToStr(withLegacy) + "\n";
++txtOut += "    Output support: " + boolToStr(withOutput) + "\n";
++txtOut += "XML Schema support: " + boolToStr(withSchemas) + "\n";
++txtOut += "Schematron support: " + boolToStr(withSchematron) + "\n";
++txtOut += "   Python bindings: " + boolToStr(withPython) + "\n";
++txtOut += "\n";
++txtOut += "Win32 build configuration\n";
++txtOut += "-------------------------\n";
++txtOut += "          Compiler: " + compiler + "\n";
++if (compiler == "msvc") {
++	txtOut += "  C-Runtime option: " + cruntime + "\n";
++	txtOut += "    Embed Manifest: " + boolToStr(vcmanifest) + "\n";
++} else if (compiler == "bcb")
++	txtOut += "   Use dynamic RTL: " + dynruntime + "\n";
++txtOut += "     Debug symbols: " + boolToStr(buildDebug) + "\n";
++txtOut += "    Static xmllint: " + boolToStr(buildStatic) + "\n";
++txtOut += "    Install prefix: " + buildPrefix + "\n";
++txtOut += "      Put tools in: " + buildBinPrefix + "\n";
++txtOut += "    Put headers in: " + buildIncPrefix + "\n";
++txtOut += "Put static libs in: " + buildLibPrefix + "\n";
++txtOut += "Put shared libs in: " + buildSoPrefix + "\n";
++txtOut += "      Include path: " + buildInclude + "\n";
++txtOut += "          Lib path: " + buildLib + "\n";
++WScript.Echo(txtOut);
++
++//
++

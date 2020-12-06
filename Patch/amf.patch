@@ -1,0 +1,87 @@
+ .../AmfMediaChromaKeyCommon/AmfMediaChromaKeyCommon.vcxproj    |  2 +-
+ amf/public/proj/vs2017/AmfMediaCommon/AmfMediaCommon.vcxproj   |  2 +-
+ .../proj/vs2017/ComponentsFFMPEG/ComponentsFFMPEG.vcxproj      |  2 +-
+ amf/public/proj/vs2019/AmfMediaCommon/AmfMediaCommon.vcxproj   | 10 +++++-----
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/amf/public/proj/vs2017/AmfMediaChromaKeyCommon/AmfMediaChromaKeyCommon.vcxproj b/amf/public/proj/vs2017/AmfMediaChromaKeyCommon/AmfMediaChromaKeyCommon.vcxproj
+index 8e352cc..6135640 100644
+--- a/amf/public/proj/vs2017/AmfMediaChromaKeyCommon/AmfMediaChromaKeyCommon.vcxproj
++++ b/amf/public/proj/vs2017/AmfMediaChromaKeyCommon/AmfMediaChromaKeyCommon.vcxproj
+@@ -21,7 +21,7 @@
+   <PropertyGroup Label="Globals">
+     <ProjectGuid>{188C93E9-24D9-48D8-AC6D-FE19A76B5E71}</ProjectGuid>
+     <RootNamespace>AmfChromaKeyCommon</RootNamespace>
+-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
++    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+diff --git a/amf/public/proj/vs2017/AmfMediaCommon/AmfMediaCommon.vcxproj b/amf/public/proj/vs2017/AmfMediaCommon/AmfMediaCommon.vcxproj
+index caffc7f..3c555e6 100644
+--- a/amf/public/proj/vs2017/AmfMediaCommon/AmfMediaCommon.vcxproj
++++ b/amf/public/proj/vs2017/AmfMediaCommon/AmfMediaCommon.vcxproj
+@@ -80,7 +80,7 @@
+     <ProjectGuid>{BE74F945-D4A5-4840-8C55-919030E8DC47}</ProjectGuid>
+     <Keyword>Win32Proj</Keyword>
+     <RootNamespace>AmfMediaCommon</RootNamespace>
+-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
++    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+diff --git a/amf/public/proj/vs2017/ComponentsFFMPEG/ComponentsFFMPEG.vcxproj b/amf/public/proj/vs2017/ComponentsFFMPEG/ComponentsFFMPEG.vcxproj
+index 5fb87ad..388ba14 100644
+--- a/amf/public/proj/vs2017/ComponentsFFMPEG/ComponentsFFMPEG.vcxproj
++++ b/amf/public/proj/vs2017/ComponentsFFMPEG/ComponentsFFMPEG.vcxproj
+@@ -22,7 +22,7 @@
+     <ProjectGuid>{16D5EA62-0CAB-4DFD-AD0F-7813FA89B6FD}</ProjectGuid>
+     <Keyword>Win32Proj</Keyword>
+     <RootNamespace>componentdemuxerffmpeg</RootNamespace>
+-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
++    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+diff --git a/amf/public/proj/vs2019/AmfMediaCommon/AmfMediaCommon.vcxproj b/amf/public/proj/vs2019/AmfMediaCommon/AmfMediaCommon.vcxproj
+index caffc7f..272a012 100644
+--- a/amf/public/proj/vs2019/AmfMediaCommon/AmfMediaCommon.vcxproj
++++ b/amf/public/proj/vs2019/AmfMediaCommon/AmfMediaCommon.vcxproj
+@@ -80,32 +80,32 @@
+     <ProjectGuid>{BE74F945-D4A5-4840-8C55-919030E8DC47}</ProjectGuid>
+     <Keyword>Win32Proj</Keyword>
+     <RootNamespace>AmfMediaCommon</RootNamespace>
+-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
++    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+   </PropertyGroup>
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+-    <PlatformToolset>v141</PlatformToolset>
++    <PlatformToolset>v142</PlatformToolset>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+-    <PlatformToolset>v141</PlatformToolset>
++    <PlatformToolset>v142</PlatformToolset>
+     <WholeProgramOptimization>true</WholeProgramOptimization>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+-    <PlatformToolset>v141</PlatformToolset>
++    <PlatformToolset>v142</PlatformToolset>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>StaticLibrary</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+-    <PlatformToolset>v141</PlatformToolset>
++    <PlatformToolset>v142</PlatformToolset>
+     <WholeProgramOptimization>true</WholeProgramOptimization>
+     <CharacterSet>Unicode</CharacterSet>
+   </PropertyGroup>

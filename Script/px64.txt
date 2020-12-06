@@ -1,0 +1,21 @@
+C:\Program Files\Java\jdk1.8.0_202
+C:\Program Files\Java\jdk1.8.0_202\bin
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\ipp
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\ipp\bin
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\ipp\include
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\ipp\lib\intel64_win
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl\bin
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl\bin\pkgconfig
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl\include
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl\lib\intel64_win
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl\tools
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mpi
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mpi\intel64\bin
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\redist
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\redist\intel64_win\ipp
+H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\redist\intel64_win\mkl
+H:\Green\Language\NVIDIA\CUDA\11.1\SDK
+H:\Green\Language\NVIDIA\CUDA\11.1\SDK\bin
+H:\Green\Language\NVIDIA\CUDA\11.1\SDK\include
+H:\Green\Language\NVIDIA\CUDA\11.1\SDK\lib\x64

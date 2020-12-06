@@ -1,0 +1,37 @@
+ include/iconv.h.build.in                   | 4 ----
+ libcharset/include/localcharset.h.build.in | 5 -----
+ 2 files changed, 9 deletions(-)
+
+diff --git a/include/iconv.h.build.in b/include/iconv.h.build.in
+index ae50ba3..41505b0 100644
+--- a/include/iconv.h.build.in
++++ b/include/iconv.h.build.in
+@@ -23,11 +23,7 @@
+ 
+ #define _LIBICONV_VERSION 0x010E    /* version number: (major<<8) + minor */
+ 
+-#if @HAVE_VISIBILITY@ && BUILDING_LIBICONV
+-#define LIBICONV_DLL_EXPORTED __attribute__((__visibility__("default")))
+-#else
+ #define LIBICONV_DLL_EXPORTED
+-#endif
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/libcharset/include/localcharset.h.build.in b/libcharset/include/localcharset.h.build.in
+index c691359..7ff4138 100644
+--- a/libcharset/include/localcharset.h.build.in
++++ b/libcharset/include/localcharset.h.build.in
+@@ -20,12 +20,7 @@
+ #ifndef _LOCALCHARSET_H
+ #define _LOCALCHARSET_H
+ 
+-#if @HAVE_VISIBILITY@ && BUILDING_LIBCHARSET
+-#define LIBCHARSET_DLL_EXPORTED __attribute__((__visibility__("default")))
+-#else
+ #define LIBCHARSET_DLL_EXPORTED
+-#endif
+-
+ 
+ #ifdef __cplusplus
+ extern "C" {

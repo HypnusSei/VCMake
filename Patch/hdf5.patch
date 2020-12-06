@@ -1,0 +1,17 @@
+diff --git "a/config/cmake_ext_mod/HDFUseCXX.cmake" "b/config/cmake_ext_mod/HDFUseCXX.cmake"
+index 8d98147991..9952acbc09 100644
+--- "a/config/cmake_ext_mod/HDFUseCXX.cmake"
++++ "b/config/cmake_ext_mod/HDFUseCXX.cmake"
+@@ -20,9 +20,9 @@ set (HDF_PREFIX "H5")
+ #  Fix CXX flags if we are compiling staticly on Windows using
+ #  Windows_MT.cmake from config/cmake/UserMacros
+ #-------------------------------------------------------------------------------
+-if (BUILD_STATIC_CRT_LIBS)
+-  TARGET_STATIC_CRT_FLAGS ()
+-endif ()
++#if (BUILD_STATIC_CRT_LIBS)
++#  TARGET_STATIC_CRT_FLAGS ()
++#endif ()
+ 
+ #-----------------------------------------------------------------------------
+ # Configure Checks which require CXX compilation must go in here

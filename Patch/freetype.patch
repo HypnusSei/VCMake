@@ -1,0 +1,15 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index ad8ded0..730528f 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -416,8 +416,8 @@ if (NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL)
+       PATTERN "ftconfig.h" EXCLUDE
+       PATTERN "ftoption.h" EXCLUDE)
+   install(
+-    FILES ${PROJECT_BINARY_DIR}/include/freetype/config/ftconfig.h
+-          ${PROJECT_BINARY_DIR}/include/freetype/config/ftoption.h
++    FILES ${PROJECT_SOURCE_DIR}/include/freetype/config/ftconfig.h
++          ${PROJECT_SOURCE_DIR}/include/freetype/config/ftoption.h
+       DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/freetype2/freetype/config
+       COMPONENT headers)
+ endif ()

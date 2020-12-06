@@ -1,0 +1,179 @@
+ cmake/OpenCVCRTLinkage.cmake     | 32 ++++++++++++++++----------------
+ cmake/OpenCVDetectVTK.cmake      | 14 +++++++-------
+ modules/core/src/system.cpp      | 36 ++++++++++++++++++------------------
+ modules/highgui/CMakeLists.txt   |  4 +++-
+ modules/imgcodecs/CMakeLists.txt |  4 +++-
+ 5 files changed, 47 insertions(+), 43 deletions(-)
+
+diff --git a/cmake/OpenCVCRTLinkage.cmake b/cmake/OpenCVCRTLinkage.cmake
+index 0e0a54ecf9..3042062cea 100644
+--- a/cmake/OpenCVCRTLinkage.cmake
++++ b/cmake/OpenCVCRTLinkage.cmake
+@@ -33,7 +33,7 @@ endif()
+ # Ignore warning: This object file does not define any previously undefined public symbols, ...
+ set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /IGNORE:4221")
+ 
+-if(NOT BUILD_SHARED_LIBS AND BUILD_WITH_STATIC_CRT)
++#if(NOT BUILD_SHARED_LIBS AND BUILD_WITH_STATIC_CRT)
+   foreach(flag_var
+           CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+           CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+@@ -43,24 +43,24 @@ if(NOT BUILD_SHARED_LIBS AND BUILD_WITH_STATIC_CRT)
+       string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+     endif()
+     if(${flag_var} MATCHES "/MDd")
+-      string(REGEX REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
++      string(REGEX REPLACE "/MDd" "/MT" ${flag_var} "${${flag_var}}")
+     endif()
+   endforeach(flag_var)
+ 
+   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:atlthunk.lib")
+   set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcrt.lib")
+   set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:libcpmtd.lib /NODEFAULTLIB:msvcrtd.lib")
+-else()
+-  foreach(flag_var
+-          CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+-          CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+-          CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+-          CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+-    if(${flag_var} MATCHES "/MT")
+-      string(REGEX REPLACE "/MT" "/MD" ${flag_var} "${${flag_var}}")
+-    endif()
+-    if(${flag_var} MATCHES "/MTd")
+-      string(REGEX REPLACE "/MTd" "/MDd" ${flag_var} "${${flag_var}}")
+-    endif()
+-  endforeach(flag_var)
+-endif()
++#else()
++#  foreach(flag_var
++#          CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
++#          CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
++#          CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
++#          CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
++#    if(${flag_var} MATCHES "/MT")
++#      string(REGEX REPLACE "/MT" "/MD" ${flag_var} "${${flag_var}}")
++#    endif()
++#    if(${flag_var} MATCHES "/MTd")
++#      string(REGEX REPLACE "/MTd" "/MDd" ${flag_var} "${${flag_var}}")
++#    endif()
++#  endforeach(flag_var)
++#endif()
+diff --git a/cmake/OpenCVDetectVTK.cmake b/cmake/OpenCVDetectVTK.cmake
+index b8cf36007c..c700a39174 100644
+--- a/cmake/OpenCVDetectVTK.cmake
++++ b/cmake/OpenCVDetectVTK.cmake
+@@ -70,13 +70,13 @@ if(HAVE_QT AND VTK_VERSION VERSION_GREATER "6.0.0" AND NOT ${VTK_QT_VERSION} STR
+   endif()
+ endif()
+ 
+-try_compile(VTK_COMPILE_STATUS
+-    "${OpenCV_BINARY_DIR}"
+-    "${OpenCV_SOURCE_DIR}/cmake/checks/vtk_test.cpp"
+-    CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${VTK_INCLUDE_DIRS}"
+-    LINK_LIBRARIES ${VTK_LIBRARIES}
+-    OUTPUT_VARIABLE OUTPUT
+-)
++#try_compile(VTK_COMPILE_STATUS
++#    "${OpenCV_BINARY_DIR}"
++#    "${OpenCV_SOURCE_DIR}/cmake/checks/vtk_test.cpp"
++#    CMAKE_FLAGS "-DINCLUDE_DIRECTORIES:STRING=${VTK_INCLUDE_DIRS}"
++#    LINK_LIBRARIES ${VTK_LIBRARIES}
++#    OUTPUT_VARIABLE OUTPUT
++#)
+ 
+ if(NOT ${VTK_COMPILE_STATUS})
+   message(STATUS "VTK support is disabled. Compilation of the sample code has failed.")
+diff --git a/modules/core/src/system.cpp b/modules/core/src/system.cpp
+index 3acf77035f..10a3b72713 100644
+--- a/modules/core/src/system.cpp
++++ b/modules/core/src/system.cpp
+@@ -1801,27 +1801,27 @@ CoreTLSData& getCoreTlsData()
+     #pragma warning(disable:4447) // Disable warning 'main' signature found without threading model
+ #endif
+ 
+-extern "C"
+-BOOL WINAPI DllMain(HINSTANCE, DWORD fdwReason, LPVOID lpReserved);
++//extern "C"
++//BOOL WINAPI DllMain(HINSTANCE, DWORD fdwReason, LPVOID lpReserved);
+ 
+-extern "C"
+-BOOL WINAPI DllMain(HINSTANCE, DWORD fdwReason, LPVOID lpReserved)
+-{
+-    if (fdwReason == DLL_THREAD_DETACH || fdwReason == DLL_PROCESS_DETACH)
+-    {
+-        if (lpReserved != NULL) // called after ExitProcess() call
+-        {
+-            cv::__termination = true;
+-        }
+-        else
+-        {
++//extern "C"
++//BOOL WINAPI DllMain(HINSTANCE, DWORD fdwReason, LPVOID lpReserved)
++//{
++//    if (fdwReason == DLL_THREAD_DETACH || fdwReason == DLL_PROCESS_DETACH)
++//    {
++//        if (lpReserved != NULL) // called after ExitProcess() call
++//        {
++//            cv::__termination = true;
++//        }
++//        else
++//        {
+             // Not allowed to free resources if lpReserved is non-null
+             // http://msdn.microsoft.com/en-us/library/windows/desktop/ms682583.aspx
+-            cv::getTlsStorage().releaseThread();
+-        }
+-    }
+-    return TRUE;
+-}
++//            cv::getTlsStorage().releaseThread();
++//        }
++//    }
++//    return TRUE;
++//}
+ #endif
+ 
+ 
+diff --git a/modules/highgui/CMakeLists.txt b/modules/highgui/CMakeLists.txt
+index d7a3c220d1..5a094bc08f 100644
+--- a/modules/highgui/CMakeLists.txt
++++ b/modules/highgui/CMakeLists.txt
+@@ -59,6 +59,7 @@ if(HAVE_QT5)
+     add_definitions(${Qt5${dt5_dep}_DEFINITIONS})
+     include_directories(${Qt5${dt5_dep}_INCLUDE_DIRS})
+     list(APPEND HIGHGUI_LIBRARIES ${Qt5${dt5_dep}_LIBRARIES})
++    list(APPEND HIGHGUI_LIBRARIES "zstd" "userenv" "version" "winmm" "netapi32")
+   endforeach()
+ 
+   if(HAVE_QT_OPENGL)
+@@ -152,7 +153,8 @@ if(APPLE)
+ endif()
+ 
+ if(MSVC)
+-  set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /NODEFAULTLIB:libcmt.lib /DEBUG")
++#  set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /NODEFAULTLIB:libcmt.lib /DEBUG")
++set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /DEBUG")
+ endif()
+ 
+ ocv_warnings_disable(CMAKE_CXX_FLAGS -Wno-deprecated-declarations)
+diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
+index 8ae85e62c5..f01df47504 100644
+--- a/modules/imgcodecs/CMakeLists.txt
++++ b/modules/imgcodecs/CMakeLists.txt
+@@ -46,6 +46,7 @@ if(HAVE_TIFF)
+ endif()
+ 
+ if(HAVE_OPENJPEG)
++  add_definitions(-DOPJ_STATIC)
+   ocv_include_directories(${OPENJPEG_INCLUDE_DIRS})
+   list(APPEND GRFMT_LIBS ${OPENJPEG_LIBRARIES})
+ endif()
+@@ -153,7 +154,8 @@ if(APPLE)
+ endif()
+ 
+ if(MSVC)
+-  set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /NODEFAULTLIB:libcmt.lib /DEBUG")
++#  set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /NODEFAULTLIB:libcmt.lib /DEBUG")
++set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /DEBUG")
+ endif()
+ 
+ ocv_warnings_disable(CMAKE_CXX_FLAGS -Wno-deprecated-declarations)

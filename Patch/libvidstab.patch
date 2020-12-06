@@ -1,0 +1,44 @@
+ CMakeLists.txt           | 2 +-
+ tests/CMakeLists.txt     | 2 +-
+ transcode/CMakeLists.txt | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index bf07bc1..35320e2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,7 +21,7 @@ option(BUILD_SHARED_LIBS "build shared libraries instead of static libraries"
+ 
+ option(USE_OMP "use parallelization use OMP" ON)
+ 
+-add_definitions(-Wall -Wno-pointer-sign -fPIC -std=gnu99)
++add_definitions(-Wall -fPIC -std=gnu99)
+ 
+ ### ORC is not used in any active code at the moment  ###
+ # I tried it with 0.4.14
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index 6812916..0de8557 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -16,7 +16,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+   set(CMAKE_BUILD_TYPE "Debug")
+ endif()
+ 
+-add_definitions(-Wall -Wno-pointer-sign -DTESTING -std=gnu99)
++add_definitions(-Wall -DTESTING -std=gnu99)
+ find_package(Orc)
+ if(ORC_FOUND)
+ add_definitions( -DUSE_ORC ${ORC_DEFINITIONS})
+diff --git a/transcode/CMakeLists.txt b/transcode/CMakeLists.txt
+index 00264e3..6a6c8f7 100644
+--- a/transcode/CMakeLists.txt
++++ b/transcode/CMakeLists.txt
+@@ -11,7 +11,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+   set(CMAKE_BUILD_TYPE "Release")
+ endif()
+ 
+-add_definitions(-Wall -Wno-pointer-sign -DTRANSCODE -std=gnu99)
++add_definitions(-Wall -DTRANSCODE -std=gnu99)
+ # I tried it with 0.4.14
+ #  0.4.10 did not work (not all opcode implemented)
+ # find_package(Orc)  // it actually not used by any active code

@@ -1,0 +1,13 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index c3907f85..058e187c 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -8,6 +8,8 @@
+ #
+ ###############################################################################
+ 
++set(STATIC 1)
++
+ cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
+ 
+ # In-source builds are disabled.

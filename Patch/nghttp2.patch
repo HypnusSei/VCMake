@@ -1,0 +1,13 @@
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index 50e99a1d..12bb7c54 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -470,7 +470,7 @@ add_subdirectory(python)
+ add_subdirectory(tests)
+ #add_subdirectory(tests/testdata)
+ add_subdirectory(integration-tests)
+-add_subdirectory(doc)
++#add_subdirectory(doc)
+ add_subdirectory(contrib)
+ add_subdirectory(script)
+ 

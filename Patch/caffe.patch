@@ -1,0 +1,273 @@
+ CMakeLists.txt                         |  6 +++---
+ cmake/Dependencies.cmake               | 33 ++++++++++++++++-----------------
+ cmake/Misc.cmake                       |  2 +-
+ cmake/Modules/FindGFlags.cmake         |  3 ++-
+ cmake/Modules/FindGlog.cmake           | 13 ++++++-------
+ cmake/Modules/FindLMDB.cmake           |  3 ++-
+ cmake/Modules/FindLevelDB.cmake        | 12 +++++++++---
+ cmake/Modules/FindSnappy.cmake         |  6 +-----
+ cmake/TargetResolvePrerequesites.cmake |  4 ++--
+ cmake/Utils.cmake                      | 25 +++++++++++++++++++++++++
+ 11 files changed, 82 insertions(+), 40 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index db316eea..eb9fa219 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,7 +47,6 @@ else()
+   caffe_option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+ endif()
+ caffe_option(BUILD_python "Build Python wrapper" ON)
+-set(python_version "2" CACHE STRING "Specify which Python version to use")
+ caffe_option(BUILD_matlab "Build Matlab wrapper" OFF)
+ caffe_option(BUILD_docs   "Build documentation" ON IF UNIX OR APPLE)
+ caffe_option(BUILD_python_layer "Build the Caffe Python layer" ON)
+@@ -73,8 +72,9 @@ if(MSVC AND BUILD_SHARED_LIBS)
+   message(WARNING "Some tests (solvers) will fail when building as a shared library with MSVC")
+ endif()
+ 
+-# ---[ Prebuild dependencies on windows
+-include(cmake/WindowsDownloadPrebuiltDependencies.cmake)
++if(WIN32)
++    add_definitions(/DGOOGLE_GLOG_DLL_DECL=)
++endif()
+ 
+ # ---[ Dependencies
+ include(cmake/Dependencies.cmake)
+diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
+index 3dafb8d3..1ace2c4a 100644
+--- a/cmake/Dependencies.cmake
++++ b/cmake/Dependencies.cmake
+@@ -5,6 +5,9 @@ set(Caffe_DEFINITIONS "")
+ set(Caffe_COMPILE_OPTIONS "")
+ 
+ # ---[ Boost
++# Use static version of Boost
++# SET(Boost_USE_STATIC_LIBS ON)
++# SET(Boost_USE_STATIC_RUNTIME ON)
+ find_package(Boost 1.54 REQUIRED COMPONENTS system thread filesystem)
+ list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${Boost_INCLUDE_DIRS})
+ list(APPEND Caffe_DEFINITIONS PUBLIC -DBOOST_ALL_NO_LIB)
+@@ -54,13 +57,16 @@ if(MSVC)
+     list(APPEND CMAKE_MODULE_PATH ${HDF5_DIR})
+   endif()
+   find_package(HDF5 COMPONENTS C HL REQUIRED)
+-  set(HDF5_LIBRARIES hdf5-shared)
+-  set(HDF5_HL_LIBRARIES hdf5_hl-shared)
++  # find_package() lists only file names (not full path)
++  link_directories(${HDF5_DIR}/../../lib)
++  # lib***: Link against static library
++  set(HDF5_LIBRARIES libhdf5)
++  set(HDF5_HL_LIBRARIES libhdf5_hl)
+ else()
+   find_package(HDF5 COMPONENTS HL REQUIRED)
+ endif()
+ list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${HDF5_INCLUDE_DIRS})
+-list(APPEND Caffe_LINKER_LIBS PUBLIC ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES})
++list(APPEND Caffe_LINKER_LIBS PUBLIC ${HDF5_LIBRARIES} ${HDF5_HL_LIBRARIES} zlib)
+ 
+ # ---[ LMDB
+ if(USE_LMDB)
+@@ -137,6 +143,11 @@ if(NOT APPLE)
+     list(APPEND Caffe_INCLUDE_DIRS PUBLIC ${MKL_INCLUDE_DIR})
+     list(APPEND Caffe_LINKER_LIBS PUBLIC ${MKL_LIBRARIES})
+     list(APPEND Caffe_DEFINITIONS PUBLIC -DUSE_MKL)
++    if(CMAKE_CL_64)
++      link_directories(${MKL_ROOT}/lib/intel64_win)
++    else(CMAKE_CL_64)
++      link_directories(${MKL_ROOT}/lib/ia32_win)
++    endif(CMAKE_CL_64)
+   endif()
+ elseif(APPLE)
+   find_package(vecLib REQUIRED)
+@@ -161,21 +172,9 @@ if(BUILD_python)
+     set(version ${PYTHONLIBS_VERSION_STRING})
+ 
+     STRING( REGEX REPLACE "[^0-9]" "" boost_py_version ${version} )
+-    find_package(Boost 1.46 COMPONENTS "python-py${boost_py_version}")
+-    set(Boost_PYTHON_FOUND ${Boost_PYTHON-PY${boost_py_version}_FOUND})
++    find_package(Boost 1.46 COMPONENTS "python${python_version}")
++    set(Boost_PYTHON_FOUND ${Boost_PYTHON${python_version}_FOUND})
+ 
+-    while(NOT "${version}" STREQUAL "" AND NOT Boost_PYTHON_FOUND)
+-      STRING( REGEX REPLACE "([0-9.]+).[0-9]+" "\\1" version ${version} )
+-
+-      STRING( REGEX REPLACE "[^0-9]" "" boost_py_version ${version} )
+-      find_package(Boost 1.46 COMPONENTS "python-py${boost_py_version}")
+-      set(Boost_PYTHON_FOUND ${Boost_PYTHON-PY${boost_py_version}_FOUND})
+-
+-      STRING( REGEX MATCHALL "([0-9.]+).[0-9]+" has_more_version ${version} )
+-      if("${has_more_version}" STREQUAL "")
+-        break()
+-      endif()
+-    endwhile()
+     if(NOT Boost_PYTHON_FOUND)
+       find_package(Boost 1.46 COMPONENTS python)
+     endif()
+diff --git a/cmake/Misc.cmake b/cmake/Misc.cmake
+index 9dd2609b..73644a21 100644
+--- a/cmake/Misc.cmake
++++ b/cmake/Misc.cmake
+@@ -29,7 +29,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+ endif()
+ 
+ # ---[ RPATH settings
+-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE CACHE BOOLEAN "Use link paths for shared library rpath")
++set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE CACHE STRING "Use link paths for shared library rpath")
+ set(CMAKE_MACOSX_RPATH TRUE)
+ 
+ list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES ${CMAKE_INSTALL_PREFIX}/lib __is_systtem_dir)
+diff --git a/cmake/Modules/FindGFlags.cmake b/cmake/Modules/FindGFlags.cmake
+index f44ecc05..804d0069 100644
+--- a/cmake/Modules/FindGFlags.cmake
++++ b/cmake/Modules/FindGFlags.cmake
+@@ -15,7 +15,8 @@ set(GFLAGS_ROOT_DIR "" CACHE PATH "Folder contains Gflags")
+ 
+ # We are testing only a couple of files in the include directories
+ find_path(GFLAGS_INCLUDE_DIR gflags/gflags.h
+-    PATHS ${GFLAGS_ROOT_DIR})
++    PATHS ${GFLAGS_ROOT_DIR}
++    PATH_SUFFIXES include)
+ 
+ if(MSVC)
+     # rely on gflags-config.cmake
+diff --git a/cmake/Modules/FindGlog.cmake b/cmake/Modules/FindGlog.cmake
+index eec263a7..dd47e621 100644
+--- a/cmake/Modules/FindGlog.cmake
++++ b/cmake/Modules/FindGlog.cmake
+@@ -11,17 +11,16 @@
+ 
+ include(FindPackageHandleStandardArgs)
+ 
+-set(GLOG_ROOT_DIR "" CACHE PATH "Folder contains Google glog")
+ 
+ find_path(GLOG_INCLUDE_DIR glog/logging.h
+-    PATHS ${GLOG_ROOT_DIR})
++    PATHS ${GLOG_ROOT_DIR}
++    PATH_SUFFIXES include)
+ 
+ if(MSVC)
+-    # rely on glog-config.cmake
+-    find_package(glog NO_MODULE)
+-
+-    set(GLOG_LIBRARY ${glog_LIBRARIES})
+-    set(GLOG_INCLUDE_DIR ${glog_INCLUDE_DIRS})
++    find_library(GLOG_LIBRARY 
++        NAMES glog
++        PATHS ${GLOG_ROOT_DIR}
++        PATH_SUFFIXES lib)
+ else()
+     find_library(GLOG_LIBRARY glog
+         PATHS ${GLOG_ROOT_DIR}
+diff --git a/cmake/Modules/FindLMDB.cmake b/cmake/Modules/FindLMDB.cmake
+index 2f0adb1b..c7c9eb75 100644
+--- a/cmake/Modules/FindLMDB.cmake
++++ b/cmake/Modules/FindLMDB.cmake
+@@ -13,7 +13,8 @@
+ # Aug 31, 2013
+ 
+ if(MSVC)
+-  find_package(LMDB NO_MODULE)
++  find_path(LMDB_INCLUDE_DIR NAMES  lmdb.h PATHS "${LMDB_DIR}/include")
++  find_library(LMDB_LIBRARIES NAMES liblmdb   PATHS "${LMDB_DIR}/lib" )
+ else()
+   find_path(LMDB_INCLUDE_DIR NAMES  lmdb.h PATHS "$ENV{LMDB_DIR}/include")
+   find_library(LMDB_LIBRARIES NAMES lmdb   PATHS "$ENV{LMDB_DIR}/lib" )
+diff --git a/cmake/Modules/FindLevelDB.cmake b/cmake/Modules/FindLevelDB.cmake
+index 6e6a92dd..c40cd7c0 100644
+--- a/cmake/Modules/FindLevelDB.cmake
++++ b/cmake/Modules/FindLevelDB.cmake
+@@ -6,9 +6,15 @@
+ 
+ # Look for the header file.
+ if(MSVC)
+-  find_package(LevelDB NO_MODULE)
+-  set(LevelDB_INCLUDE ${LevelDB_INCLUDE_DIRS})
+-  set(LevelDB_LIBRARY ${LevelDB_LIBRARIES})
++  find_path(LevelDB_INCLUDE NAMES leveldb/db.h
++  PATHS ${LEVELDB_ROOT}/include
++  DOC "Path in which the file leveldb/db.h is located." )
++
++  # Look for the library.
++  find_library(LevelDB_LIBRARY NAMES leveldb
++    PATHS ${LEVELDB_ROOT}/lib
++    DOC "Path to leveldb library." )
++
+ else()
+   find_path(LevelDB_INCLUDE NAMES leveldb/db.h
+                             PATHS $ENV{LEVELDB_ROOT}/include /opt/local/include /usr/local/include /usr/include
+diff --git a/cmake/Modules/FindSnappy.cmake b/cmake/Modules/FindSnappy.cmake
+index 3e4f5e6f..411a1614 100644
+--- a/cmake/Modules/FindSnappy.cmake
++++ b/cmake/Modules/FindSnappy.cmake
+@@ -7,16 +7,12 @@
+ #  SNAPPY_FOUND
+ #  Snappy_INCLUDE_DIR
+ #  Snappy_LIBRARIES
+-if(MSVC)
+-  # rely on snappy-config.cmake
+-  find_package(Snappy NO_MODULE)
+-else()
+   find_path(Snappy_INCLUDE_DIR NAMES snappy.h
+                               PATHS ${SNAPPY_ROOT_DIR} ${SNAPPY_ROOT_DIR}/include)
+ 
+   find_library(Snappy_LIBRARIES NAMES snappy
+                                 PATHS ${SNAPPY_ROOT_DIR} ${SNAPPY_ROOT_DIR}/lib)
+-endif()
++
+ 
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(Snappy DEFAULT_MSG Snappy_INCLUDE_DIR Snappy_LIBRARIES)
+diff --git a/cmake/TargetResolvePrerequesites.cmake b/cmake/TargetResolvePrerequesites.cmake
+index 429c1139..e7e18e8a 100644
+--- a/cmake/TargetResolvePrerequesites.cmake
++++ b/cmake/TargetResolvePrerequesites.cmake
+@@ -47,12 +47,12 @@ function(caffe_prerequisites_directories VAR)
+ endfunction()
+ 
+ function(caffe_copy_prerequisites target)
+-  caffe_prerequisites_directories(_directories)
++#  caffe_prerequisites_directories(_directories)
+   target_copy_prerequisites(${target} ${ARGN} DIRECTORIES ${_directories})
+ endfunction()
+ 
+ function(caffe_install_prerequisites target)
+-  caffe_prerequisites_directories(_directories)
++#  caffe_prerequisites_directories(_directories)
+   target_install_prerequisites(${target} ${ARGN} DIRECTORIES ${_directories})
+ endfunction()
+ 
+diff --git a/cmake/Utils.cmake b/cmake/Utils.cmake
+index 653de5fd..b964e401 100644
+--- a/cmake/Utils.cmake
++++ b/cmake/Utils.cmake
+@@ -380,3 +380,28 @@ function(caffe_detect_darwin_version output_var)
+     set(${output_var} "" PARENT_SCOPE)
+   endif()
+ endfunction()
++
++#-----------------------------------------------------------------------------
++# Option to Build with Static CRT libraries on Windows
++#-------------------------------------------------------------------------------
++MACRO (TARGET_STATIC_CRT_FLAGS)
++  if (MSVC AND NOT BUILD_SHARED_LIBS)
++    foreach (flag_var
++        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
++        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
++        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
++        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
++      if (${flag_var} MATCHES "/MD")
++        string (REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
++      endif (${flag_var} MATCHES "/MD")
++    endforeach (flag_var)
++
++    set (WIN_COMPILE_FLAGS "")
++  endif (MSVC AND NOT BUILD_SHARED_LIBS)
++ENDMACRO (TARGET_STATIC_CRT_FLAGS)
++
++#-----------------------------------------------------------------------------
++option (BUILD_STATIC_CRT_LIBS "Build With Static CRT Libraries" OFF)
++if (BUILD_STATIC_CRT_LIBS)
++  TARGET_STATIC_CRT_FLAGS ()
++endif (BUILD_STATIC_CRT_LIBS)
+\ No newline at end of file

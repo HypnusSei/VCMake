@@ -1,0 +1,13 @@
+diff --git "a/cmake/version.in.cmake" "b/cmake/version.in.cmake"
+index e650c7ba..afc2daeb 100644
+--- "a/cmake/version.in.cmake"
++++ "b/cmake/version.in.cmake"
+@@ -54,7 +54,7 @@ END
+ 
+ // Icon with lowest ID value placed first to ensure application icon
+ // remains consistent on all systems.
+-1                       ICON                    PRODUCT_ICON
++//1                       ICON                    PRODUCT_ICON
+ 
+ 
+ #endif    // English (United States) resources

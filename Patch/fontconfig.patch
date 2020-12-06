@@ -1,0 +1,16 @@
+ config.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/config.h b/config.h
+index 2a96a0d..e54156f 100644
+--- a/config.h
++++ b/config.h
+@@ -32,7 +32,7 @@
+ #    define W_OK 0x02
+ #endif
+ 
+-#define snprintf _snprintf
++//#define snprintf _snprintf
+ /* Font configuration directory */
+ #define CONFDIR "c:/windows/etc"
+ 

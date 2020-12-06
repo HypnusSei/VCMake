@@ -1,0 +1,13 @@
+diff --git "a/src/lib/openjp2/openjpeg.h" "b/src/lib/openjp2/openjpeg.h"
+index 50ed02d8..dfe486b9 100644
+--- "a/src/lib/openjp2/openjpeg.h"
++++ "b/src/lib/openjp2/openjpeg.h"
+@@ -91,7 +91,7 @@ Most compilers implement their own version of this keyword ...
+ #   endif
+ #   define OPJ_CALLCONV
+ #else
+-#   define OPJ_CALLCONV __stdcall
++#   define OPJ_CALLCONV __cdecl
+ /*
+ The following ifdef block is the standard way of creating macros which make exporting
+ from a DLL simpler. All files within this DLL are compiled with the OPJ_EXPORTS
