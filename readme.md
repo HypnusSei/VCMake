@@ -20,6 +20,7 @@
     vca.cmd           : The source code to be compiled is placed here, you can add it at will;
 
 ## Compile specification:
+    The vcx86.cmd/vcx64.cmd file must be run in administrator mode;
     At the beginning of compilation, the source code directory is checked for existence; 
     If it exists, it will not be downloaded again;
     In other words, if the source code directory exists, that download address can be filled in arbitrarily;
