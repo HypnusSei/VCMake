@@ -13,7 +13,7 @@ set VCProjectNameX=%8
 set "PKG_CONFIG_PATH=%dbyoungSDKPath%\lib\pkgconfig"
 
 :: 源代码目录
-set "libvorbisSRC=%VCMakeRootPath%Source\%SourceCodeName%"
+set "libvorbisSRC=%~d0\Source\%SourceCodeName%"
 
 :: MSBuild 头文件、库文件搜索路径
 set "INCLUDE=%dbyoungSDKPath%\include;%dbyoungSDKPath%\include\pixman-1;%dbyoungSDKPath%\include\freetype2;%INCLUDE%"

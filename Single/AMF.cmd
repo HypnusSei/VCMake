@@ -13,14 +13,14 @@ set VCProjectNameX=%8
 set "PKG_CONFIG_PATH=%dbyoungSDKPath%\lib\pkgconfig"
 
 :: 源代码目录
-set "SourceFullPath=%VCMakeRootPath%Source\%SourceCodeName%"
+set "SourceFullPath=%~d0\Source\%SourceCodeName%"
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%SourceFullPath%\%SourceCodeName%.patch"
    cd /D "%SourceFullPath%"
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%SourceFullPath%\%SourceCodeName%.patch"
  )
 
 :: MSBuild 头文件、库文件搜索路径

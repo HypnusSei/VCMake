@@ -11,6 +11,7 @@ set BuildHostX8664=%7
 set VCProjectNameX=%8
 set BuildLLVMPathX=%VCMakeRootPath%VSBuild\llvm\%BuildHostX8664%
 set BuildCLANGPath=%VCMakeRootPath%VSBuild\clang\%BuildHostX8664%
+set "SourceFullPath=%~d0\Source\%SourceCodeName%"
 
 :: 设置 CMake 编译参数
 set "sFile=%VCMakeRootPath%Script\vcp.txt"
@@ -20,15 +21,15 @@ set "Bpara=%sPara% %Bpara%"
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
-   CD /D %VCMakeRootPath%Source\%SourceCodeName%
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%SourceFullPath%\%SourceCodeName%.patch"
+   CD /D %SourceFullPath%
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%SourceFullPath%\%SourceCodeName%.patch"
  )
 
 :: 编译 llvm
 echo 开始 CMake 编译
-cmake %Bpara% -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %BuildLLVMPathX% -G %BuildLanguageX% -A %BuildPlatform_% %VCMakeRootPath%\Source\%SourceCodeName%\llvm
+cmake %Bpara% -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %BuildLLVMPathX% -G %BuildLanguageX% -A %BuildPlatform_% %SourceFullPath%\llvm
 cmake %BuildLLVMPathX%
 
 :: VC 多进程编译；加快编译速度；如果工程名称不正确，不影响编译，只是不能使用 VC 的多进程编译。多进程编译会起很多进程编译，编译大工程时，会拖慢机器相应速度
@@ -81,7 +82,7 @@ if exist %BuildCLANGPath% (
 :: 编译 clang
 echo 编译 llvm - clang
 title 编译 llvm - clang
-cmake %Bpara% -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %BuildCLANGPath% -G %BuildLanguageX% -A %BuildPlatform_% %VCMakeRootPath%\Source\%SourceCodeName%\clang
+cmake %Bpara% -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %BuildCLANGPath% -G %BuildLanguageX% -A %BuildPlatform_% %SourceFullPath%\clang
 cmake %BuildCLANGPath%
 
 echo 如果命令行编译失败，用 CMAKE-GUI 打开，编译成功后，再按任意键继续
@@ -123,7 +124,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: 源代码还原
-cd /d "%VCMakeRootPath%Source\%SourceCodeName%"
+cd /d "%SourceFullPath%"
 git clean -d  -fx -f
 git checkout .
 

@@ -13,7 +13,7 @@ set VCProjectNameX=%8
 set "PKG_CONFIG_PATH=%dbyoungSDKPath%\lib\pkgconfig"
 
 :: Ô´´úÂëÄ¿Â¼
-set "SourceFullPath=%VCMakeRootPath%Source\%SourceCodeName%"
+set "SourceFullPath=%~d0\Source\%SourceCodeName%"
 
 if %BuildLanguageX% == "Visual Studio 15 2017" (
   set Lang=vs2017

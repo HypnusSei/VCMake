@@ -10,8 +10,9 @@ set BuildPlatform_=%5
 set BuildLanguageX=%6
 set BuildHostX8664=%7
 set VCProjectNameX=%8
+set SourceFullPath=%~d0\Source\%SourceCodePath%
 
-cd %SourceCodePath%
+cd %SourceFullPath%
 
 set "SourceCodePathLine=%SourceCodePath:\=/%"
 
@@ -42,7 +43,7 @@ if %ERRORLEVEL% NEQ 0 (
 cd "VisualMagick\configure"
 call configure.exe
 
-MSBuild.exe %SourceCodePath%\VisualMagick\VisualStaticMT.sln^
+MSBuild.exe %SourceFullPath%\VisualMagick\VisualStaticMT.sln^
  /nologo /consoleloggerparameters:Verbosity=minimal /maxcpucount /nodeReuse:true^
  /target:Build /property:Configuration=Release;Platform=%BuildPlatform_%^
  /flp1:LogFile=zxerror.log;errorsonly;Verbosity=diagnostic^

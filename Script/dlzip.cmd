@@ -5,7 +5,9 @@ set "Bhttp=%2"
 set "Bpath=%3"
 set "Build=%4 %5 %6 %7 %8 %9"
 
-if exist "%Bpath%Source\%Bname%"    goto Compile
+set "SourcePath=%~d0\Source"
+
+if exist "%SourcePath%\%Bname%"    goto Compile
 if exist "%Bpath%%Bname%.tar"       goto Unzip2
 if exist "%Bpath%%Bname%.tar.gz"    goto Unzip1
 if exist "%Bpath%%Bname%.tar.bz2"   goto Unzip0
@@ -14,7 +16,7 @@ if exist "%Bpath%%Bname%.tar.xz" (
   echo Ω‚—πÀı %Bname%
   title Ω‚—πÀı %Bname%
    7z x "%Bpath%%Bname%.tar.xz" -o"%Bpath%"
-   7z x "%Bpath%%Bname%.tar" -o"%Bpath%Source\"
+   7z x "%Bpath%%Bname%.tar" -o"%SourcePath%\"
    goto Compile
   )
 
@@ -45,7 +47,7 @@ title Ω‚—πÀı %Bname%
 :Unzip2
 echo Ω‚—πÀı %Bname%
 title Ω‚—πÀı %Bname%
- 7z x "%Bpath%%Bname%.tar" -o"%Bpath%Source\"
+ 7z x "%Bpath%%Bname%.tar" -o"%SourcePath%\"
 
 :Compile
 echo ±‡“Î %Bname%

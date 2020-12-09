@@ -11,8 +11,9 @@ set BuildLanguageX=%6
 set BuildHostX8664=%7
 set VCProjectNameX=%8
 
+
 :: 源代码目录
-set "OpenSSLSRC=%VCMakeRootPath%Source\%SourceCodeName%"
+set "OpenSSLSRC=%~d0\Source\%SourceCodeName%"
 CD /D %OpenSSLSRC%
 
 :: 编译平台

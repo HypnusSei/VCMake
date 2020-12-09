@@ -25,7 +25,7 @@ if %BuildLanguageX% == "Visual Studio 15 2017" (
 )
 
 :: Брвы
-CD /D "%VCMakeRootPath%Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 if exist b2.exe (
   b2 install --build-dir=%VCBuildTmpPath% --prefix=%InstallSDKPath% --includedir=%dbyoungSDKPath%\include -sEXPAT_INCLUDE=%dbyoungSDKPath%\include -sEXPAT_LIBPATH=%dbyoungSDKPath%\lib --toolset=%LangToolset% address-model=%PlatformModel% link=static runtime-link=static  threading=multi variant=release
 ) else (

@@ -11,7 +11,7 @@ set "dbyoungSDKPath=%6"
 set "InstallSDKPath=%7"
 set "VCProjectNameX=%8"
 set "VCBuildTmpPath=%VCMakeRootPath%VSBuild\%SourceCodeName%\%BuildHostX8664%"
-set "SourceFullPath=%VCMakeRootPath%Source\%SourceCodeName%"
+set "SourceFullPath=%~d0\Source\%SourceCodeName%"
 set "mfxlibInc=%dbyoungSDKPath%\include"
 set "mfxlibLib=%dbyoungSDKPath%\lib"
 
@@ -39,10 +39,10 @@ if exist "%VCMakeRootPath%Single\%SourceCodeName%.cmd" (
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
    echo 打补丁
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
-   cd "%VCMakeRootPath%Source\%SourceCodeName%"
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%SourceFullPath%\%SourceCodeName%.patch"
+   cd "%SourceFullPath%"
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%SourceFullPath%\%SourceCodeName%.patch"
 )
 
 :: 设置 CMake 编译参数
@@ -53,11 +53,11 @@ set "Bpara=%sPara% %Bpara%"
 
 :: 查找 patch 目录下是否有同项目名称的 txt 文本，如果有则复制过来，并重命名为 CMakelists.txt
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.txt" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.txt" "%VCMakeRootPath%Source\%SourceCodeName%\CMakelists.txt" 
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.txt" "%SourceFullPath%\CMakelists.txt" 
 )
 
 :: 检查是否有 CMakeLists.txt 文件；如果没有，退出编译
-if not exist "%VCMakeRootPath%Source\%SourceCodeName%\CMakelists.txt" (
+if not exist "%SourceFullPath%\CMakelists.txt" (
    echo 没有 CMakelists.txt 文件，不支持编译
    pause
    goto bEnd
@@ -65,7 +65,7 @@ if not exist "%VCMakeRootPath%Source\%SourceCodeName%\CMakelists.txt" (
 
 :: 开始 CMake 编译
 echo 开始 CMake 编译
-CMake  %Bpara% %USEGPU% -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\4.0.2\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\1.10.9\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B "%VCBuildTmpPath%" -G %BuildLanguageX% -A %BuildPlatformX% %VCMakeRootPath%Source\%SourceCodeName%
+CMake  %Bpara% %USEGPU% -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\current\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\current\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B "%VCBuildTmpPath%" -G %BuildLanguageX% -A %BuildPlatformX% %SourceFullPath%
 CMake "%VCBuildTmpPath%"
 
 :: 检查 CMake 编译是否有错误

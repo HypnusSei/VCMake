@@ -19,7 +19,7 @@ for /f "tokens=*" %%I in (%sFile%) do (set "sPara=!sPara! %%I")
 set "Bpara=%sPara% %Bpara%"
 
 :: 编译 zenlib
-cmake %sPara% -DSIZE_T_IS_NOT_LONG=ON -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %BuildZenlibPathX% -G %BuildLanguageX% -A %BuildPlatform_% %VCMakeRootPath%\Source\%SourceCodeName%\Project\CMake
+cmake %sPara% -DSIZE_T_IS_NOT_LONG=ON -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %BuildZenlibPathX% -G %BuildLanguageX% -A %BuildPlatform_% %~d0\Source\%SourceCodeName%\Project\CMake
 cmake %BuildZenlibPathX%
 
 :: VC 多进程编译；加快编译速度；如果工程名称不正确，不影响编译，只是不能使用 VC 的多进程编译。多进程编译会起很多进程编译，编译大工程时，会拖慢机器相应速度
@@ -46,7 +46,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: 源代码还原
-CD /D "%VCMakeRootPath%Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
 

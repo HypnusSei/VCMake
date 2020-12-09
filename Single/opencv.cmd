@@ -28,11 +28,11 @@ rem if %BuildHostX8664%==x86 (
 rem   set "USEGPU=-DCPU_ONLY=ON -DWITH_CUDA=OFF -DVTK_USE_CUDA=OFF"
 rem   set "USECPU=CPU"
 rem   ) else (
-rem   set "USEGPU=-DCPU_ONLY=OFF -DWITH_CUDA=ON -DVTK_USE_CUDA=ON -DOPENCV_EXTRA_MODULES_PATH=%VCMakeRootPath%Source\opencv_contrib"
+rem   set "USEGPU=-DCPU_ONLY=OFF -DWITH_CUDA=ON -DVTK_USE_CUDA=ON -DOPENCV_EXTRA_MODULES_PATH=%~d0\Source\opencv_contrib"
 rem   set "USECPU=GPU"
-rem   if not exist "%VCMakeRootPath%Source\opencv_contrib" (
-rem     git clone --progress --recursive -v "https://github.com/opencv/opencv_contrib.git" "%VCMakeRootPath%Source\opencv_contrib"
-rem     git clone --progress --recursive -v "https://github.com/opencv/opencv_extra.git"   "%VCMakeRootPath%Source\opencv_extra"
+rem   if not exist "%~d0\Source\opencv_contrib" (
+rem     git clone --progress --recursive -v "https://github.com/opencv/opencv_contrib.git" "%~d0\Source\opencv_contrib"
+rem     git clone --progress --recursive -v "https://github.com/opencv/opencv_extra.git"   "%~d0\Source\opencv_extra"
 rem     )
 rem )
 
@@ -53,20 +53,20 @@ if exist %BuildOpenCVStaticPath% (
 )
 
 :: 还原代码
-CD /D "%VCMakeRootPath%Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
-   CD /D %VCMakeRootPath%Source\%SourceCodeName%
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
+   CD /D %~d0\Source\%SourceCodeName%
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
  )
 
 :: 源代码目录
-CD /D %VCMakeRootPath%Source\%SourceCodeName%"
+CD /D %~d0\Source\%SourceCodeName%"
 
 :: 编译 OpenCV 静态库
 echo 开始编译 OpenCV 静态库 
@@ -113,7 +113,7 @@ if exist %BuildOpenCVSharePath% (
 )
 
 :: 还原代码
-CD /D "%VCMakeRootPath%Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
 
@@ -125,14 +125,14 @@ if exist static (
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
-   CD /D %VCMakeRootPath%Source\%SourceCodeName%
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
+   CD /D %~d0\Source\%SourceCodeName%
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
  )
 
 :: 源代码目录
-CD /D %VCMakeRootPath%Source\%SourceCodeName%"
+CD /D %~d0\Source\%SourceCodeName%"
 
 :: 字符串搜索替换，修改为编译动态库类型
 set Temp01=-DBUILD_SHARED=OFF
@@ -200,7 +200,7 @@ if exist %BuildOpenCVWorldPath% (
 )
 
 :: 还原代码
-CD /D "%VCMakeRootPath%Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
 
@@ -212,14 +212,14 @@ if exist static (
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
-   CD /D %VCMakeRootPath%Source\%SourceCodeName%
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
+   CD /D %~d0\Source\%SourceCodeName%
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
  )
 
 :: 源代码目录
-CD /D %VCMakeRootPath%Source\%SourceCodeName%"
+CD /D %~d0\Source\%SourceCodeName%"
 
 :: 字符串搜索替换，修改为编译动态库类型
 set Temp01=-DBUILD_SHARED=OFF
@@ -277,7 +277,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: 还原代码
-CD /D "%VCMakeRootPath%Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
 

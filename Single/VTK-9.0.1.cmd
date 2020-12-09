@@ -19,7 +19,7 @@ for /f "tokens=*" %%I in (%sFile%) do (set "sPara=!sPara! %%I")
 set "Bpara=%sPara% %Bpara%"
 
 :: 编译 vtk <WITH QT5.15.0>
-cmake %Bpara% -DQt5_DIR=%dbyoungSDKPath%\qt5\static\lib\cmake\Qt5 -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %BuildVTKPath% -G %BuildLanguageX% -A %BuildPlatform_% %VCMakeRootPath%\Source\%SourceCodeName%
+cmake %Bpara% -DQt5_DIR=%dbyoungSDKPath%\qt5\static\lib\cmake\Qt5 -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %BuildVTKPath% -G %BuildLanguageX% -A %BuildPlatform_% %~d0\Source\%SourceCodeName%
 cmake %BuildVTKPath%
 
 echo 如果命令行编译失败，用 CMAKE-GUI 打开，编译成功后，再按任意键继续(如果没有启用QT5,可自行启用)

@@ -20,23 +20,23 @@ if %BuildHostX8664%==x64 (
 )
 
 :: 源代码还原
-CD /D %VCMakeRootPath%\Source\%SourceCodeName%
+CD /D %~d0\Source\%SourceCodeName%
 git clean -d  -fx -f
 git checkout .
 
 :: 检查是否有 patch 补丁文件
 echo 打 patch 补丁
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
-   CD /D %VCMakeRootPath%Source\%SourceCodeName%
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
+   CD /D %~d0\Source\%SourceCodeName%
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
  )
 
-copy /Y "%InstallSDKPath%\lib\ossl_static.pdb" "%VCMakeRootPath%Source\%SourceCodeName%\gdal\ossl_static.pdb"
+copy /Y "%InstallSDKPath%\lib\ossl_static.pdb" "%~d0\Source\%SourceCodeName%\gdal\ossl_static.pdb"
 
 :: 编译参数设定
-set bpmFile=%VCMakeRootPath%\Source\%SourceCodeName%\gdal\%SourceCodeName%.opt
+set bpmFile=%~d0\Source\%SourceCodeName%\gdal\%SourceCodeName%.opt
 set JavaVer=1.8.0_211
 
 @echo MSVC_VER=1910 >%bpmFile%
@@ -83,7 +83,7 @@ set JavaVer=1.8.0_211
 :: 开始编译
 echo 开始编译 %SourceCodeName%
 title 开始编译 %SourceCodeName%
-CD /D %VCMakeRootPath%\Source\%SourceCodeName%\gdal
+CD /D %~d0\Source\%SourceCodeName%\gdal
 nmake -f makefile.vc EXT_NMAKE_OPT=%SourceCodeName%.opt install
 nmake -f makefile.vc EXT_NMAKE_OPT=%SourceCodeName%.opt devinstall
 
@@ -95,6 +95,6 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: 源代码还原
-CD /D "%VCMakeRootPath%\Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .

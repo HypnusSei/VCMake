@@ -19,7 +19,7 @@ for /f "tokens=*" %%I in (%sFile%) do (set "sPara=!sPara! %%I")
 set "Bpara=%sPara% %Bpara%"
 
 :: 编译 x265
-cmake %sPara% -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %Buildx265PathX% -G %BuildLanguageX% -A %BuildPlatform_% %VCMakeRootPath%\Source\%SourceCodeName%\source
+cmake %sPara% -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B %Buildx265PathX% -G %BuildLanguageX% -A %BuildPlatform_% %~d0\Source\%SourceCodeName%\source
 cmake %Buildx265PathX%
 
 :: VC 多进程编译；加快编译速度；如果工程名称不正确，不影响编译，只是不能使用 VC 的多进程编译。多进程编译会起很多进程编译，编译大工程时，会拖慢机器相应速度

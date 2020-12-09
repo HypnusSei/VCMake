@@ -13,7 +13,7 @@ set VCProjectNameX=%8
 set "PKG_CONFIG_PATH=%dbyoungSDKPath%\lib\pkgconfig"
 
 :: 源代码目录
-set "SourceFullPath=%VCMakeRootPath%Source\%SourceCodeName%"
+set "SourceFullPath=%~d0\Source\%SourceCodeName%"
 
 :: 编译目录
 set BuildPixmanPath=%VCMakeRootPath%VSBuild\%SourceCodeName%\%BuildHostX8664%

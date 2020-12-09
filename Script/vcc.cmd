@@ -38,15 +38,15 @@ if %IfUseLangNinja%==0 (
   :: ±‡“Î”Ô—‘ VS2017 / VS2019
   if %BuildLanguageX% == VS2017 (
     set CMakeLang="Visual Studio 15 2017"
-    set "VSWHERE="%SCOOP%\vswhere\2.8.4\vswhere.exe" -property installationPath -requires Microsoft.Component.MSBuild Microsoft.VisualStudio.Component.VC.ATLMFC Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -version [15.0,16.0^)"
+    set "VSWHERE="%SCOOP%\vswhere\current\vswhere.exe" -property installationPath -requires Microsoft.Component.MSBuild Microsoft.VisualStudio.Component.VC.ATLMFC Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -version [15.0,16.0^)"
     for /f "delims=" %%A IN ('!VSWHERE!') DO call "%%A\Common7\Tools\vsdevcmd.bat" -no_logo -arch=%BuildPlatform2%
   ) else (
     set CMakeLang="Visual Studio 16 2019"
-    set "VSWHERE="%SCOOP%\vswhere\2.8.4\vswhere.exe" -property installationPath -requires Microsoft.Component.MSBuild Microsoft.VisualStudio.Component.VC.ATLMFC Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -version [16.0,17.0^)"
+    set "VSWHERE="%SCOOP%\vswhere\current\vswhere.exe" -property installationPath -requires Microsoft.Component.MSBuild Microsoft.VisualStudio.Component.VC.ATLMFC Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -version [16.0,17.0^)"
     for /f "delims=" %%A IN ('!VSWHERE!') DO call "%%A\Common7\Tools\vsdevcmd.bat" -no_logo -arch=%BuildPlatform2%
   ) 
 ) else (
-  set "Path=%SCOOP%\cmake\3.19.1\bin;%VCMakeRootPath%Tools;%Python3Path%;%Python3Path%\libs;%Python3Path%\Scripts;%Path%"
+  set "Path=%SCOOP%\cmake\current\bin;%VCMakeRootPath%Tools;%Python3Path%;%Python3Path%\libs;%Python3Path%\Scripts;%Path%"
   set CMakeLang=Ninja
 )
 

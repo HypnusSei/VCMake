@@ -19,7 +19,7 @@ for /f "tokens=*" %%I in (%sFile%) do (set "sPara=!sPara! %%I")
 set "Bpara=%sPara% %Bpara%"
 
 :: 编译 libexpat
-cmake %sPara% -DCMAKE_INSTALL_PREFIX=%dbyoungSDKPath% -Thost=%BuildHostX8664% -B %BuildExpatPath% -G %BuildLanguageX% -A %BuildPlatform_% %VCMakeRootPath%\Source\%SourceCodeName%\expat
+cmake %sPara% -DCMAKE_INSTALL_PREFIX=%dbyoungSDKPath% -Thost=%BuildHostX8664% -B %BuildExpatPath% -G %BuildLanguageX% -A %BuildPlatform_% %~d0\Source\%SourceCodeName%\expat
 cmake %BuildExpatPath%
 
 :: VC 多进程编译；加快编译速度；如果工程名称不正确，不影响编译，只是不能使用 VC 的多进程编译。多进程编译会起很多进程编译，编译大工程时，会拖慢机器相应速度

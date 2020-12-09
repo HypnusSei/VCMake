@@ -20,10 +20,10 @@ set "Bpara=%sPara% %Bpara%"
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
-   CD /D %VCMakeRootPath%Source\%SourceCodeName%
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
+   CD /D %~d0\Source\%SourceCodeName%
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
  )
 
 :: 编译 Caffe
@@ -34,7 +34,7 @@ cmake  %Bpara% ^
  -DMKL_WITH_OPENMP=ON ^
  -DCPU_ONLY=ON ^
  -DUSE_OPENCV=OFF ^
- -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B "%BuildCaffePath%" -G %BuildLanguageX% -A %BuildPlatformX% %VCMakeRootPath%Source\%SourceCodeName%
+ -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -Thost=%BuildHostX8664% -B "%BuildCaffePath%" -G %BuildLanguageX% -A %BuildPlatformX% %~d0\Source\%SourceCodeName%
 cmake %BuildCaffePath%
 
 :: VC 编译之前，检查是否有工程文件需要修改的补丁，有则给工程文件打补丁 (xz 工程有问题，不能编译 MT 类型)
@@ -67,7 +67,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: 源代码还原
-CD /D "%VCMakeRootPath%Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
 

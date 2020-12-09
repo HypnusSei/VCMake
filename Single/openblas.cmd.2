@@ -51,14 +51,14 @@ set "UseEnv=True"
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
-   CD /D %VCMakeRootPath%Source\%SourceCodeName%
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
+   CD /D %~d0\Source\%SourceCodeName%
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%~d0\Source\%SourceCodeName%\%SourceCodeName%.patch"
  )
 
 :: 编译 OpenBlas
-CMake %Bpara% -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DTARGET=NEHALEM -DCMAKE_Fortran_COMPILER=%Intelifort% -DBUILD_RELAPACK=OFF -DBUILD_WITHOUT_LAPACK=OFF -DNOFORTRAN=0 -DDYNAMIC_ARCH=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -B %BuildOpenBlasPath% %VCMakeRootPath%Source\%SourceCodeName%
+CMake %Bpara% -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DTARGET=NEHALEM -DCMAKE_Fortran_COMPILER=%Intelifort% -DBUILD_RELAPACK=OFF -DBUILD_WITHOUT_LAPACK=OFF -DNOFORTRAN=0 -DDYNAMIC_ARCH=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -B %BuildOpenBlasPath% %~d0\Source\%SourceCodeName%
 CMake %BuildOpenBlasPath%
  
 :: 如果上面 VC 多进程编译没有任何问题，这里就不会再编译了，直接安装了
@@ -77,7 +77,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: 源代码还原
-cd /d "%VCMakeRootPath%Source\%SourceCodeName%"
+cd /d "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
 

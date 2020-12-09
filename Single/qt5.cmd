@@ -15,26 +15,26 @@ set VCProjectNameX=%8
 set LibraryType=static
 
 :: 还原代码
-CD /D "%VCMakeRootPath%Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
 
 :: 清除 QT5 子目录
-call %VCMakeRootPath%Single\qt5c.cmd %VCMakeRootPath%Source\%SourceCodeName%
+call %VCMakeRootPath%Single\qt5c.cmd %~d0\Source\%SourceCodeName%
 
 :: QT5 安装目录
 set QT5InstallPath=%dbyoungSDKPath%\QT5\%LibraryType%
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\qtbase\%SourceCodeName%.patch"
-   CD /D "%VCMakeRootPath%Source\%SourceCodeName%\qtbase"
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%~d0\Source\%SourceCodeName%\qtbase\%SourceCodeName%.patch"
+   CD /D "%~d0\Source\%SourceCodeName%\qtbase"
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\qtbase\%SourceCodeName%.patch"
+   del "%~d0\Source\%SourceCodeName%\qtbase\%SourceCodeName%.patch"
  )
 
 :: 源代码目录
-CD /D %VCMakeRootPath%Source\%SourceCodeName%"
+CD /D %~d0\Source\%SourceCodeName%"
 
 :: 编译 <webengine 无法编译为 MT 静态库，所以要去除掉>
 call configure -confirm-license -opensource -mp -release -%LibraryType% -prefix "%QT5InstallPath%" -opengl desktop -nomake examples  -nomake tests -skip qtwebengine
@@ -49,12 +49,12 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: 还原代码
-CD /D "%VCMakeRootPath%Source\%SourceCodeName%"
+CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
 
 :: 清除 QT5 子目录
-call %VCMakeRootPath%Single\qt5c.cmd %VCMakeRootPath%Source\%SourceCodeName%
+call %VCMakeRootPath%Single\qt5c.cmd %~d0\Source\%SourceCodeName%
 
 :: 编译动态库
 set LibraryType=shared
@@ -68,14 +68,14 @@ set QT5InstallPath=%dbyoungSDKPath%\QT5\%LibraryType%
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\qtbase\%SourceCodeName%.patch"
-   CD /D "%VCMakeRootPath%Source\%SourceCodeName%\qtbase"
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%~d0\Source\%SourceCodeName%\qtbase\%SourceCodeName%.patch"
+   CD /D "%~d0\Source\%SourceCodeName%\qtbase"
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\qtbase\%SourceCodeName%.patch"
+   del "%~d0\Source\%SourceCodeName%\qtbase\%SourceCodeName%.patch"
  )
 
 :: 源代码目录
-CD /D %VCMakeRootPath%Source\%SourceCodeName%"
+CD /D %~d0\Source\%SourceCodeName%"
 
 :: 编译 <webengine 无法编译为 MT 静态库，所以要去除掉>
 call configure -confirm-license -opensource -mp -release -%LibraryType% -prefix "%QT5InstallPath%" -opengl desktop -nomake examples  -nomake tests -skip qtwebengine

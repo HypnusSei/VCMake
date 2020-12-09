@@ -16,7 +16,7 @@ set "PKG_CONFIG_PATH=%dbyoungSDKPath%\lib\pkgconfig"
 set BuildcairoPath=%VCMakeRootPath%VSBuild\%SourceCodeName%\%BuildHostX8664%
 
 :: 源代码目录
-set "SourceFullPath=%VCMakeRootPath%Source\%SourceCodeName%"
+set "SourceFullPath=%~d0\Source\%SourceCodeName%"
 
 :: 解压
 7z x %VCMakeRootPath%Single\cairo.7z -o"%BuildcairoPath%" -y

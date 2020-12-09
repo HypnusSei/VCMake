@@ -10,7 +10,7 @@ set BuildPlatform_=%5
 set BuildLanguageX=%6
 set BuildHostX8664=%7
 set VCProjectNameX=%8
-set "liblmdbSRC=%VCMakeRootPath%Source\%SourceCodeName%"
+set "liblmdbSRC=%~d0\Source\%SourceCodeName%"
 set "BuildlmdbPath=%VCMakeRootPath%VSBuild\%SourceCodeName%\%BuildHostX8664%"
 
 :: MSBuild 头文件、库文件搜索路径
@@ -50,7 +50,7 @@ CMake --build "%BuildlmdbPath%" --config Release --target install
 :: 源代码还原
 echo  编译 %SourceCodeName% 完成，清理临时文件
 title 编译 %SourceCodeName% 完成，清理临时文件
-cd /d %VCMakeRootPath%Source\%SourceCodeName%
+cd /d %~d0\Source\%SourceCodeName%
 git clean -d  -fx -f
 git checkout .
 

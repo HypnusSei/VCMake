@@ -13,7 +13,7 @@ set VCProjectNameX=%8
 set "PKG_CONFIG_PATH=%dbyoungSDKPath%\lib\pkgconfig"
 
 :: 源代码目录
-set "SourceFullPath=%VCMakeRootPath%Source\%SourceCodeName%"
+set "SourceFullPath=%~d0\Source\%SourceCodeName%"
 
 :: 编译目录
 set BuildGlibPath=%VCMakeRootPath%VSBuild\%SourceCodeName%\%BuildHostX8664%
@@ -25,10 +25,10 @@ set "UseEnv=True"
 
 :: 检查是否有 patch 补丁文件
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
-   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
-   CD /D %VCMakeRootPath%Source\%SourceCodeName%
+   copy /Y "%VCMakeRootPath%Patch\%SourceCodeName%.patch" "%SourceFullPath%\%SourceCodeName%.patch"
+   CD /D %SourceFullPath%
    git apply "%SourceCodeName%.patch"
-   del "%VCMakeRootPath%Source\%SourceCodeName%\%SourceCodeName%.patch"
+   del "%SourceFullPath%\%SourceCodeName%.patch"
  )
 
 :: meson 编译

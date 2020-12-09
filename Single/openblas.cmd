@@ -18,7 +18,7 @@ set "LIB=%CONDA_PREFIX%\Library\lib;%LIB%"
 set "CPATH=%CONDA_PREFIX%\Library\include;%CPATH%"
 
 :: 编译 OpenBlas
-CMake -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang -DBUILD_WITHOUT_LAPACK=no -DBUILD_SHARED_LIBS=OFF -DNOFORTRAN=0 -DDYNAMIC_ARCH=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -B %BuildOpenBlasPath% %VCMakeRootPath%Source\%SourceCodeName%
+CMake -G "Ninja" -DCMAKE_CXX_COMPILER=clang-cl -DCMAKE_C_COMPILER=clang-cl -DCMAKE_Fortran_COMPILER=flang -DBUILD_WITHOUT_LAPACK=no -DBUILD_SHARED_LIBS=OFF -DNOFORTRAN=0 -DDYNAMIC_ARCH=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%InstallSDKPath% -B %BuildOpenBlasPath% %~d0\Source\%SourceCodeName%
 CMake %BuildOpenBlasPath%
  
 :: 如果上面 VC 多进程编译没有任何问题，这里就不会再编译了，直接安装了
