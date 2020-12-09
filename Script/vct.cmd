@@ -10,8 +10,7 @@ set "Python3Path=%VCMakeRootPath%Tools\Python\3.8.2"
 set "Path=%SCOOP%\shims;%Path%"
 set "Ruby=%SCOOP%\apps\ruby"
 set "Perl=%VCMakeRootPath%Tools\Perl"
-set "MSYS2=%SCOOP%\apps\MSYS2\current"
-set "Path=%MSYS2%\usr\bin;%Path%"
+set "MSYS2=%VCMakeRootPath%Tools\MSYS2"
 
 :: 安装 scoop 软件包
 if not exist "%SCOOP%\shims\scoop.ps1" (
@@ -20,7 +19,7 @@ if not exist "%SCOOP%\shims\scoop.ps1" (
   ) 
 
 :: 安装 scoop 工具包
-set strTools=7zip/git/sliksvn/mercurial/pkg-config/cmake/curl/bison/winflexbison/ninja/swig/ant/jom/nasm/yasm/vswhere/llvm/doxygen/gnuplot/julia/latex/graphviz/go/rust-msvc/rust/msys2/anaconda3
+set strTools=7zip/git/sliksvn/mercurial/pkg-config/cmake/curl/bison/winflexbison/ninja/swig/ant/jom/nasm/yasm/vswhere/llvm/doxygen/gnuplot/julia/latex/graphviz/go/rust-msvc/rust/anaconda3
 :split
 for /f "tokens=1,* delims=/" %%i in ("%strTools%") do (
   set ToolName=%%i
@@ -32,6 +31,11 @@ for /f "tokens=1,* delims=/" %%i in ("%strTools%") do (
 if not "%strTools%"=="" goto split
 
 CD /D %VCMakeRootPath%Tools
+
+:: 安装 MSYS2 软件
+if not exist %MSYS2% (
+  msys2-x86_64-20201109.exe --platform minimal --script silent-install.js InstallDir="%MSYS2%"
+)
 
 :: 安装 Python 2.7.16 软件
 if not exist %Python2Path% (
