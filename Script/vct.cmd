@@ -1,5 +1,5 @@
 @echo off
-rem setlocal EnableDelayedExpansion
+setlocal EnableDelayedExpansion
 title  安装编译源代码过程中需要使用到的工具软件
 
 :: 设置环境变量 
@@ -10,6 +10,8 @@ set "Python3Path=%VCMakeRootPath%Tools\Python\3.8.2"
 set "Path=%SCOOP%\shims;%Path%"
 set "Ruby=%SCOOP%\apps\ruby"
 set "Perl=%VCMakeRootPath%Tools\Perl"
+set "MSYS2=%SCOOP%\apps\MSYS2\current"
+set "Path=%MSYS2%\usr\bin;%Path%"
 
 :: 安装 scoop 软件包
 if not exist "%SCOOP%\shims\scoop.ps1" (
@@ -79,10 +81,12 @@ if not exist %Python3Path% (
   pip install PyYaml
 )
 
+CD /D %VCMakeRootPath%Tools
+
 :: 安装 Perl 软件
 if not exist %Perl% (
   call %SCOOP%\apps\curl\current\bin\curl -x 127.0.0.1:1080 --connect-timeout 30 --retry 10 --retry-delay 5 -C - -OL  http://strawberryperl.com/download/5.32.0.1/strawberry-perl-5.32.0.1-64bit.msi
-  call msiexec strawberry-perl-5.32.0.1-64bit.msi  /qn TARGETDIR=%Perl%"
+  call msiexec /i strawberry-perl-5.32.0.1-64bit.msi /quiet INSTALLDIR=%Perl%"
 )
 
 CD /D %VCMakeRootPath%
