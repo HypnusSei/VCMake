@@ -70,7 +70,7 @@ CD /D %~d0\Source\%SourceCodeName%"
 
 :: 编译 OpenCV 静态库
 echo 开始编译 OpenCV 静态库 
-cmake %Bpara% %USEGPU% -DCMAKE_SUPPRESS_REGENERATION=OFF -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\4.0.2\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\1.10.9\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath%\%SourceCodeName%\%USECPU%\%LibraryStaticType% -Thost=%BuildHostX8664% -B %BuildOpenCVStaticPath% -G %BuildLanguageX% -A %BuildPlatform_% %VCMakeRootPath%\Source\%SourceCodeName%
+cmake %Bpara% %USEGPU% -DCMAKE_SUPPRESS_REGENERATION=OFF -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\4.0.2\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\1.10.9\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath%\%SourceCodeName%\%USECPU%\%LibraryStaticType% -Thost=%BuildHostX8664% -B %BuildOpenCVStaticPath% -G %BuildLanguageX% -A %BuildPlatform_% %~d0\Source\%SourceCodeName%
 cmake %BuildOpenCVStaticPath%
 
 :: VC 编译之前，检查是否有工程文件需要修改的补丁，有则给工程文件打补丁 (xz 工程有问题，不能编译 MT 类型)
@@ -157,7 +157,7 @@ for /f "tokens=*" %%f in ('powershell -command "'%Bpara%' -replace '%Temp01%', '
 echo 编译 OpenCV 动态库 
 title 编译 OpenCV 动态库 
 
-cmake %TTT% %USEGPU% -DBUILD_opencv_world=ON -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\4.0.2\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\1.10.9\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath%\%SourceCodeName%\%USECPU%\%LibraryShareType% -Thost=%BuildHostX8664% -B %BuildOpenCVSharePath% -G %BuildLanguageX% -A %BuildPlatform_% %VCMakeRootPath%\Source\%SourceCodeName%
+cmake %TTT% %USEGPU% -DBUILD_opencv_world=ON -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\4.0.2\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\1.10.9\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath%\%SourceCodeName%\%USECPU%\%LibraryShareType% -Thost=%BuildHostX8664% -B %BuildOpenCVSharePath% -G %BuildLanguageX% -A %BuildPlatform_% %~d0\Source\%SourceCodeName%
 cmake %BuildOpenCVSharePath%
 
 :: VC 编译之前，检查是否有工程文件需要修改的补丁，有则给工程文件打补丁 (xz 工程有问题，不能编译 MT 类型)
@@ -244,7 +244,7 @@ for /f "tokens=*" %%f in ('powershell -command "'%Bpara%' -replace '%Temp01%', '
 echo 编译 OpenCV 动态库 
 title 编译 OpenCV 动态库 
 
-cmake %TTT% %USEGPU% -DBUILD_opencv_world=ON -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\4.0.2\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\1.10.9\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath%\%SourceCodeName%\%USECPU%\%LibraryWorldType% -Thost=%BuildHostX8664% -B %BuildOpenCVWorldPath% -G %BuildLanguageX% -A %BuildPlatform_% %VCMakeRootPath%\Source\%SourceCodeName%
+cmake %TTT% %USEGPU% -DBUILD_opencv_world=ON -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\4.0.2\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\1.10.9\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath%\%SourceCodeName%\%USECPU%\%LibraryWorldType% -Thost=%BuildHostX8664% -B %BuildOpenCVWorldPath% -G %BuildLanguageX% -A %BuildPlatform_% %~d0\Source\%SourceCodeName%
 cmake %BuildOpenCVWorldPath%
 
 :: VC 编译之前，检查是否有工程文件需要修改的补丁，有则给工程文件打补丁 (xz 工程有问题，不能编译 MT 类型)
