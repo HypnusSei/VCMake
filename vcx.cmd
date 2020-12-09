@@ -1,5 +1,5 @@
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:::: 1.0：Windows10下，编译 OpenSSL 需要管理员权限，因为它需要向系统盘写入数据；
+:::: 1.0：Windows10下，必须以管理员权限运行；
 :::: 2.0：编译 lapack，  需要 Intel Parallel Studio 2020 开发组件 (包含 ifort Fortran 编译器), CMake 只能使用 Ninja 模式(bUseNinja=1)，不能使用 VS 模式；
 :::: 3.1：编译 Openblas，需要 Fortran 编译器, miniconda3                 包含 flang Fortran 编译器, CMake 使用 Ninja + clang + flang 模式(bUseNinja=0)；
 :::: 3.2：编译 Openblas，需要 Fortran 编译器, Intel Parallel Studio 2020 包含 flang Fortran 编译器, CMake 使用 Ninja + clang + ifort 模式(bUseNinja=0)；
