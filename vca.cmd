@@ -53,6 +53,7 @@ rem call "%VCMakeRootPath%Script\dlzip" sqlite-snapshot-202003121754 https://www
 rem call "%VCMakeRootPath%Script\dlgit" libssh2                      https://github.com/libssh2/libssh2.git                              %Buildtype% libssh2.sln
 rem call "%VCMakeRootPath%Script\dlgit" gettext                      https://github.com/georgegerdin/gettext-cmake.git                   %Buildtype% gettext.sln
 rem call "%VCMakeRootPath%Script\dlgit" freetype                     https://github.com/winlibs/freetype.git                             %Buildtype% freetype.sln
+call "%VCMakeRootPath%Script\dlgit" brotli                       https://github.com/google/brotli.git                                %Buildtype% brotli.sln
 call "%VCMakeRootPath%Script\dlgit" harfbuzz                     https://github.com/harfbuzz/harfbuzz.git                            %Buildtype% harfbuzz.sln
 call "%VCMakeRootPath%Script\dlgit" hdf5                         https://github.com/live-clones/hdf5.git                             %Buildtype% hdf5.sln
 call "%VCMakeRootPath%Script\dlgit" libiconv                     https://github.com/LuaDist/libiconv.git                             %Buildtype% libiconv.sln
@@ -63,7 +64,6 @@ call "%VCMakeRootPath%Script\dlgit" boost                        https://github.
 call "%VCMakeRootPath%Script\dlgit" leveldb                      https://github.com/google/leveldb.git                              %Buildtype% leveldb.sln
 call "%VCMakeRootPath%Script\dlgit" openssl                      https://github.com/openssl/openssl.git                              %Buildtype% openssl.sln
 call "%VCMakeRootPath%Script\dlgit" nghttp2                      https://github.com/nghttp2/nghttp2.git                              %Buildtype% nghttp2.sln
-call "%VCMakeRootPath%Script\dlgit" brotli                       https://github.com/google/brotli.git                                %Buildtype% brotli.sln
 call "%VCMakeRootPath%Script\dlgit" eigen                        https://github.com/eigenteam/eigen-git-mirror.git                   %Buildtype% eigen3.sln
 call "%VCMakeRootPath%Script\dlgit" c-ares                       https://github.com/c-ares/c-ares.git                                %Buildtype% c-ares.sln
 call "%VCMakeRootPath%Script\dlgit" curl                         https://github.com/curl/curl.git                                    %Buildtype% curl.sln
