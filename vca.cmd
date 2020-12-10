@@ -29,30 +29,30 @@ rem call "%VCMakeRootPath%Script\dlgit" flang                        https://git
 rem call "%VCMakeRootPath%Script\dlgit" rocksdb                      https://github.com/facebook/rocksdb.git                             %Buildtype% rocksdb.sln
 
 :: ±‡“Î≥…π¶
-call "%VCMakeRootPath%Script\dlzip" zlib-1.2.11                  https://www.zlib.net/zlib-1.2.11.tar.gz                             %Buildtype% zlib.sln
-call "%VCMakeRootPath%Script\dlgit" xz                           https://git.tukaani.org/xz.git                                      %Buildtype% xz.sln
-call "%VCMakeRootPath%Script\dlgit" bzip2                        https://github.com/osrf/bzip2_cmake.git                             %Buildtype% bzip2.sln
-call "%VCMakeRootPath%Script\dlgit" z3                           https://github.com/Z3Prover/z3.git                                  %Buildtype% z3.sln
-call "%VCMakeRootPath%Script\dlgit" lz4                          https://github.com/lz4/lz4.git                                      %Buildtype% lz4.sln
-call "%VCMakeRootPath%Script\dlgit" zziplib                      https://github.com/gdraheim/zziplib.git                             %Buildtype% zziplib.sln
-call "%VCMakeRootPath%Script\dlgit" snappy                       https://github.com/willyd/snappy.git                                %Buildtype% snappy.sln
-call "%VCMakeRootPath%Script\dlgit" zstd                         https://github.com/facebook/zstd.git                                %Buildtype% zstd.sln
-call "%VCMakeRootPath%Script\dlgit" giflib                       https://github.com/xbmc/giflib.git                                  %Buildtype% giflib.sln
-call "%VCMakeRootPath%Script\dlgit" libjpeg-turbo                https://github.com/libjpeg-turbo/libjpeg-turbo.git                  %Buildtype% libjpeg-turbo.sln
-call "%VCMakeRootPath%Script\dlgit" libpng                       https://github.com/glennrp/libpng.git                               %Buildtype% libpng.sln
-call "%VCMakeRootPath%Script\dlgit" libtiff                      https://gitlab.com/libtiff/libtiff.git                              %Buildtype% tiff.sln
-call "%VCMakeRootPath%Script\dlgit" openjpeg                     https://github.com/uclouvain/openjpeg.git                           %Buildtype% openjpeg.sln
-call "%VCMakeRootPath%Script\dlgit" libwebp                      https://chromium.googlesource.com/webm/libwebp                      %Buildtype% webp.sln
-call "%VCMakeRootPath%Script\dlgit" leptonica                    https://github.com/DanBloomberg/leptonica.git                       %Buildtype% leptonica.sln
-call "%VCMakeRootPath%Script\dlgit" tesseract                    https://github.com/tesseract-ocr/tesseract.git                      %Buildtype% tesseract.sln
-call "%VCMakeRootPath%Script\dlzip" SDL2-2.0.12                  http://www.libsdl.org/release/SDL2-2.0.12.tar.gz                    %Buildtype% sdl2.sln
-call "%VCMakeRootPath%Script\dlgit" gflags                       https://github.com/gflags/gflags.git                                %Buildtype% gflags.sln
-call "%VCMakeRootPath%Script\dlgit" glog                         https://github.com/google/glog.git                                  %Buildtype% glog.sln
-call "%VCMakeRootPath%Script\dlgit" gtest                        https://github.com/google/googletest.git                            %Buildtype% googletest-distribution.sln
-call "%VCMakeRootPath%Script\dlzip" sqlite-snapshot-202003121754 https://www.sqlite.org/snapshot/sqlite-snapshot-202003121754.tar.gz %Buildtype% sqlite.sln
-call "%VCMakeRootPath%Script\dlgit" libssh2                      https://github.com/libssh2/libssh2.git                              %Buildtype% libssh2.sln
-call "%VCMakeRootPath%Script\dlgit" gettext                      https://github.com/georgegerdin/gettext-cmake.git                   %Buildtype% gettext.sln
-call "%VCMakeRootPath%Script\dlgit" freetype                     https://github.com/winlibs/freetype.git                             %Buildtype% freetype.sln
+rem call "%VCMakeRootPath%Script\dlzip" zlib-1.2.11                  https://www.zlib.net/zlib-1.2.11.tar.gz                             %Buildtype% zlib.sln
+rem call "%VCMakeRootPath%Script\dlgit" xz                           https://git.tukaani.org/xz.git                                      %Buildtype% xz.sln
+rem call "%VCMakeRootPath%Script\dlgit" bzip2                        https://github.com/osrf/bzip2_cmake.git                             %Buildtype% bzip2.sln
+rem call "%VCMakeRootPath%Script\dlgit" z3                           https://github.com/Z3Prover/z3.git                                  %Buildtype% z3.sln
+rem call "%VCMakeRootPath%Script\dlgit" lz4                          https://github.com/lz4/lz4.git                                      %Buildtype% lz4.sln
+rem call "%VCMakeRootPath%Script\dlgit" zziplib                      https://github.com/gdraheim/zziplib.git                             %Buildtype% zziplib.sln
+rem call "%VCMakeRootPath%Script\dlgit" snappy                       https://github.com/willyd/snappy.git                                %Buildtype% snappy.sln
+rem call "%VCMakeRootPath%Script\dlgit" zstd                         https://github.com/facebook/zstd.git                                %Buildtype% zstd.sln
+rem call "%VCMakeRootPath%Script\dlgit" giflib                       https://github.com/xbmc/giflib.git                                  %Buildtype% giflib.sln
+rem call "%VCMakeRootPath%Script\dlgit" libjpeg-turbo                https://github.com/libjpeg-turbo/libjpeg-turbo.git                  %Buildtype% libjpeg-turbo.sln
+rem call "%VCMakeRootPath%Script\dlgit" libpng                       https://github.com/glennrp/libpng.git                               %Buildtype% libpng.sln
+rem call "%VCMakeRootPath%Script\dlgit" libtiff                      https://gitlab.com/libtiff/libtiff.git                              %Buildtype% tiff.sln
+rem call "%VCMakeRootPath%Script\dlgit" openjpeg                     https://github.com/uclouvain/openjpeg.git                           %Buildtype% openjpeg.sln
+rem call "%VCMakeRootPath%Script\dlgit" libwebp                      https://chromium.googlesource.com/webm/libwebp                      %Buildtype% webp.sln
+rem call "%VCMakeRootPath%Script\dlgit" leptonica                    https://github.com/DanBloomberg/leptonica.git                       %Buildtype% leptonica.sln
+rem call "%VCMakeRootPath%Script\dlgit" tesseract                    https://github.com/tesseract-ocr/tesseract.git                      %Buildtype% tesseract.sln
+rem call "%VCMakeRootPath%Script\dlzip" SDL2-2.0.12                  http://www.libsdl.org/release/SDL2-2.0.12.tar.gz                    %Buildtype% sdl2.sln
+rem call "%VCMakeRootPath%Script\dlgit" gflags                       https://github.com/gflags/gflags.git                                %Buildtype% gflags.sln
+rem call "%VCMakeRootPath%Script\dlgit" glog                         https://github.com/google/glog.git                                  %Buildtype% glog.sln
+rem call "%VCMakeRootPath%Script\dlgit" gtest                        https://github.com/google/googletest.git                            %Buildtype% googletest-distribution.sln
+rem call "%VCMakeRootPath%Script\dlzip" sqlite-snapshot-202003121754 https://www.sqlite.org/snapshot/sqlite-snapshot-202003121754.tar.gz %Buildtype% sqlite.sln
+rem call "%VCMakeRootPath%Script\dlgit" libssh2                      https://github.com/libssh2/libssh2.git                              %Buildtype% libssh2.sln
+rem call "%VCMakeRootPath%Script\dlgit" gettext                      https://github.com/georgegerdin/gettext-cmake.git                   %Buildtype% gettext.sln
+rem call "%VCMakeRootPath%Script\dlgit" freetype                     https://github.com/winlibs/freetype.git                             %Buildtype% freetype.sln
 call "%VCMakeRootPath%Script\dlgit" harfbuzz                     https://github.com/harfbuzz/harfbuzz.git                            %Buildtype% harfbuzz.sln
 call "%VCMakeRootPath%Script\dlgit" hdf5                         https://github.com/live-clones/hdf5.git                             %Buildtype% hdf5.sln
 call "%VCMakeRootPath%Script\dlgit" libiconv                     https://github.com/LuaDist/libiconv.git                             %Buildtype% libiconv.sln

@@ -4,9 +4,11 @@
 /Tools/x64
 /Tools/Python
 /Tools/Perl
+/Tools/MSYS2
 /Tools/mconda3
 /Tools/strawberry-perl-5.32.0.1-64bit.msi
 /Tools/python-2.7.16.amd64.msi
 /Tools/python-2.7.16.msi
 /Tools/python-3.8.2.exe
 /Tools/python-3.8.2-amd64.exe
+/Tools/msys2-x86_64-20201109.exe
