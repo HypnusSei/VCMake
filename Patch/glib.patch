@@ -1,34 +1,40 @@
- gio/meson.build  | 3 ---
- glib/meson.build | 3 ---
+ gio/meson.build  | 6 +++---
+ glib/meson.build | 6 +++---
  gobject/gtype.c  | 4 ++--
- meson.build      | 5 +----
- 4 files changed, 3 insertions(+), 12 deletions(-)
+ meson.build      | 9 +++++----
+ 4 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/gio/meson.build b/gio/meson.build
-index 39e246b9b..e5b72cc19 100644
+index 40a9ca6d0..538652e61 100644
 --- a/gio/meson.build
 +++ b/gio/meson.build
-@@ -1009,9 +1009,6 @@ if enable_systemtap
+@@ -1002,9 +1002,9 @@ if enable_systemtap
  endif
  
  subdir('fam')
 -if build_tests
 -    subdir('tests')
 -endif
++#if build_tests
++#    subdir('tests')
++#endif
  
  # The following is an example for building internal marshallers that are used
  # by GIO. We cannot guarantee glib-genmarshal availability while building GLib
 diff --git a/glib/meson.build b/glib/meson.build
-index 7e0edb905..cf3fee8f2 100644
+index 7e0edb905..2914ece57 100644
 --- a/glib/meson.build
 +++ b/glib/meson.build
-@@ -479,6 +479,3 @@ if enable_systemtap
+@@ -479,6 +479,6 @@ if enable_systemtap
    )
  endif
  
 -if build_tests
 -  subdir('tests')
 -endif
++#if build_tests
++#  subdir('tests')
++#endif
 diff --git a/gobject/gtype.c b/gobject/gtype.c
 index 723675d59..b017579b6 100644
 --- a/gobject/gtype.c
@@ -49,25 +55,29 @@ index 723675d59..b017579b6 100644
           LPVOID    lpvReserved)
  {
 diff --git a/meson.build b/meson.build
-index 79726d2d7..f10ecce3f 100644
+index 627dcce57..39de2b601 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -19,7 +19,7 @@ if cc.get_id() == 'msvc'
+@@ -19,7 +19,8 @@ if cc.get_id() == 'msvc'
    # If a warning is completely useless and spammy, use '/wdXXXX' to suppress it
    # If a warning is harmless but hard to fix, use '/woXXXX' so it's shown once
    # NOTE: Only add warnings here if you are sure they're spurious
 -  add_project_arguments('/wd4035', '/wd4715', '/wd4116',
++  # add_project_arguments('/wd4035', '/wd4715', '/wd4116',
 +  add_project_arguments('/wd4035', '/wd4715', '/wd4116', '/DG_INTL_STATIC_COMPILATION', '/DFFI_STATIC_BUILD',
      '/wd4046', '/wd4068', '/wo4090', '/FImsvc_recommended_pragmas.h',language : 'c')
    # Disable SAFESEH with MSVC for plugins and libs that use external deps that
    # are built with MinGW
-@@ -2247,9 +2247,6 @@ subdir('gthread')
+@@ -2269,9 +2270,9 @@ subdir('gthread')
  subdir('gmodule')
  subdir('gio')
  subdir('fuzzing')
 -if build_tests
 -  subdir('tests')
 -endif
++#if build_tests
++#  subdir('tests')
++#endif
  
  # xgettext is optional (on Windows for instance)
  if find_program('xgettext', required : get_option('nls')).found()

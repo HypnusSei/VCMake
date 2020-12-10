@@ -103,7 +103,7 @@ call "%VCMakeRootPath%Script\dlgit" gdal                         https://github.
 call "%VCMakeRootPath%Script\dlgit" lmdb                         https://github.com/LMDB/lmdb.git                                    %Buildtype% lmdb.sln
 call "%VCMakeRootPath%Script\dlgit" protobuf                     https://github.com/protocolbuffers/protobuf.git#3.5.x               %Buildtype% protobuf.sln
 call "%VCMakeRootPath%Script\dlgit" opencv                       https://github.com/opencv/opencv.git                                %Buildtype% opencv.sln
-rem call "%VCMakeRootPath%Script\dlgit" wxWidgets                    https://github.com/wxWidgets/wxWidgets.git                          %Buildtype% wxWidgets.sln
+call "%VCMakeRootPath%Script\dlgit" wxWidgets                    https://github.com/wxWidgets/wxWidgets.git                          %Buildtype% wxWidgets.sln
 rem call "%VCMakeRootPath%Script\dlgit" lapack                       https://github.com/Reference-LAPACK/lapack.git                      %Buildtype% lapack.sln
 rem call "%VCMakeRootPath%Script\dlgit" OpenBLAS                     https://github.com/xianyi/OpenBLAS.git                              %Buildtype% OpenBLAS.sln
-rem call "%VCMakeRootPath%Script\dlgit" cmake                        https://gitlab.kitware.com/cmake/cmake.git                          %Buildtype% cmake.sln
+call "%VCMakeRootPath%Script\dlgit" cmake                        https://gitlab.kitware.com/cmake/cmake.git                          %Buildtype% cmake.sln
