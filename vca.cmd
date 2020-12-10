@@ -53,25 +53,25 @@ rem call "%VCMakeRootPath%Script\dlzip" sqlite-snapshot-202003121754 https://www
 rem call "%VCMakeRootPath%Script\dlgit" libssh2                      https://github.com/libssh2/libssh2.git                              %Buildtype% libssh2.sln
 rem call "%VCMakeRootPath%Script\dlgit" gettext                      https://github.com/georgegerdin/gettext-cmake.git                   %Buildtype% gettext.sln
 rem call "%VCMakeRootPath%Script\dlgit" freetype                     https://github.com/winlibs/freetype.git                             %Buildtype% freetype.sln
-call "%VCMakeRootPath%Script\dlgit" brotli                       https://github.com/google/brotli.git                                %Buildtype% brotli.sln
-call "%VCMakeRootPath%Script\dlgit" harfbuzz                     https://github.com/harfbuzz/harfbuzz.git                            %Buildtype% harfbuzz.sln
-call "%VCMakeRootPath%Script\dlgit" hdf5                         https://github.com/live-clones/hdf5.git                             %Buildtype% hdf5.sln
-call "%VCMakeRootPath%Script\dlgit" libiconv                     https://github.com/LuaDist/libiconv.git                             %Buildtype% libiconv.sln
-call "%VCMakeRootPath%Script\dlgit" libxml2                      https://github.com/GNOME/libxml2.git                                %Buildtype% libxml2.sln
-call "%VCMakeRootPath%Script\dlgit" pcre                         https://github.com/svn2github/pcre.git                              %Buildtype% pcre.sln
-call "%VCMakeRootPath%Script\dlzip" pcre2-10.34                  https://downloads.sourceforge.net/pcre/pcre2-10.34.tar.bz2          %Buildtype% pcre2.sln
-call "%VCMakeRootPath%Script\dlgit" boost                        https://github.com/boostorg/boost.git                               %Buildtype% boost.sln
-call "%VCMakeRootPath%Script\dlgit" leveldb                      https://github.com/google/leveldb.git                              %Buildtype% leveldb.sln
-call "%VCMakeRootPath%Script\dlgit" openssl                      https://github.com/openssl/openssl.git                              %Buildtype% openssl.sln
-call "%VCMakeRootPath%Script\dlgit" nghttp2                      https://github.com/nghttp2/nghttp2.git                              %Buildtype% nghttp2.sln
-call "%VCMakeRootPath%Script\dlgit" eigen                        https://github.com/eigenteam/eigen-git-mirror.git                   %Buildtype% eigen3.sln
-call "%VCMakeRootPath%Script\dlgit" c-ares                       https://github.com/c-ares/c-ares.git                                %Buildtype% c-ares.sln
-call "%VCMakeRootPath%Script\dlgit" curl                         https://github.com/curl/curl.git                                    %Buildtype% curl.sln
-call "%VCMakeRootPath%Script\dlgit" fribidi                      https://github.com/fribidi/fribidi.git                              %Buildtype% fribidi.sln
-call "%VCMakeRootPath%Script\dlgit" tinyxml2                     https://github.com/leethomason/tinyxml2.git                         %Buildtype% tinyxml2.sln
-call "%VCMakeRootPath%Script\dlgit" llvm                         https://github.com/llvm/llvm-project.git                            %Buildtype% llvm.sln
-call "%VCMakeRootPath%Script\dlgit" CastXML                      https://github.com/CastXML/CastXML.git                              %Buildtype% CastXML.sln
-call "%VCMakeRootPath%Script\dlgit" libexpat                     https://github.com/libexpat/libexpat.git                            %Buildtype% expat.sln
+rem call "%VCMakeRootPath%Script\dlgit" brotli                       https://github.com/google/brotli.git                                %Buildtype% brotli.sln
+rem call "%VCMakeRootPath%Script\dlgit" harfbuzz                     https://github.com/harfbuzz/harfbuzz.git                            %Buildtype% harfbuzz.sln
+rem call "%VCMakeRootPath%Script\dlgit" hdf5                         https://github.com/live-clones/hdf5.git                             %Buildtype% hdf5.sln
+rem call "%VCMakeRootPath%Script\dlgit" libiconv                     https://github.com/LuaDist/libiconv.git                             %Buildtype% libiconv.sln
+rem call "%VCMakeRootPath%Script\dlgit" libxml2                      https://github.com/GNOME/libxml2.git                                %Buildtype% libxml2.sln
+rem call "%VCMakeRootPath%Script\dlgit" pcre                         https://github.com/svn2github/pcre.git                              %Buildtype% pcre.sln
+rem call "%VCMakeRootPath%Script\dlzip" pcre2-10.34                  https://downloads.sourceforge.net/pcre/pcre2-10.34.tar.bz2          %Buildtype% pcre2.sln
+rem call "%VCMakeRootPath%Script\dlgit" boost                        https://github.com/boostorg/boost.git                               %Buildtype% boost.sln
+rem call "%VCMakeRootPath%Script\dlgit" leveldb                      https://github.com/google/leveldb.git                              %Buildtype% leveldb.sln
+rem call "%VCMakeRootPath%Script\dlgit" openssl                      https://github.com/openssl/openssl.git                              %Buildtype% openssl.sln
+rem call "%VCMakeRootPath%Script\dlgit" nghttp2                      https://github.com/nghttp2/nghttp2.git                              %Buildtype% nghttp2.sln
+rem call "%VCMakeRootPath%Script\dlgit" eigen                        https://github.com/eigenteam/eigen-git-mirror.git                   %Buildtype% eigen3.sln
+rem call "%VCMakeRootPath%Script\dlgit" c-ares                       https://github.com/c-ares/c-ares.git                                %Buildtype% c-ares.sln
+rem call "%VCMakeRootPath%Script\dlgit" curl                         https://github.com/curl/curl.git                                    %Buildtype% curl.sln
+rem call "%VCMakeRootPath%Script\dlgit" fribidi                      https://github.com/fribidi/fribidi.git                              %Buildtype% fribidi.sln
+rem call "%VCMakeRootPath%Script\dlgit" tinyxml2                     https://github.com/leethomason/tinyxml2.git                         %Buildtype% tinyxml2.sln
+rem call "%VCMakeRootPath%Script\dlgit" llvm                         https://github.com/llvm/llvm-project.git                            %Buildtype% llvm.sln
+rem call "%VCMakeRootPath%Script\dlgit" CastXML                      https://github.com/CastXML/CastXML.git                              %Buildtype% CastXML.sln
+rem call "%VCMakeRootPath%Script\dlgit" libexpat                     https://github.com/libexpat/libexpat.git                            %Buildtype% expat.sln
 call "%VCMakeRootPath%Script\dlgit" fontconfig                   https://github.com/georgegerdin/fontconfig-cmake.git                %Buildtype% fontconfig.sln
 call "%VCMakeRootPath%Script\dlgit" icu                          https://github.com/hunter-packages/icu.git                          %Buildtype% icu.sln
 call "%VCMakeRootPath%Script\dlgit" websocketpp                  https://github.com/zaphoyd/websocketpp.git                          %Buildtype% websocketpp.sln

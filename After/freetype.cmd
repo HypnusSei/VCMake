@@ -27,3 +27,15 @@ if not exist %InstallSDKPath%\lib\pkgconfig (
 @echo Libs: -L${libdir} -lfreetype -lzlib -llzma -lbzip2 -llibpng -lharfbuzz -llibbrotlidec>>%InstallSDKPath%\lib\pkgconfig\freetype2.pc
 @echo Libs.private:  -lfreetype -lzlib -llzma -lbzip2 -llibpng -lharfbuzz -llibbrotlidec>>%InstallSDKPath%\lib\pkgconfig\freetype2.pc
 @echo Cflags: -I${includedir}/freetype2>>%InstallSDKPath%\lib\pkgconfig\freetype2.pc
+
+@echo libdir=%InstallPCPath%/lib>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo includedir=%InstallPCPath%/include>>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo Name: FreeType 2>>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo URL: https://freetype.org>>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo Description: A free, high-quality, and portable font engine.>>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo Version: 23.4.17>>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo Requires:>>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo Requires.private: zlib, bzip2, libpng, harfbuzz >= 1.8.0, libbrotlidec>>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo Libs: -L${libdir} -lfreetype -lzlib -llzma -lbzip2 -llibpng -lharfbuzz -llibbrotlidec>>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo Libs.private:  -lfreetype -lzlib -llzma -lbzip2 -llibpng -lharfbuzz -llibbrotlidec>>%InstallSDKPath%\lib\pkgconfig\freetype.pc
+@echo Cflags: -I${includedir}/freetype2>>%InstallSDKPath%\lib\pkgconfig\freetype.pc

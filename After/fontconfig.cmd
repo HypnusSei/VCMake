@@ -7,7 +7,7 @@ set SourceCodeName=%4
 set BuildPlatform_=%5
 set BuildLanguageX=%6
 set BuildHostX8664=%7
-set "BuildFontconfigPath=%VCMakeRootPath%VSBuild\%SourceProjName%\%BuildHostX8664%"
+set "BuildFontconfigPath=%VCMakeRootPath%VSBuild\%SourceCodeName%\%BuildHostX8664%"
 
 set "InstallPCPath=%InstallSDKPath:\=/%"
 
@@ -22,12 +22,12 @@ if not exist "%InstallSDKPath%\include\fontconfig" (
   md fontconfig
 )
 
-copy /Y "%VCMakeRootPath%\source\%SourceCodeName%\fontconfig\fcfreetype.h" "%InstallSDKPath%\include\fontconfig\fcfreetype.h"
-copy /Y "%VCMakeRootPath%\source\%SourceCodeName%\fontconfig\fcprivate.h"  "%InstallSDKPath%\include\fontconfig\fcprivate.h"
-copy /Y "%VCMakeRootPath%\source\%SourceCodeName%\fontconfig\fontconfig.h" "%InstallSDKPath%\include\fontconfig\fontconfig.h"
+copy /Y "%~d0\source\%SourceCodeName%\fontconfig\fcfreetype.h" "%InstallSDKPath%\include\fontconfig\fcfreetype.h"
+copy /Y "%~d0\source\%SourceCodeName%\fontconfig\fcprivate.h"  "%InstallSDKPath%\include\fontconfig\fcprivate.h"
+copy /Y "%~d0\source\%SourceCodeName%\fontconfig\fontconfig.h" "%InstallSDKPath%\include\fontconfig\fontconfig.h"
 
-@echo libdir=%InstallPCPath%/lib>>%InstallSDKPath%\lib\pkgconfig\zlib.pc
-@echo includedir=%InstallPCPath%/include>>%InstallSDKPath%\lib\pkgconfig\zlib.pc
+@echo libdir=%InstallPCPath%/lib>>%InstallSDKPath%\lib\pkgconfig\fontconfig.pc
+@echo includedir=%InstallPCPath%/include>>%InstallSDKPath%\lib\pkgconfig\fontconfig.pc
 @echo Name: Fontconfig>%InstallSDKPath%\lib\pkgconfig\fontconfig.pc
 @echo Description: Font configuration and customization library>>%InstallSDKPath%\lib\pkgconfig\fontconfig.pc
 @echo Version: 2.13.92>>%InstallSDKPath%\lib\pkgconfig\fontconfig.pc
