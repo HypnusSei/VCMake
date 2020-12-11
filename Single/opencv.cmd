@@ -10,7 +10,7 @@ set BuildPlatform_=%5
 set BuildLanguageX=%6
 set BuildHostX8664=%7
 set VCProjectNameX=%8
-set "MKL_ROOT_DIR=H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl"
+set "MKL_ROOT_DIR=F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl"
 set "mfxlibInc=%InstallSDKPath%\include\mfx"
 set "mfxlibLib=%InstallSDKPath%\lib"
 

@@ -82,28 +82,28 @@ rem call "%VCMakeRootPath%Script\dlgit" pixman                       https://git
 rem call "%VCMakeRootPath%Script\dlgit" cairo                        https://github.com/freedesktop/cairo.git                            %Buildtype% cairo.sln
 rem call "%VCMakeRootPath%Script\dlgit" qt5                          https://code.qt.io/qt/qt5.git#5.15.0                                %Buildtype% qt5.sln
 rem call "%VCMakeRootPath%Script\dlzip" qt6                          http://mirrors.sjtug.sjtu.edu.cn/qt/archive/qt/6.0/6.0.0/single/qt-everywhere-src-6.0.0.tar.xz %Buildtype% qt6.sln
-call "%VCMakeRootPath%Script\dlzip" VTK-9.0.1                    https://www.vtk.org/files/release/9.0/VTK-9.0.1.tar.gz              %Buildtype% VTK.sln
-call "%VCMakeRootPath%Script\dlgit" AMF                          https://github.com/GPUOpen-LibrariesAndSDKs/AMF.git                 %Buildtype% AMF.sln
-call "%VCMakeRootPath%Script\dlzip" libogg-1.3.4                 http://downloads.xiph.org/releases/ogg/libogg-1.3.4.tar.gz          %Buildtype% libogg.sln
-call "%VCMakeRootPath%Script\dlzip" libvorbis-1.3.6              http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.gz    %Buildtype% libvorbis.sln
-call "%VCMakeRootPath%Script\dlzip" libtheora-1.1.1              http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.bz2   %Buildtype% libtheora.sln
-call "%VCMakeRootPath%Script\dlzip" flac-1.3.2                   http://downloads.xiph.org/releases/flac/flac-1.3.2.tar.xz           %Buildtype% flac.sln
-call "%VCMakeRootPath%Script\dlgit" tbb                          https://github.com/intel/tbb.git                                    %Buildtype% tbb.sln
-call "%VCMakeRootPath%Script\dlgit" lua                          https://github.com/LuaDist/lua.git                                  %Buildtype% lua.sln
-call "%VCMakeRootPath%Script\dlgit" libuv                        https://github.com/libuv/libuv.git                                  %Buildtype% libuv.sln
-call "%VCMakeRootPath%Script\dlgit" openh264                     https://github.com/cisco/openh264.git                               %Buildtype% openh264.sln
-call "%VCMakeRootPath%Script\dlgit" OIS                          https://github.com/wgois/OIS.git                                    %Buildtype% OIS.sln
-call "%VCMakeRootPath%Script\dlhg"  x265                         https://bitbucket.org/multicoreware/x265                            %Buildtype% x265.sln
-call "%VCMakeRootPath%Script\dlgit" yasm                         https://github.com/yasm/yasm.git                                    %Buildtype% yasm.sln
-call "%VCMakeRootPath%Script\dlgit" dav1d                        https://code.videolan.org/videolan/dav1d.git                        %Buildtype% dav1d.sln
-call "%VCMakeRootPath%Script\dlgit" ZenLib                       https://github.com/MediaArea/ZenLib.git                             %Buildtype% ZenLib.sln
-call "%VCMakeRootPath%Script\dlgit" minizip                      https://github.com/nmoinvaz/minizip.git                             %Buildtype% minizip.sln
-call "%VCMakeRootPath%Script\dlgit" uriparser                    https://github.com/uriparser/uriparser.git                          %Buildtype% uriparser.sln
-call "%VCMakeRootPath%Script\dlgit" gdal                         https://github.com/OSGeo/gdal.git                                   %Buildtype% gdal.sln
-call "%VCMakeRootPath%Script\dlgit" lmdb                         https://github.com/LMDB/lmdb.git                                    %Buildtype% lmdb.sln
-call "%VCMakeRootPath%Script\dlgit" protobuf                     https://github.com/protocolbuffers/protobuf.git#3.5.x               %Buildtype% protobuf.sln
+rem call "%VCMakeRootPath%Script\dlzip" VTK-9.0.1                    https://www.vtk.org/files/release/9.0/VTK-9.0.1.tar.gz              %Buildtype% VTK.sln
+rem call "%VCMakeRootPath%Script\dlgit" AMF                          https://github.com/GPUOpen-LibrariesAndSDKs/AMF.git                 %Buildtype% AMF.sln
+rem call "%VCMakeRootPath%Script\dlzip" libogg-1.3.4                 http://downloads.xiph.org/releases/ogg/libogg-1.3.4.tar.gz          %Buildtype% libogg.sln
+rem call "%VCMakeRootPath%Script\dlzip" libvorbis-1.3.6              http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.gz    %Buildtype% libvorbis.sln
+rem call "%VCMakeRootPath%Script\dlzip" libtheora-1.1.1              http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.bz2   %Buildtype% libtheora.sln
+rem call "%VCMakeRootPath%Script\dlzip" flac-1.3.2                   http://downloads.xiph.org/releases/flac/flac-1.3.2.tar.xz           %Buildtype% flac.sln
+rem call "%VCMakeRootPath%Script\dlgit" tbb                          https://github.com/intel/tbb.git                                    %Buildtype% tbb.sln
+rem call "%VCMakeRootPath%Script\dlgit" lua                          https://github.com/LuaDist/lua.git                                  %Buildtype% lua.sln
+rem call "%VCMakeRootPath%Script\dlgit" libuv                        https://github.com/libuv/libuv.git                                  %Buildtype% libuv.sln
+rem call "%VCMakeRootPath%Script\dlgit" openh264                     https://github.com/cisco/openh264.git                               %Buildtype% openh264.sln
+rem call "%VCMakeRootPath%Script\dlgit" OIS                          https://github.com/wgois/OIS.git                                    %Buildtype% OIS.sln
+rem call "%VCMakeRootPath%Script\dlhg"  x265                         https://bitbucket.org/multicoreware/x265                            %Buildtype% x265.sln
+rem call "%VCMakeRootPath%Script\dlgit" yasm                         https://github.com/yasm/yasm.git                                    %Buildtype% yasm.sln
+rem call "%VCMakeRootPath%Script\dlgit" dav1d                        https://code.videolan.org/videolan/dav1d.git                        %Buildtype% dav1d.sln
+rem call "%VCMakeRootPath%Script\dlgit" ZenLib                       https://github.com/MediaArea/ZenLib.git                             %Buildtype% ZenLib.sln
+rem call "%VCMakeRootPath%Script\dlgit" minizip                      https://github.com/nmoinvaz/minizip.git                             %Buildtype% minizip.sln
+rem call "%VCMakeRootPath%Script\dlgit" uriparser                    https://github.com/uriparser/uriparser.git                          %Buildtype% uriparser.sln
+rem call "%VCMakeRootPath%Script\dlgit" gdal                         https://github.com/OSGeo/gdal.git                                   %Buildtype% gdal.sln
+rem call "%VCMakeRootPath%Script\dlgit" lmdb                         https://github.com/LMDB/lmdb.git                                    %Buildtype% lmdb.sln
+rem call "%VCMakeRootPath%Script\dlgit" protobuf                     https://github.com/protocolbuffers/protobuf.git#3.5.x               %Buildtype% protobuf.sln
+rem call "%VCMakeRootPath%Script\dlgit" wxWidgets                    https://github.com/wxWidgets/wxWidgets.git                          %Buildtype% wxWidgets.sln
 call "%VCMakeRootPath%Script\dlgit" opencv                       https://github.com/opencv/opencv.git                                %Buildtype% opencv.sln
-call "%VCMakeRootPath%Script\dlgit" wxWidgets                    https://github.com/wxWidgets/wxWidgets.git                          %Buildtype% wxWidgets.sln
 rem call "%VCMakeRootPath%Script\dlgit" lapack                       https://github.com/Reference-LAPACK/lapack.git                      %Buildtype% lapack.sln
 rem call "%VCMakeRootPath%Script\dlgit" OpenBLAS                     https://github.com/xianyi/OpenBLAS.git                              %Buildtype% OpenBLAS.sln
 call "%VCMakeRootPath%Script\dlgit" cmake                        https://gitlab.kitware.com/cmake/cmake.git                          %Buildtype% cmake.sln
