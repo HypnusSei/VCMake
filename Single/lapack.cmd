@@ -19,7 +19,7 @@ for /f "tokens=*" %%I in (%sFile%) do (set "sPara=!sPara! %%I")
 set "Bpara=%sPara% %Bpara%"
 
 :: Intel Parallel Studio 2020 开发组件 (包含 ifort 编译器)
-set "IntelCompilePath=H:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows"
+set "IntelCompilePath=F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows"
 if not exist %IntelCompilePath% (
   echo Intel Parallel Studio 2020 编译器不存在，无法编译 lapack
   pause
