@@ -76,7 +76,7 @@ cmake %BuildOpenCVStaticPath%
 :: VC 编译之前，检查是否有工程文件需要修改的补丁，有则给工程文件打补丁 (xz 工程有问题，不能编译 MT 类型)
 if exist "%VCMakeRootPath%Patch\%SourceCodeName%_sln.cmd" (
   echo 修正工程中，请稍候......
-  call "%VCMakeRootPath%Patch\%SourceCodeName%_sln.cmd" %BuildOpenCVStaticPath% %dbyoungSDKPath% %InstallSDKPath%
+  call "%VCMakeRootPath%Patch\%SourceCodeName%_sln.cmd" %BuildOpenCVStaticPath% %dbyoungSDKPath% %VCMakeRootPath%
 )
 
 :: VC 多进程编译；加快编译速度；如果工程名称不正确，不影响编译，只是不能使用 VC 的多进程编译。多进程编译会起很多进程编译，编译大工程时，会拖慢机器相应速度
@@ -163,7 +163,7 @@ cmake %BuildOpenCVSharePath%
 :: VC 编译之前，检查是否有工程文件需要修改的补丁，有则给工程文件打补丁 (xz 工程有问题，不能编译 MT 类型)
 if exist "%VCMakeRootPath%Patch\%SourceCodeName%_sln.cmd" (
   echo 修正工程中，请稍候......
-  call "%VCMakeRootPath%Patch\%SourceCodeName%_sln.cmd" %BuildOpenCVSharePath% %dbyoungSDKPath% %InstallSDKPath%
+  call "%VCMakeRootPath%Patch\%SourceCodeName%_sln.cmd" %BuildOpenCVSharePath% %dbyoungSDKPath% %VCMakeRootPath%
 )
 
 :: VC 多进程编译；加快编译速度；如果工程名称不正确，不影响编译，只是不能使用 VC 的多进程编译。多进程编译会起很多进程编译，编译大工程时，会拖慢机器相应速度
@@ -250,7 +250,7 @@ cmake %BuildOpenCVWorldPath%
 :: VC 编译之前，检查是否有工程文件需要修改的补丁，有则给工程文件打补丁 (xz 工程有问题，不能编译 MT 类型)
 if exist "%VCMakeRootPath%Patch\%SourceCodeName%_sln.cmd" (
   echo 修正工程中，请稍候......
-  call "%VCMakeRootPath%Patch\%SourceCodeName%_sln.cmd" %BuildOpenCVWorldPath% %dbyoungSDKPath% %InstallSDKPath%
+  call "%VCMakeRootPath%Patch\%SourceCodeName%_sln.cmd" %BuildOpenCVWorldPath% %dbyoungSDKPath% %VCMakeRootPath%
 )
 
 :: VC 多进程编译；加快编译速度；如果工程名称不正确，不影响编译，只是不能使用 VC 的多进程编译。多进程编译会起很多进程编译，编译大工程时，会拖慢机器相应速度
