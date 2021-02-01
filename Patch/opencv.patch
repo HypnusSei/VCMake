@@ -1,12 +1,12 @@
- cmake/OpenCVCRTLinkage.cmake     | 32 ++++++++++++++++----------------
+ cmake/OpenCVCRTLinkage.cmake     | 30 +++++++++++++++---------------
  cmake/OpenCVDetectVTK.cmake      | 14 +++++++-------
  modules/core/src/system.cpp      | 36 ++++++++++++++++++------------------
  modules/highgui/CMakeLists.txt   |  4 +++-
  modules/imgcodecs/CMakeLists.txt |  4 +++-
- 5 files changed, 47 insertions(+), 43 deletions(-)
+ 5 files changed, 46 insertions(+), 42 deletions(-)
 
 diff --git a/cmake/OpenCVCRTLinkage.cmake b/cmake/OpenCVCRTLinkage.cmake
-index 0e0a54ecf9..3042062cea 100644
+index 0e0a54ecf9..98d0255271 100644
 --- a/cmake/OpenCVCRTLinkage.cmake
 +++ b/cmake/OpenCVCRTLinkage.cmake
 @@ -33,7 +33,7 @@ endif()
@@ -18,15 +18,7 @@ index 0e0a54ecf9..3042062cea 100644
    foreach(flag_var
            CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
            CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
-@@ -43,24 +43,24 @@ if(NOT BUILD_SHARED_LIBS AND BUILD_WITH_STATIC_CRT)
-       string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-     endif()
-     if(${flag_var} MATCHES "/MDd")
--      string(REGEX REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
-+      string(REGEX REPLACE "/MDd" "/MT" ${flag_var} "${${flag_var}}")
-     endif()
-   endforeach(flag_var)
- 
+@@ -50,17 +50,17 @@ if(NOT BUILD_SHARED_LIBS AND BUILD_WITH_STATIC_CRT)
    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:atlthunk.lib")
    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcrt.lib")
    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:libcpmtd.lib /NODEFAULTLIB:msvcrtd.lib")
@@ -84,7 +76,7 @@ index b8cf36007c..c700a39174 100644
  if(NOT ${VTK_COMPILE_STATUS})
    message(STATUS "VTK support is disabled. Compilation of the sample code has failed.")
 diff --git a/modules/core/src/system.cpp b/modules/core/src/system.cpp
-index 3acf77035f..10a3b72713 100644
+index 901a503300..921e3f8821 100644
 --- a/modules/core/src/system.cpp
 +++ b/modules/core/src/system.cpp
 @@ -1801,27 +1801,27 @@ CoreTLSData& getCoreTlsData()
@@ -134,7 +126,7 @@ index 3acf77035f..10a3b72713 100644
  
  
 diff --git a/modules/highgui/CMakeLists.txt b/modules/highgui/CMakeLists.txt
-index d7a3c220d1..5a094bc08f 100644
+index d7a3c220d1..30b6975615 100644
 --- a/modules/highgui/CMakeLists.txt
 +++ b/modules/highgui/CMakeLists.txt
 @@ -59,6 +59,7 @@ if(HAVE_QT5)
@@ -151,12 +143,12 @@ index d7a3c220d1..5a094bc08f 100644
  if(MSVC)
 -  set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /NODEFAULTLIB:libcmt.lib /DEBUG")
 +#  set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /NODEFAULTLIB:libcmt.lib /DEBUG")
-+set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /DEBUG")
++   set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /DEBUG")
  endif()
  
  ocv_warnings_disable(CMAKE_CXX_FLAGS -Wno-deprecated-declarations)
 diff --git a/modules/imgcodecs/CMakeLists.txt b/modules/imgcodecs/CMakeLists.txt
-index 8ae85e62c5..f01df47504 100644
+index 8ae85e62c5..56f079e0c1 100644
 --- a/modules/imgcodecs/CMakeLists.txt
 +++ b/modules/imgcodecs/CMakeLists.txt
 @@ -46,6 +46,7 @@ if(HAVE_TIFF)
@@ -173,7 +165,7 @@ index 8ae85e62c5..f01df47504 100644
  if(MSVC)
 -  set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /NODEFAULTLIB:libcmt.lib /DEBUG")
 +#  set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /NODEFAULTLIB:libcmt.lib /DEBUG")
-+set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /DEBUG")
++   set_target_properties(${the_module} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /DEBUG")
  endif()
  
  ocv_warnings_disable(CMAKE_CXX_FLAGS -Wno-deprecated-declarations)

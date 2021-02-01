@@ -106,4 +106,4 @@ rem call "%VCMakeRootPath%Script\dlgit" wxWidgets                    https://git
 call "%VCMakeRootPath%Script\dlgit" opencv                       https://github.com/opencv/opencv.git                                %Buildtype% opencv.sln
 rem call "%VCMakeRootPath%Script\dlgit" lapack                       https://github.com/Reference-LAPACK/lapack.git                      %Buildtype% lapack.sln
 rem call "%VCMakeRootPath%Script\dlgit" OpenBLAS                     https://github.com/xianyi/OpenBLAS.git                              %Buildtype% OpenBLAS.sln
-call "%VCMakeRootPath%Script\dlgit" cmake                        https://gitlab.kitware.com/cmake/cmake.git                          %Buildtype% cmake.sln
+rem call "%VCMakeRootPath%Script\dlgit" cmake                        https://gitlab.kitware.com/cmake/cmake.git                          %Buildtype% cmake.sln
