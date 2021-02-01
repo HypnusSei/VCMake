@@ -25,6 +25,10 @@ if exist blas.lib (
   rename blas.lib blas.lib.bak
 )
 
+if exist openblas.lib (
+  rename openblas.lib openblas.lib.bak
+)
+
 ::  «∑Ò π”√ GPU 
 set "USEGPU="
 set "USECPU=CPU"
@@ -295,7 +299,10 @@ if exist tbb.lib.bak (
   rename tbb.lib.bak tbb.lib
 )
 
-CD /D %InstallSDKPath%\lib
 if exist blas.lib.bak (
   rename blas.lib.bak blas.lib
+)
+
+if exist openblas.lib.bak (
+  rename openblas.lib.bak openblas.lib
 )
