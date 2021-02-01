@@ -21,6 +21,10 @@ if exist tbb.lib (
   rename tbb.lib tbb.lib.bak
 )
 
+if exist blas.lib (
+  rename blas.lib blas.lib.bak
+)
+
 ::  «∑Ò π”√ GPU 
 set "USEGPU="
 set "USECPU=CPU"
@@ -289,4 +293,9 @@ rename static_bak static
 CD /D %InstallSDKPath%\lib
 if exist tbb.lib.bak (
   rename tbb.lib.bak tbb.lib
+)
+
+CD /D %InstallSDKPath%\lib
+if exist blas.lib.bak (
+  rename blas.lib.bak blas.lib
 )
