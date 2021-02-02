@@ -10,39 +10,26 @@ set BuildPlatform_=%5
 set BuildLanguageX=%6
 set BuildHostX8664=%7
 set VCProjectNameX=%8
-set "MKL_ROOT_DIR=F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl"
 set "mfxlibInc=%InstallSDKPath%\include\mfx"
 set "mfxlibLib=%InstallSDKPath%\lib"
 
 cls
-title ø™ º±‡“Î OpenCV æ≤Ã¨ø‚ 
 CD /D %InstallSDKPath%\lib
-if exist tbb.lib (
-  rename tbb.lib tbb.lib.bak
-)
-
-if exist blas.lib (
-  rename blas.lib blas.lib.bak
-)
-
-if exist openblas.lib (
-  rename openblas.lib openblas.lib.bak
-)
 
 ::  «∑Ò π”√ GPU 
 set "USEGPU="
 set "USECPU=CPU"
-rem if %BuildHostX8664%==x86 (
-rem   set "USEGPU=-DCPU_ONLY=ON -DWITH_CUDA=OFF -DVTK_USE_CUDA=OFF"
-rem   set "USECPU=CPU"
-rem   ) else (
-rem   set "USEGPU=-DCPU_ONLY=OFF -DWITH_CUDA=ON -DVTK_USE_CUDA=ON -DOPENCV_EXTRA_MODULES_PATH=%~d0\Source\opencv_contrib"
-rem   set "USECPU=GPU"
-rem   if not exist "%~d0\Source\opencv_contrib" (
-rem     git clone --progress --recursive -v "https://github.com/opencv/opencv_contrib.git" "%~d0\Source\opencv_contrib"
-rem     git clone --progress --recursive -v "https://github.com/opencv/opencv_extra.git"   "%~d0\Source\opencv_extra"
-rem     )
-rem )
+if %BuildHostX8664%==x86 (
+  set "USEGPU=-DCPU_ONLY=ON -DWITH_CUDA=OFF -DVTK_USE_CUDA=OFF"
+  set "USECPU=CPU"
+  ) else (
+  set "USEGPU=-DCPU_ONLY=OFF -DWITH_CUDA=ON -DVTK_USE_CUDA=ON -DOPENCV_EXTRA_MODULES_PATH=%~d0\Source\opencv_contrib"
+  set "USECPU=GPU"
+  if not exist "%~d0\Source\opencv_contrib" (
+    git clone --progress --recursive -v "https://github.com/opencv/opencv_contrib.git" "%~d0\Source\opencv_contrib"
+    git clone --progress --recursive -v "https://github.com/opencv/opencv_extra.git"   "%~d0\Source\opencv_extra"
+    )
+)
 
 :: …Ë÷√ CMake ±‡“Î≤Œ ˝
 set "sFile=%VCMakeRootPath%Script\vcp.txt"
@@ -51,6 +38,9 @@ for /f "tokens=*" %%I in (%sFile%) do (set "sPara=!sPara! %%I")
 set "Bpara=%sPara% %Bpara%"
 
 :: ±‡“Îæ≤Ã¨ø‚
+cls
+echo ±‡“Î OpenCV æ≤Ã¨ø‚ 
+title ±‡“Î OpenCV æ≤Ã¨ø‚ 
 set LibraryStaticType=static
 
 :: ±‡“Îƒø¬º
@@ -111,6 +101,9 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: ±‡“Î∂ØÃ¨ø‚
+cls
+echo ±‡“Î OpenCV ∂ØÃ¨ø‚ 
+title ±‡“Î OpenCV ∂ØÃ¨ø‚
 set LibraryShareType=share
 
 :: ±‡“Îƒø¬º
@@ -162,9 +155,6 @@ for /f "tokens=*" %%f in ('powershell -command "'%Bpara%' -replace '%Temp01%', '
 )
 
 :: ±‡“Î OpenCV ∂ØÃ¨ø‚
-echo ±‡“Î OpenCV ∂ØÃ¨ø‚ 
-title ±‡“Î OpenCV ∂ØÃ¨ø‚ 
-
 cmake %TTT% %USEGPU% -DBUILD_opencv_world=OFF -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\4.0.2\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\1.10.9\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath%\%SourceCodeName%\%USECPU%\%LibraryShareType% -Thost=%BuildHostX8664% -B %BuildOpenCVSharePath% -G %BuildLanguageX% -A %BuildPlatform_% %~d0\Source\%SourceCodeName%
 cmake %BuildOpenCVSharePath%
 
@@ -198,6 +188,9 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: ±‡“Î world ∂ØÃ¨ø‚
+cls
+echo ±‡“Î OpenCV world ∂ØÃ¨ø‚ 
+title ±‡“Î OpenCV world ∂ØÃ¨ø‚
 set LibraryWorldType=world
 
 :: ±‡“Îƒø¬º
@@ -211,12 +204,6 @@ if exist %BuildOpenCVWorldPath% (
 CD /D "%~d0\Source\%SourceCodeName%"
 git clean -d  -fx -f
 git checkout .
-
-:: ÷ÿ√¸√˚ static æ≤Ã¨ø‚ƒø¬º
-CD /D "%dbyoungSDKPath%\opencv\%USECPU%"
-if exist static (
-  rename static static_bak
-)
 
 :: ºÏ≤È «∑Ò”– patch ≤π∂°Œƒº˛
  if exist "%VCMakeRootPath%Patch\%SourceCodeName%.patch" (
@@ -248,10 +235,7 @@ for /f "tokens=*" %%f in ('powershell -command "'%Bpara%' -replace '%Temp01%', '
   set TTT=%%f
 )
 
-:: ±‡“Î OpenCV ∂ØÃ¨ø‚
-echo ±‡“Î OpenCV ∂ØÃ¨ø‚ 
-title ±‡“Î OpenCV ∂ØÃ¨ø‚ 
-
+:: ±‡“Î OpenCV world ∂ØÃ¨ø‚
 cmake %TTT% %USEGPU% -DBUILD_opencv_world=ON -DSWIG_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\swig\4.0.2\swig.exe -DANT_EXECUTABLE=%VCMakeRootPath%Tools\x64\scoop\apps\ant\1.10.9\bin\ant.bat -DMFX_INCLUDE_DIRS=%mfxlibInc% -DMFX_LIBRARIES=%mfxlibLib%\libmfx_vs2015.lib -DCMAKE_INSTALL_PREFIX=%InstallSDKPath%\%SourceCodeName%\%USECPU%\%LibraryWorldType% -Thost=%BuildHostX8664% -B %BuildOpenCVWorldPath% -G %BuildLanguageX% -A %BuildPlatform_% %~d0\Source\%SourceCodeName%
 cmake %BuildOpenCVWorldPath%
 
@@ -293,16 +277,3 @@ git checkout .
 :bEnd
 CD /D "%dbyoungSDKPath%\opencv\%USECPU%"
 rename static_bak static
-
-CD /D %InstallSDKPath%\lib
-if exist tbb.lib.bak (
-  rename tbb.lib.bak tbb.lib
-)
-
-if exist blas.lib.bak (
-  rename blas.lib.bak blas.lib
-)
-
-if exist openblas.lib.bak (
-  rename openblas.lib.bak openblas.lib
-)
