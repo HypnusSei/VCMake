@@ -12,4 +12,4 @@ set "strNew01=;"
 if exist %libprojName01% (powershell -Command "(gc %libprojName01%) -replace '%strOld01%', '%strNew01%' | Out-File %libprojName01%")
 
 :: ×Ö·û´®ËÑË÷Ìæ»»
-call %CMakeRoot%Tools\fsr '%BuildPath%','*.vcxproj','MultiThreadedDLL','MultiThreaded',1,0,'UTF8'
+call %CMakeRoot%Tools\fsr '%BuildPath%','*.vcxproj','MultiThreadedDLL','MultiThreaded',1,0,'UTF8',1
