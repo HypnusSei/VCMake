@@ -1,5 +1,17 @@
 C:\Program Files (x86)\Java\jdk1.8.0_202
 C:\Program Files (x86)\Java\jdk1.8.0_202\bin
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\ipp
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\ipp\bin
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\ipp\include
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\ipp\lib\ia32_win
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl\bin
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl\include
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl\lib\ia32_win
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\mkl\tools
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\redist
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\redist\ia32_win\ipp
+F:\Green\Language\Intel\PSXE2020\compilers_and_libraries_2020.4.311\windows\redist\ia32_win\mkl
 F:\Green\Language\NVIDIA\CUDA\11.1\SDK
 F:\Green\Language\NVIDIA\CUDA\11.1\SDK\bin
 F:\Green\Language\NVIDIA\CUDA\11.1\SDK\include
