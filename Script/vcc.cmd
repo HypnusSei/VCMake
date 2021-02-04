@@ -51,7 +51,7 @@ if %IfUseLangNinja%==0 (
 )
 
 :: MSBuild 头文件、库文件搜索路径
-set "INCLUDE=%dbyoungSDKPath%\include\openblas;%dbyoungSDKPath%\include\libxml2;%dbyoungSDKPath%\include;%dbyoungSDKPath%\include\TBB;%dbyoungSDKPath%\include\harfbuzz;%dbyoungSDKPath%\QT5\static\include;%dbyoungSDKPath%\include\glib-2.0;%dbyoungSDKPath%\lib\glib-2.0\include;%IntelMFX_INC%;%INCLUDE%"
+set "INCLUDE=%dbyoungSDKPath%\include\openblas;%dbyoungSDKPath%\include\libxml2;%dbyoungSDKPath%\include;%dbyoungSDKPath%\include\freetype2;%dbyoungSDKPath%\include\TBB;%dbyoungSDKPath%\include\harfbuzz;%dbyoungSDKPath%\QT5\static\include;%dbyoungSDKPath%\include\glib-2.0;%dbyoungSDKPath%\lib\glib-2.0\include;%IntelMFX_INC%;%INCLUDE%"
 set "LIB=%dbyoungSDKPath%\lib;%dbyoungSDKPath%\QT5\static\lib;%IntelMFX_LIB%;%LIB%"
 set "UseEnv=True"
 

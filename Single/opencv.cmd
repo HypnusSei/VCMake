@@ -15,7 +15,15 @@ set "mfxlibInc=%InstallSDKPath%\include\mfx"
 set "mfxlibLib=%InstallSDKPath%\lib"
 
 cls
+
+:: TBB 和自带的 ITT 有冲突，屏蔽掉
 CD /D %InstallSDKPath%\lib
+if exist tbb.lib (
+  if exist tbb.lib.bak (
+    del tbb.lib.bak
+  )
+ rename tbb.lib tbb.lib.bak 
+)
 
 :: 是否使用 GPU 
 set "USEGPU="
@@ -278,3 +286,12 @@ git checkout .
 :bEnd
 CD /D "%dbyoungSDKPath%\opencv\%USECPU%"
 rename static_bak static
+
+:: 编译完成之后，恢复 TBB 
+CD /D %InstallSDKPath%\lib
+if exist tbb.lib.bak (
+  if exist tbb.lib (
+    del tbb.lib
+  )
+ rename tbb.lib.bak tbb.lib
+)
